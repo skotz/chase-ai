@@ -14,6 +14,112 @@ namespace Chase.Engine
         {
         }
 
+        public List<Move> GetValidMoves(Player sideToMove)
+        {
+            List<Move> moves = new List<Move>();
+            int destination;
+
+            for (int i = 0; i < Constants.BoardSize; i++)
+            {
+                // A piece can never reside on the chamber
+                if (i == Constants.ChamberIndex)
+                {
+                    continue;
+                }
+                
+                // There's a piece on this tile
+                if (board[i] != 0)
+                {
+                    // Only look for moves for the player whose turn it is to move
+                    if ((sideToMove == Player.Blue && board[i] > 0) || (sideToMove == Player.Red && board[i] < 0))
+                    {
+                        foreach (Direction direction in Constants.Directions)
+                        {
+                            // Move in a direction for as many tiles as the value of the die on that tile
+                            destination = GetDestinationIndexIfValidMove(i, direction, Math.Abs(board[i]));
+                            
+                            if (destination != Constants.InvalidMove)
+                            {
+                                moves.Add(new Move()
+                                {
+                                    FromIndex = i,
+                                    ToIndex = destination,
+                                    Increment = 0
+                                });
+                            }
+                        }                                
+                    }
+                }
+            }
+
+            return moves;
+        }
+
+        /// <summary>
+        /// Check if it's possible to move a piece from a given tile in a given direction a given number of tiles.
+        /// If the move is valid then the destination index will be returned.
+        /// </summary>
+        /// <param name="sourceIndex">The index of the tile from which we're moving</param>
+        /// <param name="direction">The initial direction of the movement</param>
+        /// <param name="distance">The number of tiles to move</param>
+        /// <returns></returns>
+        public int GetDestinationIndexIfValidMove(int sourceIndex, Direction direction, int distance)
+        {
+            int index = sourceIndex;
+
+            for (int i = 1; i <= distance; i++)
+            {
+                if (i > 1)
+                {
+                    // Check for richochets
+                    if (direction == Direction.UpRight && index.In(0, 1, 2, 3, 4, 5, 6, 7, 8))
+                    {
+                        direction = Direction.DownRight;
+                    }
+                    else if (direction == Direction.UpLeft && index.In(0, 1, 2, 3, 4, 5, 6, 7, 8))
+                    {
+                        direction = Direction.DownLeft;
+                    }
+                    else if (direction == Direction.DownLeft && index.In(72, 73, 74, 75, 76, 77, 78, 79, 80))
+                    {
+                        direction = Direction.UpLeft;
+                    }
+                    else if (direction == Direction.DownRight && index.In(72, 73, 74, 75, 76, 77, 78, 79, 80))
+                    {
+                        direction = Direction.UpRight;
+                    }
+                }
+
+                // Check to see if we landed on the chamber last move
+                if (index == Constants.ChamberIndex)
+                {
+                    return Constants.InvalidMove;
+                }
+
+                // Move one tile
+                index = GetIndexInDirection(index, direction);
+
+                if (index == Constants.InvalidMove)
+                {
+                    return Constants.InvalidMove;
+                }
+
+                // Our move ends on either a blank tile or another piece (which we can capture or bump)
+                if (i == distance)
+                {
+                    return index;
+                }
+
+                // Did we hit another piece before (blue or red) before the end of our distance?
+                if (board[index] != 0)
+                {
+                    return Constants.InvalidMove;
+                }
+            }
+
+            return Constants.InvalidMove;
+        }
+
         /// <summary>
         /// Get the index of one tile by moving one unit from a given tile.
         /// </summary>
@@ -154,10 +260,14 @@ namespace Chase.Engine
             }
         }
 
+        public void SetPiece(int index, int pieceValue)
+        {
+            board[index] = pieceValue;
+        }
+
         public static Position NewPosition()
         {
             Position p = new Position();
-            int cv = Constants.ChamberValue;
 
             p.board = new int[]
             {
@@ -165,11 +275,31 @@ namespace Chase.Engine
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // h
                   0,  0,  0,  0,  0,  0,  0,  0,  0, // g
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // f
-                  0,  0,  0,  0, cv,  0,  0,  0,  0, // e
+                  0,  0,  0,  0,  0,  0,  0,  0,  0, // e
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // d
                   0,  0,  0,  0,  0,  0,  0,  0,  0, // c
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // b
-                  1,  2,  3,  4,  5,  6,  7,  8,  9  // a
+                  1,  2,  3,  4,  5,  4,  3,  2,  1  // a
+            };
+
+            return p;
+        }
+
+        public static Position EmptyPosition()
+        {
+            Position p = new Position();
+
+            p.board = new int[]
+            {
+                  0,  0,  0,  0,  0,  0,  0,  0,  0, // i
+                0,  0,  0,  0,  0,  0,  0,  0,  0,   // h
+                  0,  0,  0,  0,  0,  0,  0,  0,  0, // g
+                0,  0,  0,  0,  0,  0,  0,  0,  0,   // f
+                  0,  0,  0,  0,  0,  0,  0,  0,  0, // e
+                0,  0,  0,  0,  0,  0,  0,  0,  0,   // d
+                  0,  0,  0,  0,  0,  0,  0,  0,  0, // c
+                0,  0,  0,  0,  0,  0,  0,  0,  0,   // b
+                  0,  0,  0,  0,  0,  0,  0,  0,  0  // a
             };
 
             return p;

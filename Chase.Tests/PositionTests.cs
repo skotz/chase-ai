@@ -46,5 +46,41 @@ namespace Chase.Tests
             Assert.AreEqual(Constants.InvalidMove, position.GetIndexInDirection(4, Direction.UpLeft));
             Assert.AreEqual(Constants.InvalidMove, position.GetIndexInDirection(76, Direction.DownRight));
         }
+
+        [TestMethod]
+        public void TestGetDestinationIndexIfValidMove()
+        {
+            //    0,  1,  2,  3,  4,  5,  6,  7,  8, // i
+            //  9, 10, 11, 12, 13, 14, 15, 16, 17,   // h
+            //   18, 19, 20, 21, 22, 23, 24, 25, 26, // g
+            // 27, 28, 29, 30, 31, 32, 33, 34, 35,   // f
+            //   36, 37, 38, 39, 40, 41, 42, 43, 44, // e
+            // 45, 46, 47, 48, 49, 50, 51, 52, 53,   // d
+            //   54, 55, 56, 57, 58, 59, 60, 61, 62, // c
+            // 63, 64, 65, 66, 67, 68, 69, 70, 71,   // b
+            //   72, 73, 74, 75, 76, 77, 78, 79, 80  // a
+
+            Position position = Position.EmptyPosition();
+            position.SetPiece(74, 5);
+
+            // Regular moves
+            Assert.AreEqual(39, position.GetDestinationIndexIfValidMove(11, Direction.DownRight, 3));
+
+            // Capture and bump moves
+            Assert.AreEqual(74, position.GetDestinationIndexIfValidMove(76, Direction.Left, 2));
+
+            // Wrapping moves
+            Assert.AreEqual(27, position.GetDestinationIndexIfValidMove(53, Direction.UpRight, 2));
+
+            // Richochet moves
+            Assert.AreEqual(32, position.GetDestinationIndexIfValidMove(12, Direction.UpRight, 4));
+            Assert.AreEqual(Constants.ChamberIndex, position.GetDestinationIndexIfValidMove(49, Direction.DownLeft, 71));
+
+            // Can't move through the chamber
+            Assert.AreEqual(Constants.InvalidMove, position.GetDestinationIndexIfValidMove(39, Direction.Right, 2));
+
+            // Can't move through another piece
+            Assert.AreEqual(Constants.InvalidMove, position.GetDestinationIndexIfValidMove(55, Direction.DownRight, 6));
+        }
     }
 }

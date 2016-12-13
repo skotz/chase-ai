@@ -43,7 +43,9 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Move.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
