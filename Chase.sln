@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chase.GUI", "Chase.GUI\Chase.GUI.csproj", "{7CF630FB-8C04-4019-9051-7B18D46AC632}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chase.Engine", "Chase.Engine\Chase.Engine.csproj", "{407ED6B4-25C0-463F-B518-760EE89C7560}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chase.Tests", "Chase.Tests\Chase.Tests.csproj", "{31B3CF22-FA01-455C-AB4C-249BC59E0BBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CF630FB-8C04-4019-9051-7B18D46AC632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF630FB-8C04-4019-9051-7B18D46AC632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF630FB-8C04-4019-9051-7B18D46AC632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF630FB-8C04-4019-9051-7B18D46AC632}.Release|Any CPU.Build.0 = Release|Any CPU
+		{407ED6B4-25C0-463F-B518-760EE89C7560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{407ED6B4-25C0-463F-B518-760EE89C7560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{407ED6B4-25C0-463F-B518-760EE89C7560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{407ED6B4-25C0-463F-B518-760EE89C7560}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31B3CF22-FA01-455C-AB4C-249BC59E0BBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31B3CF22-FA01-455C-AB4C-249BC59E0BBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31B3CF22-FA01-455C-AB4C-249BC59E0BBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31B3CF22-FA01-455C-AB4C-249BC59E0BBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
