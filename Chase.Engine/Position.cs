@@ -8,13 +8,138 @@ namespace Chase.Engine
 {
     public class Position
     {
-        private int[] board;
+        public int[] Board { get; private set; }
+
+        public Player PlayerToMove { get; private set; }
+
+        public int PointsToDistribute { get; private set; }
 
         public Position()
         {
+            
         }
 
-        public List<Move> GetValidMoves(Player sideToMove)
+        public void MakeMove(string move)
+        {
+            // TODO: parse string moves and validate before making the move
+
+            // TODO: 
+        }
+
+        public void MakeMove(Move move)
+        {
+            // Store the piece we're moving and clear the source tile
+            int sourcePiece = Board[move.FromIndex];
+            Player opponent = PlayerToMove == Player.Blue ? Player.Red : Player.Blue;
+            Board[move.FromIndex] = 0;
+
+            // Are we bumping another one of our pieces?
+            if ((sourcePiece > 0 && Board[move.ToIndex] > 0) || (sourcePiece < 0 && Board[move.ToIndex] < 0))
+            {
+                // Figure out what move needs to be made to move the bumbed piece
+                Direction direction = move.FinalDirection;
+                int targetIndex = GetDestinationIndexIfValidMove(move.ToIndex, ref direction, 1, true);
+                Move bumpMove = new Move()
+                {
+                    FromIndex = move.ToIndex,
+                    ToIndex = targetIndex,
+                    Increment = 0,
+                    FinalDirection = direction
+                };
+
+                // Recursively make the bump move(s)
+                MakeMove(bumpMove);
+            }
+
+            // Are we capturing an enemy piece?
+            if ((sourcePiece > 0 && Board[move.ToIndex] < 0) || (sourcePiece < 0 && Board[move.ToIndex] > 0))
+            {
+                // Keep track of how many points the enemy will need to distribute to other dice
+                PointsToDistribute = Math.Abs(Board[move.ToIndex]);
+            }
+
+            // Are we landing on the chamber?
+            if (move.ToIndex == Constants.ChamberIndex)
+            {
+                // Figure out the point split
+                int leftValue = (int)Math.Ceiling(sourcePiece / 2.0);
+                int rightValue = leftValue * 2 > sourcePiece ? leftValue - 1 : leftValue;
+                
+                // Figure out the destination tiles based on the direction we were going when we landed on the chamber, and move new pieces there
+                int leftIndex = -1;
+                int rightIndex = -1;
+                Direction leftDirection = (Direction)(-1);
+                Direction rightDirection = (Direction)(-1);
+                switch (move.FinalDirection)
+                {
+                    case Direction.DownLeft:
+                        leftIndex = 41;
+                        rightIndex = 31;
+                        leftDirection = Direction.Right;
+                        rightDirection = Direction.UpLeft;
+                        break;
+                    case Direction.UpLeft:
+                        leftIndex = 49;
+                        rightIndex = 41;
+                        leftDirection = Direction.DownLeft;
+                        rightDirection = Direction.Right;
+                        break;
+                    case Direction.DownRight:
+                        leftIndex = 32;
+                        rightIndex = 39;
+                        leftDirection = Direction.UpRight;
+                        rightDirection = Direction.Left;
+                        break;
+                    case Direction.UpRight:
+                        leftIndex = 39;
+                        rightIndex = 50;
+                        leftDirection = Direction.Left;
+                        rightDirection = Direction.DownRight;
+                        break;
+                    case Direction.Left:
+                        leftIndex = 50;
+                        rightIndex = 32;
+                        leftDirection = Direction.UpLeft;
+                        rightDirection = Direction.DownLeft;
+                        break;
+                    case Direction.Right:
+                        leftIndex = 31;
+                        rightIndex = 49;
+                        leftDirection = Direction.DownRight;
+                        rightDirection = Direction.UpRight;
+                        break;
+                }
+
+                // Create the new tiles and them recursively move them (in case they need to bump or capture)
+                Move leftMove = new Move()
+                {
+                    FromIndex = Constants.ChamberIndex,
+                    ToIndex = leftIndex,
+                    Increment = 0,
+                    FinalDirection = leftDirection
+                };
+                MakeMove(leftMove);
+                Move rightMove = new Move()
+                {
+                    FromIndex = Constants.ChamberIndex,
+                    ToIndex = rightIndex,
+                    Increment = 0,
+                    FinalDirection = rightDirection
+                };
+                MakeMove(rightMove);
+            }
+            
+            if (move.ToIndex != Constants.ChamberIndex)
+            {
+                // Assume the move is valid and go ahead and make it
+                Board[move.ToIndex] = sourcePiece;
+            }
+
+            // It's now the other player's turn to move
+            PlayerToMove = opponent;
+        }
+
+        public List<Move> GetValidMoves()
         {
             List<Move> moves = new List<Move>();
             int destination;
@@ -28,15 +153,16 @@ namespace Chase.Engine
                 }
                 
                 // There's a piece on this tile
-                if (board[i] != 0)
+                if (Board[i] != 0)
                 {
                     // Only look for moves for the player whose turn it is to move
-                    if ((sideToMove == Player.Blue && board[i] > 0) || (sideToMove == Player.Red && board[i] < 0))
+                    if ((PlayerToMove == Player.Blue && Board[i] > 0) || (PlayerToMove == Player.Red && Board[i] < 0))
                     {
                         foreach (Direction direction in Constants.Directions)
                         {
                             // Move in a direction for as many tiles as the value of the die on that tile
-                            destination = GetDestinationIndexIfValidMove(i, direction, Math.Abs(board[i]));
+                            Direction movement = direction;
+                            destination = GetDestinationIndexIfValidMove(i, ref movement, Math.Abs(Board[i]));
                             
                             if (destination != Constants.InvalidMove)
                             {
@@ -44,7 +170,8 @@ namespace Chase.Engine
                                 {
                                     FromIndex = i,
                                     ToIndex = destination,
-                                    Increment = 0
+                                    Increment = 0,
+                                    FinalDirection = movement
                                 });
                             }
                         }                                
@@ -63,13 +190,27 @@ namespace Chase.Engine
         /// <param name="direction">The initial direction of the movement</param>
         /// <param name="distance">The number of tiles to move</param>
         /// <returns></returns>
-        public int GetDestinationIndexIfValidMove(int sourceIndex, Direction direction, int distance)
+        public int GetDestinationIndexIfValidMove(int sourceIndex, Direction direction, int distance, bool isBounce = false)
+        {
+            Direction d = direction;
+            return GetDestinationIndexIfValidMove(sourceIndex, ref direction, distance, isBounce);
+        }
+
+        /// <summary>
+        /// Check if it's possible to move a piece from a given tile in a given direction a given number of tiles.
+        /// If the move is valid then the destination index will be returned.
+        /// </summary>
+        /// <param name="sourceIndex">The index of the tile from which we're moving</param>
+        /// <param name="direction">The initial direction of the movement</param>
+        /// <param name="distance">The number of tiles to move</param>
+        /// <returns></returns>
+        public int GetDestinationIndexIfValidMove(int sourceIndex, ref Direction direction, int distance, bool isBounce = false)
         {
             int index = sourceIndex;
 
             for (int i = 1; i <= distance; i++)
             {
-                if (i > 1)
+                if (i > 1 || isBounce)
                 {
                     // Check for richochets
                     if (direction == Direction.UpRight && index.In(0, 1, 2, 3, 4, 5, 6, 7, 8))
@@ -90,12 +231,6 @@ namespace Chase.Engine
                     }
                 }
 
-                // Check to see if we landed on the chamber last move
-                if (index == Constants.ChamberIndex)
-                {
-                    return Constants.InvalidMove;
-                }
-
                 // Move one tile
                 index = GetIndexInDirection(index, direction);
 
@@ -111,7 +246,13 @@ namespace Chase.Engine
                 }
 
                 // Did we hit another piece before (blue or red) before the end of our distance?
-                if (board[index] != 0)
+                if (Board[index] != 0)
+                {
+                    return Constants.InvalidMove;
+                }
+
+                // Check to see if we landed on the chamber
+                if (index == Constants.ChamberIndex)
                 {
                     return Constants.InvalidMove;
                 }
@@ -262,16 +403,16 @@ namespace Chase.Engine
 
         public void SetPiece(int index, int pieceValue)
         {
-            board[index] = pieceValue;
+            Board[index] = pieceValue;
         }
 
         public static Position NewPosition()
         {
             Position p = new Position();
 
-            p.board = new int[]
+            p.Board = new int[]
             {
-                 -1, -2, -3, -4, -5, -4, -3, -2, -1, // i
+                  1,  2,  3,  4,  5,  4,  3,  2,  1, // i
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // h
                   0,  0,  0,  0,  0,  0,  0,  0,  0, // g
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // f
@@ -279,8 +420,10 @@ namespace Chase.Engine
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // d
                   0,  0,  0,  0,  0,  0,  0,  0,  0, // c
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // b
-                  1,  2,  3,  4,  5,  4,  3,  2,  1  // a
+                 -1, -2, -3, -4, -5, -4, -3, -2, -1  // a
             };
+
+            p.PointsToDistribute = 0;
 
             return p;
         }
@@ -289,7 +432,7 @@ namespace Chase.Engine
         {
             Position p = new Position();
 
-            p.board = new int[]
+            p.Board = new int[]
             {
                   0,  0,  0,  0,  0,  0,  0,  0,  0, // i
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // h
@@ -301,8 +444,23 @@ namespace Chase.Engine
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // b
                   0,  0,  0,  0,  0,  0,  0,  0,  0  // a
             };
+            
+            p.PointsToDistribute = 0;
 
             return p;
+        }
+
+        public Position Clone()
+        {
+            Position position = new Position();
+
+            position.Board = new int[Constants.BoardSize];
+            Array.Copy(Board, position.Board, Board.Length);
+
+            position.PlayerToMove = PlayerToMove;
+            position.PointsToDistribute = PointsToDistribute;
+
+            return position;
         }
     }
 }

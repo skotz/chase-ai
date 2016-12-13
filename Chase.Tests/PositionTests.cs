@@ -61,6 +61,11 @@ namespace Chase.Tests
             //   72, 73, 74, 75, 76, 77, 78, 79, 80  // a
 
             Position position = Position.EmptyPosition();
+
+            // Long richochet
+            Assert.AreEqual(Constants.ChamberIndex, position.GetDestinationIndexIfValidMove(49, Direction.DownLeft, 71));
+
+            // Add a piece
             position.SetPiece(74, 5);
 
             // Regular moves
@@ -74,7 +79,6 @@ namespace Chase.Tests
 
             // Richochet moves
             Assert.AreEqual(32, position.GetDestinationIndexIfValidMove(12, Direction.UpRight, 4));
-            Assert.AreEqual(Constants.ChamberIndex, position.GetDestinationIndexIfValidMove(49, Direction.DownLeft, 71));
 
             // Can't move through the chamber
             Assert.AreEqual(Constants.InvalidMove, position.GetDestinationIndexIfValidMove(39, Direction.Right, 2));

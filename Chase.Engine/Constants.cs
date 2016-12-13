@@ -10,13 +10,19 @@ namespace Chase.Engine
     {
         public const int MaximumPieceCount = 10;
 
+        public const int MinimumPieceCount = 5;
+
         public const int MaximumPieceValue = 6;
+
+        public const int VictoryScore = 10000;
 
         public const int ChamberIndex = 40;
 
         public const int BoardSize = 81;
 
         public const int InvalidMove = -1;
+
+        public static Random Rand = new Random();
 
         public static Direction[] Directions = new Direction[] 
         {

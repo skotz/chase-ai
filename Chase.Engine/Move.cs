@@ -23,6 +23,11 @@ namespace Chase.Engine
         /// </summary>
         public int Increment { get; set; }
 
+        /// <summary>
+        /// The direction the piece was moving when it stopped
+        /// </summary>
+        public Direction FinalDirection { get; set; }
+
         public static string GetTileFromIndex(int index)
         {
             // Indexes of each piece on the board...
