@@ -47,7 +47,15 @@ namespace Chase.GUI
 
         private void button4_Click(object sender, EventArgs e)
         {
-            SearchResult best = game.GetBestMove(3);
+            SearchResult best = game.GetBestMove(2);
+
+            //SearchResult best = new SearchResult() { BestMove = new Engine.Move() { FromIndex = 0, ToIndex = 8, FinalDirection = Direction.Left, Increment = 0 } };
+            //game.MakeMove(best.BestMove);
+            //richTextBox1.Text += game.GetStringVisualization();
+            //best = new SearchResult() { BestMove = new Engine.Move() { FromIndex = 72, ToIndex = 73, FinalDirection = Direction.Right, Increment = 0 } };
+            //game.MakeMove(best.BestMove);
+            //richTextBox1.Text += game.GetStringVisualization();
+            //best = new SearchResult() { BestMove = new Engine.Move() { FromIndex = 2, ToIndex = 40, FinalDirection = Direction.DownRight, Increment = 0 } };
 
             game.MakeMove(best.BestMove);
 
@@ -58,6 +66,11 @@ namespace Chase.GUI
             richTextBox1.Text += "Next Player: " + game.PlayerToMove.ToString() + "\r\n";
 
             richTextBox1.Text += game.GetStringVisualization();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            game.SaveGameToFile("game.txt");
         }
     }
 }

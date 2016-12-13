@@ -14,9 +14,10 @@ namespace Chase.Engine
 
         public int PointsToDistribute { get; private set; }
 
+        public string MovesHistory { get; set; }
+
         public Position()
         {
-            
         }
 
         public void MakeMove(string move)
@@ -111,6 +112,7 @@ namespace Chase.Engine
                 }
 
                 // Create the new tiles and them recursively move them (in case they need to bump or capture)
+                Board[Constants.ChamberIndex] = leftValue;
                 Move leftMove = new Move()
                 {
                     FromIndex = Constants.ChamberIndex,
@@ -119,6 +121,7 @@ namespace Chase.Engine
                     FinalDirection = leftDirection
                 };
                 MakeMove(leftMove);
+                Board[Constants.ChamberIndex] = rightValue;
                 Move rightMove = new Move()
                 {
                     FromIndex = Constants.ChamberIndex,
@@ -137,6 +140,7 @@ namespace Chase.Engine
 
             // It's now the other player's turn to move
             PlayerToMove = opponent;
+            MovesHistory = string.IsNullOrEmpty(MovesHistory) ? move.ToString() : MovesHistory + " " + move.ToString();
         }
 
         public List<Move> GetValidMoves()
@@ -459,6 +463,7 @@ namespace Chase.Engine
 
             position.PlayerToMove = PlayerToMove;
             position.PointsToDistribute = PointsToDistribute;
+            position.MovesHistory = MovesHistory;
 
             return position;
         }

@@ -48,8 +48,8 @@ namespace Chase.Engine
                 return 10000;
             }
 
-            // Just a basic material calculation
-            return (bluePieces - redPieces) * 100 + Constants.Rand.Next(51) - 25;
+            // Just a basic material difference calculation
+            return (bluePieces - redPieces) * 100 + Constants.Rand.Next(21) - 10;
         }
 
         private static SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth)

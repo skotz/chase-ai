@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,14 @@ namespace Chase.Engine
 
         public Player PlayerToMove { get { return Board.PlayerToMove; } }
 
+        private List<Position> History;
+
         public Game()
         {
             Board = Position.NewPosition();
+            History = new List<Position>();
+
+            History.Add(Board.Clone());
         }
 
         public SearchResult GetBestMove(int searchDepth)
@@ -25,11 +31,13 @@ namespace Chase.Engine
         public void MakeMove(string move)
         {
             Board.MakeMove(move);
+            History.Add(Board.Clone());
         }
 
         public void MakeMove(Move move)
         {
             Board.MakeMove(move);
+            History.Add(Board.Clone());
         }
 
         public List<Move> GetAllMoves()
@@ -37,7 +45,26 @@ namespace Chase.Engine
             return Board.GetValidMoves();
         }
 
+        public void SaveGameToFile(string file)
+        {
+            using (StreamWriter w = new StreamWriter(file))
+            {
+                w.WriteLine("MOVES: " + Board.MovesHistory);
+                w.WriteLine("--------------------------------------");
+                foreach (Position position in History)
+                {
+                    w.Write(GetStringVisualization(position));
+                    w.WriteLine("--------------------------------------");
+                }
+            }
+        }
+
         public string GetStringVisualization()
+        {
+            return GetStringVisualization(Board);
+        }
+
+        public string GetStringVisualization(Position position)
         {
             // Indexes of each piece on the board...
             // ----------------------------------------
@@ -69,7 +96,7 @@ namespace Chase.Engine
                 }
                 else
                 {
-                    board += (Board.Board[i] != 0 ? Board.Board[i].ToString() : "<>").PadLeft(3, ' ') + " ";
+                    board += (position.Board[i] != 0 ? position.Board[i].ToString() : "<>").PadLeft(3, ' ') + " ";
                 }
 
                 if (i.In(8, 17, 26, 35, 44, 53, 62, 71, 80))
