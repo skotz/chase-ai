@@ -20,7 +20,7 @@ namespace Chase.Engine
             return result;
         }
 
-        private static int EvaluatePosition(Position position)
+        public static int EvaluatePosition(Position position)
         {
             int bluePieces = 0;
             int redPieces = 0;

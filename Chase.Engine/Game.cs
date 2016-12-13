@@ -15,6 +15,8 @@ namespace Chase.Engine
 
         private List<Position> History;
 
+        public string Status { get; private set; }
+
         public Game()
         {
             Board = Position.NewPosition();
@@ -38,6 +40,17 @@ namespace Chase.Engine
         {
             Board.MakeMove(move);
             History.Add(Board.Clone());
+            
+            // See if the game is over
+            int eval = Search.EvaluatePosition(Board);
+            if (eval == Constants.VictoryScore)
+            {
+                Status = "Blue Wins!";
+            }
+            else if (eval == -Constants.VictoryScore)
+            {
+                Status = "Red Wins!";
+            }
         }
 
         public List<Move> GetAllMoves()
@@ -49,7 +62,8 @@ namespace Chase.Engine
         {
             using (StreamWriter w = new StreamWriter(file))
             {
-                w.WriteLine("MOVES: " + Board.MovesHistory);
+                w.WriteLine("Moves: " + Board.MovesHistory);
+                w.WriteLine("Result: " + Status);
                 w.WriteLine("--------------------------------------");
                 foreach (Position position in History)
                 {

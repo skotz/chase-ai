@@ -72,5 +72,22 @@ namespace Chase.GUI
         {
             game.SaveGameToFile("game.txt");
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            game = new Game();
+            SearchResult best;
+
+            while (string.IsNullOrEmpty(game.Status))
+            {
+                best = game.GetBestMove(2);
+                game.MakeMove(best.BestMove);
+                
+                richTextBox1.Text += "Move: " + best.BestMove.ToString() + "\r\n";
+                richTextBox1.Text += game.GetStringVisualization();
+            }
+
+            game.SaveGameToFile("game.txt");
+        }
     }
 }
