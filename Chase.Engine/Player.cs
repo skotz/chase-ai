@@ -9,6 +9,7 @@ namespace Chase.Engine
     public enum Player
     {
         Blue,
-        Red
+        Red,
+        None
     }
 }

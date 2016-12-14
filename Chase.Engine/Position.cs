@@ -10,6 +10,8 @@ namespace Chase.Engine
     {
         public int[] Board { get; private set; }
 
+        public int this[int index] { get { return Board[index]; } }
+
         public Player PlayerToMove { get; set; }
 
         public int PointsToDistribute { get; private set; }
@@ -23,8 +25,6 @@ namespace Chase.Engine
         public void MakeMove(string move)
         {
             // TODO: parse string moves and validate before making the move
-
-            // TODO: 
         }
 
         public void MakeMove(Move move)
@@ -39,7 +39,7 @@ namespace Chase.Engine
                     Board[move.ToIndex] += Board[move.ToIndex] > 0 ? move.Increment : -move.Increment;
                     Board[move.FromIndex] -= Board[move.FromIndex] > 0 ? move.Increment : -move.Increment;
                 }
-                else if (PointsToDistribute > 0)
+                else
                 {
                     // We're adding points to a die after another one of our dice was captured
                     Board[move.ToIndex] += Board[move.ToIndex] > 0 ? move.Increment : -move.Increment;
@@ -49,10 +49,6 @@ namespace Chase.Engine
 
                     // It's still our turn after adding points to a piece
                     opponent = PlayerToMove;
-                }
-                else
-                {
-                    throw new Exception("Impossible State?");
                 }
             }
             else

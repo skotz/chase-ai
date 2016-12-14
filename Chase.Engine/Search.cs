@@ -1,26 +1,33 @@
-﻿using System;
+﻿using Chase.Engine.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Chase.Engine
 {
-    public class Search
+    public class Search : ISearchAlgorithm
     {
         private static int evaluations;
 
-        public static SearchResult GetBestMove(Position position, int searchDepth)
+        private static Stopwatch timer;
+
+        public event EventHandler<SearchStatus> OnNewResult;
+
+        public SearchResult GetBestMove(Position position, int searchDepth)
         {
+            timer = Stopwatch.StartNew();
             evaluations = 0;
 
-            SearchResult result = AlphaBetaSearch(position, int.MinValue, int.MaxValue, searchDepth * 2);
+            SearchResult result = AlphaBetaSearch(position, int.MinValue, int.MaxValue, searchDepth * 2, 1);
             result.Evaluations = evaluations;
 
             return result;
         }
 
-        public static int EvaluatePosition(Position position)
+        private int EvaluatePosition(Position position)
         {
             // Start with a small amount of randomness to prevent always choosing one of two equal moves
             int eval = Constants.Rand.Next(3) - 1;
@@ -29,7 +36,6 @@ namespace Chase.Engine
 
             int bluePieces = 0;
             int redPieces = 0;
-
 
             evaluations++;
 
@@ -69,7 +75,7 @@ namespace Chase.Engine
             return eval;
         }
 
-        private static SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth)
+        private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth)
         {
             // Evaluate the position
             int eval = EvaluatePosition(position);
@@ -101,6 +107,7 @@ namespace Chase.Engine
             };
 
             List<Move> moves = position.GetValidMoves();
+            int movenum = 1;
             foreach (Move move in moves)
             {
                 // Copy the board and make a move
@@ -108,7 +115,7 @@ namespace Chase.Engine
                 copy.MakeMove(move);
 
                 // Find opponents best counter move
-                SearchResult child = AlphaBetaSearch(copy, alpha, beta, depth - 1);
+                SearchResult child = AlphaBetaSearch(copy, alpha, beta, depth - 1, reportdepth - 1);
 
                 if (maximizingPlayer)
                 {
@@ -143,6 +150,19 @@ namespace Chase.Engine
                         // Alpha cutoff
                         break;
                     }
+                }
+
+                if (reportdepth > 0)
+                {
+                    // Report on the progress of our search
+                    OnNewResult(null, new SearchStatus()
+                    {
+                        BestMoveSoFar = best,
+                        SearchedNodes = evaluations,
+                        ElapsedMilliseconds = timer.ElapsedMilliseconds,
+                        CurrentMove = movenum++,
+                        TotalMoves = moves.Count
+                    });
                 }
             }
 

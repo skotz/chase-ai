@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Chase.Engine.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,19 +17,83 @@ namespace Chase.Engine
 
         private List<Position> History;
 
-        public string Status { get; private set; }
+        private ISearchAlgorithm search;
+        
+        public delegate void SearchProgress(SearchStatus status);
+
+        /// <summary>
+        /// Raised whenever there's an update to a pending search
+        /// </summary>
+        public event SearchProgress OnSearchProgress;
+
+        public delegate void FoundBestMove(SearchResult result);
+
+        /// <summary>
+        /// Raised whenever a best move was found
+        /// </summary>
+        public event FoundBestMove OnFoundBestMove;
+
+        public event EventHandler<Player> OnGameOver;
+
+        private BackgroundWorker worker;
+
+        private SearchResult bestMove;
 
         public Game()
         {
+            StartNew();
+
+            search = new Search();
+            search.OnNewResult += Search_OnNewResult;
+
+            worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.ProgressChanged += Worker_ProgressChanged;
+        }
+
+        public void StartNew()
+        {
             Board = Position.NewPosition();
             History = new List<Position>();
-
             History.Add(Board.Clone());
+        }
+
+        private void Search_OnNewResult(object sender, SearchStatus e)
+        {
+            worker.ReportProgress(100, e);
+        }
+
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            OnSearchProgress?.Invoke((SearchStatus)e.UserState);
+        }
+
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // Notify our subscribers that we found a move
+            OnFoundBestMove?.Invoke(bestMove);
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            int depth = (int)e.Argument;
+            bestMove = GetBestMove(depth);
         }
 
         public SearchResult GetBestMove(int searchDepth)
         {
-            return Search.GetBestMove(Board, searchDepth);
+            return search.GetBestMove(Board, searchDepth);
+        }
+
+        public void BeginGetBestMove(int searchDepth)
+        {
+            if (!worker.IsBusy)
+            {
+                // Start the search in a background thread
+                worker.RunWorkerAsync(searchDepth);
+            }
         }
 
         public void MakeMove(string move)
@@ -40,17 +106,40 @@ namespace Chase.Engine
         {
             Board.MakeMove(move);
             History.Add(Board.Clone());
-            
+
             // See if the game is over
-            int eval = Search.EvaluatePosition(Board);
-            if (eval == Constants.VictoryScore)
+            Player winner = GetWinner();
+            if (winner != Player.None)
             {
-                Status = "Blue Wins!";
+                OnGameOver?.Invoke(this, winner);
             }
-            else if (eval == -Constants.VictoryScore)
+        }
+
+        public Player GetWinner()
+        {
+            int bluePieces = 0;
+            int redPieces = 0;
+            for (int i = 0; i < Constants.BoardSize; i++)
             {
-                Status = "Red Wins!";
+                if (Board[i] > 0)
+                {
+                    bluePieces++;
+                }
+                else if (Board[i] < 0)
+                {
+                    redPieces++;
+                }
             }
+
+            if (bluePieces < Constants.MinimumPieceCount)
+            {
+                return Player.Red;
+            }
+            else if (redPieces < Constants.MinimumPieceCount)
+            {
+                return Player.Blue;
+            }
+            return Player.None;
         }
 
         public List<Move> GetAllMoves()
@@ -63,7 +152,6 @@ namespace Chase.Engine
             using (StreamWriter w = new StreamWriter(file))
             {
                 w.WriteLine("Moves: " + Board.MovesHistory);
-                w.WriteLine("Result: " + Status);
                 w.WriteLine("--------------------------------------");
                 foreach (Position position in History)
                 {
