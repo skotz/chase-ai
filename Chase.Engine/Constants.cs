@@ -8,6 +8,10 @@ namespace Chase.Engine
 {
     public class Constants
     {
+        public const int EvalPieceWeight = 100;
+
+        public const int EvalMobilityWeight = 1;
+
         public const int MaximumPieceCount = 10;
 
         public const int MinimumPieceCount = 5;
@@ -21,6 +25,8 @@ namespace Chase.Engine
         public const int BoardSize = 81;
 
         public const int InvalidMove = -1;
+
+        public const int InvalidTile = -2;
 
         public static Random Rand = new Random();
 

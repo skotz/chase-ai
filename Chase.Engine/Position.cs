@@ -10,7 +10,7 @@ namespace Chase.Engine
     {
         public int[] Board { get; private set; }
 
-        public Player PlayerToMove { get; private set; }
+        public Player PlayerToMove { get; set; }
 
         public int PointsToDistribute { get; private set; }
 
@@ -29,113 +29,151 @@ namespace Chase.Engine
 
         public void MakeMove(Move move)
         {
-            // Store the piece we're moving and clear the source tile
-            int sourcePiece = Board[move.FromIndex];
             Player opponent = PlayerToMove == Player.Blue ? Player.Red : Player.Blue;
-            Board[move.FromIndex] = 0;
 
-            // Are we bumping another one of our pieces?
-            if ((sourcePiece > 0 && Board[move.ToIndex] > 0) || (sourcePiece < 0 && Board[move.ToIndex] < 0))
+            if (move.Increment > 0)
             {
-                // Figure out what move needs to be made to move the bumbed piece
-                Direction direction = move.FinalDirection;
-                int targetIndex = GetDestinationIndexIfValidMove(move.ToIndex, ref direction, 1, true);
-                Move bumpMove = new Move()
+                if (move.FromIndex >= 0)
                 {
-                    FromIndex = move.ToIndex,
-                    ToIndex = targetIndex,
-                    Increment = 0,
-                    FinalDirection = direction
-                };
-
-                // Recursively make the bump move(s)
-                MakeMove(bumpMove);
-            }
-
-            // Are we capturing an enemy piece?
-            if ((sourcePiece > 0 && Board[move.ToIndex] < 0) || (sourcePiece < 0 && Board[move.ToIndex] > 0))
-            {
-                // Keep track of how many points the enemy will need to distribute to other dice
-                PointsToDistribute = Math.Abs(Board[move.ToIndex]);
-            }
-
-            // Are we landing on the chamber?
-            if (move.ToIndex == Constants.ChamberIndex)
-            {
-                // Figure out the point split
-                int leftValue = (int)Math.Ceiling(sourcePiece / 2.0);
-                int rightValue = leftValue * 2 > sourcePiece ? leftValue - 1 : leftValue;
-                
-                // Figure out the destination tiles based on the direction we were going when we landed on the chamber, and move new pieces there
-                int leftIndex = -1;
-                int rightIndex = -1;
-                Direction leftDirection = (Direction)(-1);
-                Direction rightDirection = (Direction)(-1);
-                switch (move.FinalDirection)
+                    // We're moving points from one die to an adjacent die
+                    Board[move.ToIndex] += Board[move.ToIndex] > 0 ? move.Increment : -move.Increment;
+                    Board[move.FromIndex] -= Board[move.FromIndex] > 0 ? move.Increment : -move.Increment;
+                }
+                else if (PointsToDistribute > 0)
                 {
-                    case Direction.DownLeft:
-                        leftIndex = 41;
-                        rightIndex = 31;
-                        leftDirection = Direction.Right;
-                        rightDirection = Direction.UpLeft;
-                        break;
-                    case Direction.UpLeft:
-                        leftIndex = 49;
-                        rightIndex = 41;
-                        leftDirection = Direction.DownLeft;
-                        rightDirection = Direction.Right;
-                        break;
-                    case Direction.DownRight:
-                        leftIndex = 32;
-                        rightIndex = 39;
-                        leftDirection = Direction.UpRight;
-                        rightDirection = Direction.Left;
-                        break;
-                    case Direction.UpRight:
-                        leftIndex = 39;
-                        rightIndex = 50;
-                        leftDirection = Direction.Left;
-                        rightDirection = Direction.DownRight;
-                        break;
-                    case Direction.Left:
-                        leftIndex = 50;
-                        rightIndex = 32;
-                        leftDirection = Direction.UpLeft;
-                        rightDirection = Direction.DownLeft;
-                        break;
-                    case Direction.Right:
-                        leftIndex = 31;
-                        rightIndex = 49;
-                        leftDirection = Direction.DownRight;
-                        rightDirection = Direction.UpRight;
-                        break;
+                    // We're adding points to a die after another one of our dice was captured
+                    Board[move.ToIndex] += Board[move.ToIndex] > 0 ? move.Increment : -move.Increment;
+
+                    // We've distributed at least some of the points
+                    PointsToDistribute -= move.Increment;
+
+                    // It's still our turn after adding points to a piece
+                    opponent = PlayerToMove;
+                }
+                else
+                {
+                    throw new Exception("Impossible State?");
+                }
+            }
+            else
+            {
+                // Store the piece we're moving and clear the source tile
+                int sourcePiece = Board[move.FromIndex];
+                Board[move.FromIndex] = 0;
+
+                // Are we bumping another one of our pieces?
+                if ((sourcePiece > 0 && Board[move.ToIndex] > 0) || (sourcePiece < 0 && Board[move.ToIndex] < 0))
+                {
+                    // Figure out what move needs to be made to move the bumbed piece
+                    Direction direction = move.FinalDirection;
+                    int targetIndex = GetDestinationIndexIfValidMove(move.ToIndex, ref direction, 1, true);
+                    Move bumpMove = new Move()
+                    {
+                        FromIndex = move.ToIndex,
+                        ToIndex = targetIndex,
+                        Increment = 0,
+                        FinalDirection = direction
+                    };
+
+                    // Recursively make the bump move(s)
+                    MakeMove(bumpMove);
                 }
 
-                // Create the new tiles and them recursively move them (in case they need to bump or capture)
-                Board[Constants.ChamberIndex] = leftValue;
-                Move leftMove = new Move()
+                // Are we capturing an enemy piece?
+                if ((sourcePiece > 0 && Board[move.ToIndex] < 0) || (sourcePiece < 0 && Board[move.ToIndex] > 0))
                 {
-                    FromIndex = Constants.ChamberIndex,
-                    ToIndex = leftIndex,
-                    Increment = 0,
-                    FinalDirection = leftDirection
-                };
-                MakeMove(leftMove);
-                Board[Constants.ChamberIndex] = rightValue;
-                Move rightMove = new Move()
+                    // Keep track of how many points the enemy will need to distribute to other dice
+                    PointsToDistribute = Math.Abs(Board[move.ToIndex]);
+                }
+
+                // Are we landing on the chamber?
+                if (move.ToIndex == Constants.ChamberIndex)
                 {
-                    FromIndex = Constants.ChamberIndex,
-                    ToIndex = rightIndex,
-                    Increment = 0,
-                    FinalDirection = rightDirection
-                };
-                MakeMove(rightMove);
-            }
-            
-            if (move.ToIndex != Constants.ChamberIndex)
-            {
-                // Assume the move is valid and go ahead and make it
-                Board[move.ToIndex] = sourcePiece;
+                    // Figure out the point split
+                    int leftValue = (int)Math.Ceiling(sourcePiece / 2.0);
+                    int rightValue = leftValue * 2 > sourcePiece ? leftValue - 1 : leftValue;
+
+                    // If we're at the piece limit, just slide to the left
+                    if (CountPieces(PlayerToMove) >= Constants.MaximumPieceCount)
+                    {
+                        leftValue = sourcePiece;
+                        rightValue = 0;
+                    }
+
+                    // Figure out the destination tiles based on the direction we were going when we landed on the chamber, and move new pieces there
+                    int leftIndex = -1;
+                    int rightIndex = -1;
+                    Direction leftDirection = (Direction)(-1);
+                    Direction rightDirection = (Direction)(-1);
+                    switch (move.FinalDirection)
+                    {
+                        case Direction.DownLeft:
+                            leftIndex = 41;
+                            rightIndex = 31;
+                            leftDirection = Direction.Right;
+                            rightDirection = Direction.UpLeft;
+                            break;
+                        case Direction.UpLeft:
+                            leftIndex = 49;
+                            rightIndex = 41;
+                            leftDirection = Direction.DownLeft;
+                            rightDirection = Direction.Right;
+                            break;
+                        case Direction.DownRight:
+                            leftIndex = 32;
+                            rightIndex = 39;
+                            leftDirection = Direction.UpRight;
+                            rightDirection = Direction.Left;
+                            break;
+                        case Direction.UpRight:
+                            leftIndex = 39;
+                            rightIndex = 50;
+                            leftDirection = Direction.Left;
+                            rightDirection = Direction.DownRight;
+                            break;
+                        case Direction.Left:
+                            leftIndex = 50;
+                            rightIndex = 32;
+                            leftDirection = Direction.UpLeft;
+                            rightDirection = Direction.DownLeft;
+                            break;
+                        case Direction.Right:
+                            leftIndex = 31;
+                            rightIndex = 49;
+                            leftDirection = Direction.DownRight;
+                            rightDirection = Direction.UpRight;
+                            break;
+                    }
+
+                    // Create the new tiles and them recursively move them (in case they need to bump or capture)
+                    Board[Constants.ChamberIndex] = leftValue;
+                    Move leftMove = new Move()
+                    {
+                        FromIndex = Constants.ChamberIndex,
+                        ToIndex = leftIndex,
+                        Increment = 0,
+                        FinalDirection = leftDirection
+                    };
+                    MakeMove(leftMove);
+                    if (rightValue > 0)
+                    {
+                        Board[Constants.ChamberIndex] = rightValue;
+                        Move rightMove = new Move()
+                        {
+                            FromIndex = Constants.ChamberIndex,
+                            ToIndex = rightIndex,
+                            Increment = 0,
+                            FinalDirection = rightDirection
+                        };
+                        MakeMove(rightMove);
+                    }
+                }
+
+                if (move.ToIndex != Constants.ChamberIndex)
+                {
+                    // Assume the move is valid and go ahead and make it
+                    Board[move.ToIndex] = sourcePiece;
+                }
             }
 
             // It's now the other player's turn to move
@@ -143,42 +181,119 @@ namespace Chase.Engine
             MovesHistory = string.IsNullOrEmpty(MovesHistory) ? move.ToString() : MovesHistory + " " + move.ToString();
         }
 
+        private int CountPieces(Player player)
+        {
+            int count = 0;
+            for (int i = 0; i < Constants.BoardSize; i++)
+            {
+                if ((Board[i] > 0 && player == Player.Blue) || (Board[i] < 0 && player == Player.Red))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
         public List<Move> GetValidMoves()
         {
             List<Move> moves = new List<Move>();
             int destination;
 
-            for (int i = 0; i < Constants.BoardSize; i++)
+            // We must first distribute points if a piece was just captured
+            if (PointsToDistribute > 0)
             {
-                // A piece can never reside on the chamber
-                if (i == Constants.ChamberIndex)
+                // Find our lowest valued piece
+                int smallest = Board.Where(x => PlayerToMove == Player.Blue ? x > 0 : x < 0).Select(x => Math.Abs(x)).Min();
+
+                // Find out how what the new value of this piece will be and if we have any points left over
+                int maxTo = Constants.MaximumPieceValue - smallest;
+                int max = Math.Min(maxTo, PointsToDistribute);
+
+                if (PlayerToMove == Player.Red)
                 {
-                    continue;
+                    smallest *= -1;
                 }
-                
-                // There's a piece on this tile
-                if (Board[i] != 0)
+
+                // Find all the pieces with this minimum value and create a move
+                for (int i = 0; i < Constants.BoardSize; i++)
                 {
-                    // Only look for moves for the player whose turn it is to move
-                    if ((PlayerToMove == Player.Blue && Board[i] > 0) || (PlayerToMove == Player.Red && Board[i] < 0))
+                    if (Board[i] == smallest)
                     {
-                        foreach (Direction direction in Constants.Directions)
+                        moves.Add(new Move()
                         {
-                            // Move in a direction for as many tiles as the value of the die on that tile
-                            Direction movement = direction;
-                            destination = GetDestinationIndexIfValidMove(i, ref movement, Math.Abs(Board[i]));
-                            
-                            if (destination != Constants.InvalidMove)
+                            FromIndex = -1,
+                            ToIndex = i,
+                            Increment = max,
+                            FinalDirection = (Direction)(-1)
+                        });
+                    }
+                }
+            }
+            else
+            {
+                // Physical moves
+                for (int i = 0; i < Constants.BoardSize; i++)
+                {
+                    // A piece can never reside on the chamber
+                    if (i == Constants.ChamberIndex)
+                    {
+                        continue;
+                    }
+
+                    // There's a piece on this tile
+                    if (Board[i] != 0)
+                    {
+                        // Only look for moves for the player whose turn it is to move
+                        if ((PlayerToMove == Player.Blue && Board[i] > 0) || (PlayerToMove == Player.Red && Board[i] < 0))
+                        {
+                            foreach (Direction direction in Constants.Directions)
                             {
-                                moves.Add(new Move()
+                                // Find physical moves
+                                // Move in a direction for as many tiles as the value of the die on that tile
+                                Direction movement = direction;
+                                destination = GetDestinationIndexIfValidMove(i, ref movement, Math.Abs(Board[i]));
+
+                                if (destination != Constants.InvalidMove)
                                 {
-                                    FromIndex = i,
-                                    ToIndex = destination,
-                                    Increment = 0,
-                                    FinalDirection = movement
-                                });
+                                    moves.Add(new Move()
+                                    {
+                                        FromIndex = i,
+                                        ToIndex = destination,
+                                        Increment = 0,
+                                        FinalDirection = movement
+                                    });
+                                }
+
+                                // Find point distribution moves
+                                if (Board[i] > 1 || Board[i] < -1)
+                                {
+                                    destination = GetDestinationIndexIfValidMove(i, ref movement, 1);
+
+                                    if (destination != Constants.InvalidMove)
+                                    {
+                                        if (PlayerToMove == Player.Blue && Board[destination] > 0 && Board[destination] < Constants.MaximumPieceValue)
+                                        {
+                                            // Figure out what we're allowed to transfer
+                                            int maxFrom = Math.Abs(Board[i]) - 1;
+                                            int maxTo = Constants.MaximumPieceValue - Math.Abs(Board[destination]);
+                                            int max = Math.Min(maxFrom, maxTo);
+
+                                            // Create a move for each possible point transfer
+                                            for (int points = 1; points <= max; points++)
+                                            {
+                                                moves.Add(new Move()
+                                                {
+                                                    FromIndex = i,
+                                                    ToIndex = destination,
+                                                    Increment = points,
+                                                    FinalDirection = movement
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                        }                                
+                        }
                     }
                 }
             }

@@ -28,6 +28,22 @@ namespace Chase.Engine
         /// </summary>
         public Direction FinalDirection { get; set; }
 
+        private static Dictionary<string, int> IndexLookup;
+
+        public static int GetIndexFromTile(string tile)
+        {
+            if (IndexLookup == null)
+            {
+                IndexLookup = new Dictionary<string, int>();
+                for (int i=0; i < Constants.BoardSize; i++)
+                {
+                    IndexLookup.Add(GetTileFromIndex(i), i);
+                }
+            }
+
+            return IndexLookup.ContainsKey(tile) ? IndexLookup[tile] : Constants.InvalidTile; 
+        }
+
         public static string GetTileFromIndex(int index)
         {
             // Indexes of each piece on the board...
@@ -95,10 +111,20 @@ namespace Chase.Engine
         {
             if (Increment > 0)
             {
-                return GetTileFromIndex(ToIndex) + "+=" + Increment;
+                if (FromIndex >= 0)
+                {
+                    // Distributing points to an adjacent piece
+                    return GetTileFromIndex(FromIndex) + "-" + GetTileFromIndex(ToIndex) + "+=" + Increment;
+                }
+                else
+                {
+                    // Distributing points after a capture
+                    return GetTileFromIndex(ToIndex) + "+=" + Increment;
+                }
             }
             else
             {
+                // Regular move
                 return GetTileFromIndex(FromIndex) + "-" + GetTileFromIndex(ToIndex);
             }
         }

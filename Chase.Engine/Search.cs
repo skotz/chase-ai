@@ -22,11 +22,18 @@ namespace Chase.Engine
 
         public static int EvaluatePosition(Position position)
         {
+            // Start with a small amount of randomness to prevent always choosing one of two equal moves
+            int eval = Constants.Rand.Next(3) - 1;
+
+            Player savePlayer = position.PlayerToMove;
+
             int bluePieces = 0;
             int redPieces = 0;
 
+
             evaluations++;
 
+            // Material (number of pieces) difference
             for (int i = 0; i < Constants.BoardSize; i++)
             {
                 if (position.Board[i] > 0)
@@ -38,18 +45,28 @@ namespace Chase.Engine
                     redPieces++;
                 }
             }
+            eval += (bluePieces - redPieces) * Constants.EvalPieceWeight;
 
+            // Mobility (number of valid moves) difference
+            position.PlayerToMove = Player.Blue;
+            int blueMoves = position.GetValidMoves().Count;
+            position.PlayerToMove = Player.Red;
+            int redMoves = position.GetValidMoves().Count;
+            eval += (blueMoves - redMoves) * Constants.EvalMobilityWeight;
+
+            // Game over scores
             if (bluePieces < Constants.MinimumPieceCount)
             {
-                return -10000;
+                return -Constants.VictoryScore;
             }
             if (redPieces < Constants.MinimumPieceCount)
             {
-                return 10000;
+                return Constants.VictoryScore;
             }
 
-            // Just a basic material difference calculation
-            return (bluePieces - redPieces) * 100 + Constants.Rand.Next(21) - 10;
+            position.PlayerToMove = savePlayer;
+
+            return eval;
         }
 
         private static SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth)
