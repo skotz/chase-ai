@@ -53,6 +53,9 @@ namespace Chase.Engine
             }
             else
             {
+                // Count my pieces (before clearing it in the next step)
+                int pieces = CountPieces(PlayerToMove);
+
                 // Store the piece we're moving and clear the source tile
                 int sourcePiece = Board[move.FromIndex];
                 Board[move.FromIndex] = 0;
@@ -90,7 +93,7 @@ namespace Chase.Engine
                     int rightValue = leftValue * 2 > sourcePiece ? leftValue - 1 : leftValue;
 
                     // If we're at the piece limit, just slide to the left
-                    if (CountPieces(PlayerToMove) >= Constants.MaximumPieceCount)
+                    if (pieces >= Constants.MaximumPieceCount)
                     {
                         leftValue = sourcePiece;
                         rightValue = 0;
@@ -267,23 +270,26 @@ namespace Chase.Engine
 
                                     if (destination != Constants.InvalidMove)
                                     {
-                                        if (PlayerToMove == Player.Blue && Board[destination] > 0 && Board[destination] < Constants.MaximumPieceValue)
+                                        if (Math.Abs(Board[destination]) < Constants.MaximumPieceValue)
                                         {
-                                            // Figure out what we're allowed to transfer
-                                            int maxFrom = Math.Abs(Board[i]) - 1;
-                                            int maxTo = Constants.MaximumPieceValue - Math.Abs(Board[destination]);
-                                            int max = Math.Min(maxFrom, maxTo);
-
-                                            // Create a move for each possible point transfer
-                                            for (int points = 1; points <= max; points++)
+                                            if ((Board[destination] > 0 && Board[i] > 0) || (Board[destination] < 0 && Board[i] < 0))
                                             {
-                                                moves.Add(new Move()
+                                                // Figure out what we're allowed to transfer
+                                                int maxFrom = Math.Abs(Board[i]) - 1;
+                                                int maxTo = Constants.MaximumPieceValue - Math.Abs(Board[destination]);
+                                                int max = Math.Min(maxFrom, maxTo);
+
+                                                // Create a move for each possible point transfer
+                                                for (int points = 1; points <= max; points++)
                                                 {
-                                                    FromIndex = i,
-                                                    ToIndex = destination,
-                                                    Increment = points,
-                                                    FinalDirection = movement
-                                                });
+                                                    moves.Add(new Move()
+                                                    {
+                                                        FromIndex = i,
+                                                        ToIndex = destination,
+                                                        Increment = points,
+                                                        FinalDirection = movement
+                                                    });
+                                                }
                                             }
                                         }
                                     }

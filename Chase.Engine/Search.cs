@@ -54,11 +54,11 @@ namespace Chase.Engine
             eval += (bluePieces - redPieces) * Constants.EvalPieceWeight;
 
             // Mobility (number of valid moves) difference
-            position.PlayerToMove = Player.Blue;
-            int blueMoves = position.GetValidMoves().Count;
-            position.PlayerToMove = Player.Red;
-            int redMoves = position.GetValidMoves().Count;
-            eval += (blueMoves - redMoves) * Constants.EvalMobilityWeight;
+            //position.PlayerToMove = Player.Blue;
+            //int blueMoves = position.GetValidMoves().Count;
+            //position.PlayerToMove = Player.Red;
+            //int redMoves = position.GetValidMoves().Count;
+            //eval += (blueMoves - redMoves) * Constants.EvalMobilityWeight;
 
             // Game over scores
             if (bluePieces < Constants.MinimumPieceCount)
