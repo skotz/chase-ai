@@ -206,70 +206,73 @@ namespace Chase.GUI
 
         private void ClickTile(int index)
         {
-            if (type == GameType.ComputerVsHuman && ((game.PlayerToMove == Player.Blue && !computerPlaysBlueToolStripMenuItem.Checked) || (game.PlayerToMove == Player.Red && computerPlaysBlueToolStripMenuItem.Checked)))
+            if (game.GetWinner() == Player.None)
             {
-                if (selectedFromTile >= 0)
+                if (type == GameType.ComputerVsHuman && ((game.PlayerToMove == Player.Blue && !computerPlaysBlueToolStripMenuItem.Checked) || (game.PlayerToMove == Player.Red && computerPlaysBlueToolStripMenuItem.Checked)))
                 {
-                    if (selectedFromTile == index)
+                    if (selectedFromTile >= 0)
                     {
-                        // Unselect an already selected tile
-                        selectedFromTile = -1;
-                    }
-                    else
-                    {
-                        // Select destination tile
-                        selectedToTile = index;
-
-                        List<Move> moves = game.GetAllMoves();
-                        List<Move> options = moves.Where(x => x.FromIndex == selectedFromTile && x.ToIndex == selectedToTile && x.Increment > 0).ToList();
-                        if (options.Count > 0)
+                        if (selectedFromTile == index)
                         {
-                            // If we're transferring points to an adjacent piece
-                            List<int> increments = options.Select(x => x.Increment).Distinct().ToList();
-
-                            add1.Enabled = increments.Contains(1);
-                            add2.Enabled = increments.Contains(2);
-                            add3.Enabled = increments.Contains(3);
-                            add4.Enabled = increments.Contains(4);
-                            add5.Enabled = increments.Contains(5);
-
-                            addPanel.Visible = true;
+                            // Unselect an already selected tile
+                            selectedFromTile = -1;
                         }
                         else
                         {
-                            options = moves.Where(x => x.FromIndex == selectedFromTile && x.ToIndex == selectedToTile && x.Increment == 0).ToList();
+                            // Select destination tile
+                            selectedToTile = index;
 
+                            List<Move> moves = game.GetAllMoves();
+                            List<Move> options = moves.Where(x => x.FromIndex == selectedFromTile && x.ToIndex == selectedToTile && x.Increment > 0).ToList();
                             if (options.Count > 0)
                             {
-                                Move move = options.First();
+                                // If we're transferring points to an adjacent piece
+                                List<int> increments = options.Select(x => x.Increment).Distinct().ToList();
 
-                                MakeMove(move);
+                                add1.Enabled = increments.Contains(1);
+                                add2.Enabled = increments.Contains(2);
+                                add3.Enabled = increments.Contains(3);
+                                add4.Enabled = increments.Contains(4);
+                                add5.Enabled = increments.Contains(5);
+
+                                addPanel.Visible = true;
                             }
                             else
                             {
-                                // Invalid from square?
-                                selectedFromTile = -1;
+                                options = moves.Where(x => x.FromIndex == selectedFromTile && x.ToIndex == selectedToTile && x.Increment == 0).ToList();
+
+                                if (options.Count > 0)
+                                {
+                                    Move move = options.First();
+
+                                    MakeMove(move);
+                                }
+                                else
+                                {
+                                    // Invalid from square?
+                                    selectedFromTile = -1;
+                                }
                             }
                         }
                     }
-                }
-                else
-                {
-                    List<Move> moves = game.GetAllMoves();
-                    if (moves.Count > 0 && moves.Any(x => x.FromIndex == index))
+                    else
                     {
-                        // Select a source tile
-                        selectedFromTile = index;
-                    }
-
-                    // If the move we need to make is filling in points after a capture
-                    if (moves[0].Increment > 0)
-                    {
-                        Move move = moves.FirstOrDefault(x => x.ToIndex == index);
-
-                        if (move != null)
+                        List<Move> moves = game.GetAllMoves();
+                        if (moves.Count > 0 && moves.Any(x => x.FromIndex == index))
                         {
-                            MakeMove(move);
+                            // Select a source tile
+                            selectedFromTile = index;
+                        }
+
+                        // If the move we need to make is filling in points after a capture
+                        if (moves[0].Increment > 0)
+                        {
+                            Move move = moves.FirstOrDefault(x => x.ToIndex == index);
+
+                            if (move != null)
+                            {
+                                MakeMove(move);
+                            }
                         }
                     }
                 }
@@ -346,7 +349,7 @@ namespace Chase.GUI
             polygon_path.AddPolygon(pts);
             Region polygon_region = new Region(polygon_path);
 
-            Button button = new Button();
+            HexButton button = new HexButton();
             button.Location = location;
             button.Name = "tile" + moveIndex;
             button.Size = new Size((int)pts[3].X, (int)pts[2].Y);
@@ -357,8 +360,10 @@ namespace Chase.GUI
             button.ForeColor = Color.Red;
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Region = polygon_region;
+            button.Points = pts;
             button.SetBounds(button.Location.X, button.Location.Y, (int)pts[3].X + space * 2, (int)pts[2].Y + space * 2);
             button.Click += Button_Click;
+            button.DisplayTileLabel = () => showTileLabelsToolStripMenuItem.Checked;
             gamePanel.Controls.Add(button);
 
             lowerright = new Point(button.Location.X + button.Width - space * 2, button.Location.Y + button.Height - space * 2);
@@ -432,6 +437,11 @@ namespace Chase.GUI
         {
             Clipboard.SetText(game.Board.ToStringNotation());
             MessageBox.Show("Position copied to clipboard!", "Chase", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void showTileLabelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RefreshBoard();
         }
     }
 }

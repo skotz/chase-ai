@@ -31,6 +31,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
             this.gamePanel = new System.Windows.Forms.Panel();
+            this.csnPanel = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.csnInput = new System.Windows.Forms.TextBox();
             this.addPanel = new System.Windows.Forms.Panel();
             this.addNone = new System.Windows.Forms.Button();
             this.add5 = new System.Windows.Forms.Button();
@@ -42,31 +46,29 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.searchStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selfPlayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.highlightValidMovesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.computerPlaysBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.infoLabel = new System.Windows.Forms.Label();
-            this.csnPanel = new System.Windows.Forms.Panel();
-            this.csnInput = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.loadPositionFromCSNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.showThreatenedPiecesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyCSNFromPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveHistory = new System.Windows.Forms.DataGridView();
             this.MoveNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.player1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.player2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.showComputerAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.infoLabel = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selfPlayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.loadPositionFromCSNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCSNFromPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.computerPlaysBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.highlightValidMovesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showThreatenedPiecesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.showComputerAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showTileLabelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gamePanel.SuspendLayout();
+            this.csnPanel.SuspendLayout();
             this.addPanel.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -77,9 +79,8 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            this.csnPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // gamePanel
@@ -91,6 +92,47 @@
             this.gamePanel.Name = "gamePanel";
             this.gamePanel.Size = new System.Drawing.Size(774, 656);
             this.gamePanel.TabIndex = 7;
+            // 
+            // csnPanel
+            // 
+            this.csnPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.csnPanel.Controls.Add(this.button1);
+            this.csnPanel.Controls.Add(this.label1);
+            this.csnPanel.Controls.Add(this.csnInput);
+            this.csnPanel.Location = new System.Drawing.Point(49, 145);
+            this.csnPanel.Name = "csnPanel";
+            this.csnPanel.Size = new System.Drawing.Size(672, 100);
+            this.csnPanel.TabIndex = 1;
+            this.csnPanel.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(575, 20);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Cancel";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(16, 26);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(338, 20);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Paste a Chase String Notation position to load:";
+            // 
+            // csnInput
+            // 
+            this.csnInput.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.csnInput.Location = new System.Drawing.Point(20, 49);
+            this.csnInput.Name = "csnInput";
+            this.csnInput.Size = new System.Drawing.Size(630, 30);
+            this.csnInput.TabIndex = 0;
+            this.csnInput.TextChanged += new System.EventHandler(this.csnInput_TextChanged);
             // 
             // addPanel
             // 
@@ -233,163 +275,6 @@
             this.splitContainer1.SplitterDistance = 778;
             this.splitContainer1.TabIndex = 8;
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gameToolStripMenuItem,
-            this.optionsToolStripMenuItem,
-            this.testToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1095, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // gameToolStripMenuItem
-            // 
-            this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newGameToolStripMenuItem,
-            this.selfPlayToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.loadPositionFromCSNToolStripMenuItem,
-            this.copyCSNFromPositionToolStripMenuItem});
-            this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
-            this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.gameToolStripMenuItem.Text = "&Game";
-            // 
-            // newGameToolStripMenuItem
-            // 
-            this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.newGameToolStripMenuItem.Text = "&New Game";
-            this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
-            // 
-            // selfPlayToolStripMenuItem
-            // 
-            this.selfPlayToolStripMenuItem.Name = "selfPlayToolStripMenuItem";
-            this.selfPlayToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.selfPlayToolStripMenuItem.Text = "Computer Self &Play";
-            this.selfPlayToolStripMenuItem.Click += new System.EventHandler(this.selfPlayToolStripMenuItem_Click);
-            // 
-            // optionsToolStripMenuItem
-            // 
-            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.computerPlaysBlueToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.highlightValidMovesToolStripMenuItem,
-            this.showThreatenedPiecesToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.showComputerAnalysisToolStripMenuItem});
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.optionsToolStripMenuItem.Text = "&Options";
-            // 
-            // highlightValidMovesToolStripMenuItem
-            // 
-            this.highlightValidMovesToolStripMenuItem.Checked = true;
-            this.highlightValidMovesToolStripMenuItem.CheckOnClick = true;
-            this.highlightValidMovesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.highlightValidMovesToolStripMenuItem.Name = "highlightValidMovesToolStripMenuItem";
-            this.highlightValidMovesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.highlightValidMovesToolStripMenuItem.Text = "Highlight Valid &Moves";
-            // 
-            // computerPlaysBlueToolStripMenuItem
-            // 
-            this.computerPlaysBlueToolStripMenuItem.Checked = true;
-            this.computerPlaysBlueToolStripMenuItem.CheckOnClick = true;
-            this.computerPlaysBlueToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.computerPlaysBlueToolStripMenuItem.Name = "computerPlaysBlueToolStripMenuItem";
-            this.computerPlaysBlueToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.computerPlaysBlueToolStripMenuItem.Text = "Computer Plays Blue";
-            // 
-            // testToolStripMenuItem
-            // 
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-            this.testToolStripMenuItem.Text = "&Test";
-            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
-            // 
-            // infoLabel
-            // 
-            this.infoLabel.AutoSize = true;
-            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoLabel.Location = new System.Drawing.Point(3, 3);
-            this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(128, 24);
-            this.infoLabel.TabIndex = 0;
-            this.infoLabel.Text = "Ready to play!";
-            this.infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // csnPanel
-            // 
-            this.csnPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.csnPanel.Controls.Add(this.button1);
-            this.csnPanel.Controls.Add(this.label1);
-            this.csnPanel.Controls.Add(this.csnInput);
-            this.csnPanel.Location = new System.Drawing.Point(49, 145);
-            this.csnPanel.Name = "csnPanel";
-            this.csnPanel.Size = new System.Drawing.Size(672, 100);
-            this.csnPanel.TabIndex = 1;
-            this.csnPanel.Visible = false;
-            // 
-            // csnInput
-            // 
-            this.csnInput.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.csnInput.Location = new System.Drawing.Point(20, 49);
-            this.csnInput.Name = "csnInput";
-            this.csnInput.Size = new System.Drawing.Size(630, 30);
-            this.csnInput.TabIndex = 0;
-            this.csnInput.TextChanged += new System.EventHandler(this.csnInput_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(16, 26);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(338, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Paste a Chase String Notation position to load:";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(575, 20);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Cancel";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // loadPositionFromCSNToolStripMenuItem
-            // 
-            this.loadPositionFromCSNToolStripMenuItem.Name = "loadPositionFromCSNToolStripMenuItem";
-            this.loadPositionFromCSNToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.loadPositionFromCSNToolStripMenuItem.Text = "&Load Position from CSN";
-            this.loadPositionFromCSNToolStripMenuItem.Click += new System.EventHandler(this.loadPositionFromCSNToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
-            // 
-            // showThreatenedPiecesToolStripMenuItem
-            // 
-            this.showThreatenedPiecesToolStripMenuItem.Checked = true;
-            this.showThreatenedPiecesToolStripMenuItem.CheckOnClick = true;
-            this.showThreatenedPiecesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showThreatenedPiecesToolStripMenuItem.Name = "showThreatenedPiecesToolStripMenuItem";
-            this.showThreatenedPiecesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.showThreatenedPiecesToolStripMenuItem.Text = "Highlight &Threatened Pieces";
-            // 
-            // copyCSNFromPositionToolStripMenuItem
-            // 
-            this.copyCSNFromPositionToolStripMenuItem.Name = "copyCSNFromPositionToolStripMenuItem";
-            this.copyCSNFromPositionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.copyCSNFromPositionToolStripMenuItem.Text = "&Copy CSN from Position";
-            this.copyCSNFromPositionToolStripMenuItem.Click += new System.EventHandler(this.copyCSNFromPositionToolStripMenuItem_Click);
-            // 
             // moveHistory
             // 
             this.moveHistory.AllowUserToAddRows = false;
@@ -444,6 +329,126 @@
             this.player2.ReadOnly = true;
             this.player2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // infoLabel
+            // 
+            this.infoLabel.AutoSize = true;
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoLabel.Location = new System.Drawing.Point(3, 3);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(128, 24);
+            this.infoLabel.TabIndex = 0;
+            this.infoLabel.Text = "Ready to play!";
+            this.infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gameToolStripMenuItem,
+            this.optionsToolStripMenuItem,
+            this.testToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1095, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // gameToolStripMenuItem
+            // 
+            this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newGameToolStripMenuItem,
+            this.selfPlayToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.loadPositionFromCSNToolStripMenuItem,
+            this.copyCSNFromPositionToolStripMenuItem});
+            this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
+            this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.gameToolStripMenuItem.Text = "&Game";
+            // 
+            // newGameToolStripMenuItem
+            // 
+            this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.newGameToolStripMenuItem.Text = "&New Game";
+            this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
+            // 
+            // selfPlayToolStripMenuItem
+            // 
+            this.selfPlayToolStripMenuItem.Name = "selfPlayToolStripMenuItem";
+            this.selfPlayToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.selfPlayToolStripMenuItem.Text = "Computer Self &Play";
+            this.selfPlayToolStripMenuItem.Click += new System.EventHandler(this.selfPlayToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
+            // 
+            // loadPositionFromCSNToolStripMenuItem
+            // 
+            this.loadPositionFromCSNToolStripMenuItem.Name = "loadPositionFromCSNToolStripMenuItem";
+            this.loadPositionFromCSNToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.loadPositionFromCSNToolStripMenuItem.Text = "&Load Position from CSN";
+            this.loadPositionFromCSNToolStripMenuItem.Click += new System.EventHandler(this.loadPositionFromCSNToolStripMenuItem_Click);
+            // 
+            // copyCSNFromPositionToolStripMenuItem
+            // 
+            this.copyCSNFromPositionToolStripMenuItem.Name = "copyCSNFromPositionToolStripMenuItem";
+            this.copyCSNFromPositionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.copyCSNFromPositionToolStripMenuItem.Text = "&Copy CSN from Position";
+            this.copyCSNFromPositionToolStripMenuItem.Click += new System.EventHandler(this.copyCSNFromPositionToolStripMenuItem_Click);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.computerPlaysBlueToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.highlightValidMovesToolStripMenuItem,
+            this.showThreatenedPiecesToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.showComputerAnalysisToolStripMenuItem,
+            this.showTileLabelsToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "&Options";
+            // 
+            // computerPlaysBlueToolStripMenuItem
+            // 
+            this.computerPlaysBlueToolStripMenuItem.Checked = true;
+            this.computerPlaysBlueToolStripMenuItem.CheckOnClick = true;
+            this.computerPlaysBlueToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.computerPlaysBlueToolStripMenuItem.Name = "computerPlaysBlueToolStripMenuItem";
+            this.computerPlaysBlueToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.computerPlaysBlueToolStripMenuItem.Text = "Computer Plays Blue";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
+            // 
+            // highlightValidMovesToolStripMenuItem
+            // 
+            this.highlightValidMovesToolStripMenuItem.Checked = true;
+            this.highlightValidMovesToolStripMenuItem.CheckOnClick = true;
+            this.highlightValidMovesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.highlightValidMovesToolStripMenuItem.Name = "highlightValidMovesToolStripMenuItem";
+            this.highlightValidMovesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.highlightValidMovesToolStripMenuItem.Text = "Highlight Valid &Moves";
+            // 
+            // showThreatenedPiecesToolStripMenuItem
+            // 
+            this.showThreatenedPiecesToolStripMenuItem.Checked = true;
+            this.showThreatenedPiecesToolStripMenuItem.CheckOnClick = true;
+            this.showThreatenedPiecesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showThreatenedPiecesToolStripMenuItem.Name = "showThreatenedPiecesToolStripMenuItem";
+            this.showThreatenedPiecesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showThreatenedPiecesToolStripMenuItem.Text = "Highlight &Threatened Pieces";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(220, 6);
+            // 
             // showComputerAnalysisToolStripMenuItem
             // 
             this.showComputerAnalysisToolStripMenuItem.Checked = true;
@@ -453,15 +458,22 @@
             this.showComputerAnalysisToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.showComputerAnalysisToolStripMenuItem.Text = "Show Computer &Analysis";
             // 
-            // toolStripSeparator2
+            // testToolStripMenuItem
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.testToolStripMenuItem.Text = "&Test";
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
-            // toolStripSeparator3
+            // showTileLabelsToolStripMenuItem
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(220, 6);
+            this.showTileLabelsToolStripMenuItem.Checked = true;
+            this.showTileLabelsToolStripMenuItem.CheckOnClick = true;
+            this.showTileLabelsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showTileLabelsToolStripMenuItem.Name = "showTileLabelsToolStripMenuItem";
+            this.showTileLabelsToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showTileLabelsToolStripMenuItem.Text = "Show Tile &Labels";
+            this.showTileLabelsToolStripMenuItem.Click += new System.EventHandler(this.showTileLabelsToolStripMenuItem_Click);
             // 
             // GameForm
             // 
@@ -476,6 +488,8 @@
             this.Name = "GameForm";
             this.Text = "Chase by Scott Clayton";
             this.gamePanel.ResumeLayout(false);
+            this.csnPanel.ResumeLayout(false);
+            this.csnPanel.PerformLayout();
             this.addPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
@@ -491,11 +505,9 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.csnPanel.ResumeLayout(false);
-            this.csnPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -537,6 +549,7 @@
         private System.Windows.Forms.ToolStripMenuItem showComputerAnalysisToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem showTileLabelsToolStripMenuItem;
     }
 }
 
