@@ -161,7 +161,14 @@ namespace Chase.GUI
             }
 
             // Status information
-            infoLabel.Text = game.PlayerToMove.ToString() + "'s Turn";
+            if (type == GameType.NotStarted)
+            {
+                infoLabel.Text = "Ready";
+            }
+            else
+            {
+                infoLabel.Text = game.PlayerToMove.ToString() + "'s Turn";
+            }
         }
 
         private void ClickTile(int index)
@@ -215,18 +222,21 @@ namespace Chase.GUI
                 }
                 else
                 {
-                    // Select a source tile
-                    selectedFromTile = index;
-
-                    // If the move we need to make is filling in points after a capture
                     List<Move> moves = game.GetAllMoves();
-                    if (moves.Count > 0 && moves[0].Increment > 0)
+                    if (moves.Count > 0 && moves.Any(x => x.FromIndex == index))
                     {
-                        Move move = moves.FirstOrDefault(x => x.ToIndex == selectedFromTile);
+                        // Select a source tile
+                        selectedFromTile = index;
 
-                        if (move != null)
+                        // If the move we need to make is filling in points after a capture
+                        if (moves[0].Increment > 0)
                         {
-                            MakeMove(move);
+                            Move move = moves.FirstOrDefault(x => x.ToIndex == selectedFromTile);
+
+                            if (move != null)
+                            {
+                                MakeMove(move);
+                            }
                         }
                     }
                 }
