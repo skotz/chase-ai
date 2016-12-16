@@ -32,7 +32,7 @@ namespace Chase.Engine
             evaluations++;
 
             // Start with a small amount of randomness to prevent always choosing one of two equal moves
-            int eval = Constants.Rand.Next(3) - 1;            
+            int eval = Constants.Rand.Next(3) - 1;
 
             // Figure in how many pieces we have over our opponent
             eval += EvaluateMaterial(position);
@@ -75,7 +75,25 @@ namespace Chase.Engine
             }
             else
             {
-                return (bluePieces - redPieces) * Constants.EvalPieceWeight;
+                int eval = 0;
+
+                // Just the difference between the piece count between blue and red
+                // eval += (bluePieces - redPieces) * Constants.EvalPieceWeight;
+
+                // Just subtracting red from blue results in the same score for (blue = 6, red = 5) and (blue = 10, red = 9) even thought the lead of 1 means more in the first case
+                // This calculation figures in that an extra piece means more the fewer you have, so... 
+                // (blue = 6, red = 5) --> (6 * 100) / 5 - 100 = 20
+                // (blue = 10, red = 9) --> (10 * 100) / 9 - 100 = 11
+                if (bluePieces > redPieces)
+                {
+                    eval += (bluePieces * 100) / redPieces - 100;
+                }
+                else if (redPieces > bluePieces)
+                {
+                    eval += (redPieces * -100) / bluePieces - 100;
+                }
+
+                return eval * Constants.EvalPieceWeight;
             }
         }
         
@@ -167,6 +185,12 @@ namespace Chase.Engine
                 // Copy the board and make a move
                 Position copy = position.Clone();
                 copy.MakeMove(move);
+
+                // Don't repeat positions
+                if (copy.LastMoveWasRepetition())
+                {
+                    continue;
+                }
 
                 // Find opponents best counter move
                 SearchResult child = AlphaBetaSearch(copy, alpha, beta, depth - 1, reportdepth - 1);

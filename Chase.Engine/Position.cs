@@ -18,6 +18,10 @@ namespace Chase.Engine
 
         public string MovesHistory { get; set; }
 
+        private ulong[] pastPositions;
+
+        private int lastHashIndex;
+
         public Position()
         {
         }
@@ -28,6 +32,11 @@ namespace Chase.Engine
         }
 
         public void MakeMove(Move move)
+        {
+            MakeMove(move, true, -1);
+        }
+
+        private void MakeMove(Move move, bool firstLevel, int basePieceCount)
         {
             Player opponent = PlayerToMove == Player.Blue ? Player.Red : Player.Blue;
 
@@ -54,7 +63,10 @@ namespace Chase.Engine
             else
             {
                 // Count my pieces (before clearing it in the next step)
-                int pieces = CountPieces(PlayerToMove);
+                if (basePieceCount < 0)
+                {
+                    basePieceCount = CountPieces(PlayerToMove);
+                }
 
                 // Store the piece we're moving and clear the source tile
                 int sourcePiece = Board[move.FromIndex];
@@ -75,7 +87,7 @@ namespace Chase.Engine
                     };
 
                     // Recursively make the bump move(s)
-                    MakeMove(bumpMove);
+                    MakeMove(bumpMove, false, basePieceCount);
                 }
 
                 // Are we capturing an enemy piece?
@@ -94,7 +106,7 @@ namespace Chase.Engine
                     int rightValue = leftValue * 2 > sourcePieceValue ? leftValue - 1 : leftValue;
 
                     // If we're at the piece limit, just slide to the left
-                    if (pieces >= Constants.MaximumPieceCount)
+                    if (basePieceCount >= Constants.MaximumPieceCount)
                     {
                         leftValue = sourcePiece;
                         rightValue = 0;
@@ -154,7 +166,7 @@ namespace Chase.Engine
                         Increment = 0,
                         FinalDirection = leftDirection
                     };
-                    MakeMove(leftMove);
+                    MakeMove(leftMove, false, basePieceCount);
                     if (rightValue > 0)
                     {
                         Board[Constants.ChamberIndex] = sourcePiece > 0 ? rightValue : -rightValue;
@@ -165,7 +177,7 @@ namespace Chase.Engine
                             Increment = 0,
                             FinalDirection = rightDirection
                         };
-                        MakeMove(rightMove);
+                        MakeMove(rightMove, false, basePieceCount);
                     }
                 }
 
@@ -179,6 +191,18 @@ namespace Chase.Engine
             // It's now the other player's turn to move
             PlayerToMove = opponent;
             MovesHistory = string.IsNullOrEmpty(MovesHistory) ? move.ToString() : MovesHistory + " " + move.ToString();
+
+            if (pastPositions == null)
+            {
+                pastPositions = new ulong[Constants.MaxPreviousHashes];
+                lastHashIndex = 0;
+            }
+
+            if (firstLevel)
+            {
+                pastPositions[lastHashIndex] = GetHash();
+                lastHashIndex = (lastHashIndex + 1) % Constants.MaxPreviousHashes;
+            }
         }
 
         private int CountPieces(Player player)
@@ -532,6 +556,24 @@ namespace Chase.Engine
             }
         }
 
+        public bool LastMoveWasRepetition()
+        {
+            if (pastPositions != null)
+            {
+                ulong last = pastPositions[(lastHashIndex + Constants.MaxPreviousHashes - 1) % Constants.MaxPreviousHashes];
+                for (int i = 1; i < Constants.MaxPreviousHashes; i++)
+                {
+                    int index = (lastHashIndex - 1 + Constants.MaxPreviousHashes - i) % Constants.MaxPreviousHashes;
+                    if (last == pastPositions[index])
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public void SetPiece(int index, int pieceValue)
         {
             Board[index] = pieceValue;
@@ -693,12 +735,39 @@ namespace Chase.Engine
             return csn;
         }
 
+        public ulong GetHash()
+        {
+            ulong hash = 0UL;
+
+            if (PlayerToMove == Player.Blue)
+            {
+                hash ^= Constants.HashRandomSideToMoveBlue;
+            }
+
+            for (int index = 0; index < Constants.BoardSize; index++)
+            {
+                if (Board[index] != 0)
+                {
+                    hash ^= Constants.HashRandomTilePiece[index, Board[index] + 6];
+                }
+            }
+
+            return hash;
+        }
+
         public Position Clone()
         {
             Position position = new Position();
 
             position.Board = new int[Constants.BoardSize];
             Array.Copy(Board, position.Board, Board.Length);
+
+            if (pastPositions != null)
+            {
+                position.lastHashIndex = lastHashIndex;
+                position.pastPositions = new ulong[pastPositions.Length];
+                Array.Copy(pastPositions, position.pastPositions, pastPositions.Length);
+            }
 
             position.PlayerToMove = PlayerToMove;
             position.PointsToDistribute = PointsToDistribute;

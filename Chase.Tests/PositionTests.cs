@@ -128,5 +128,16 @@ namespace Chase.Tests
 
             Assert.AreEqual(original, csn);
         }
+
+        [TestMethod]
+        public void TestGetHash()
+        {
+            Position position = Position.FromStringNotation("a2de2ba/9/b8/Ec2c1E2/C1DB4b/5B3/9/9/AA3A2A b");
+
+            ulong hash = position.GetHash();
+
+            // This test mainly verifies that this position always hashes to the same value (meaning the algorithm hasn't changed)
+            Assert.AreEqual(16319590400867719686UL, hash);
+        }
     }
 }

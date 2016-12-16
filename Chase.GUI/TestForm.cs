@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -93,6 +95,38 @@ namespace Chase.GUI
             }
 
             game.SaveGameToFile("game.txt");
+        }
+
+        public ulong NextInt64(RandomNumberGenerator rnd)
+        {
+            byte[] buffer = new byte[sizeof(ulong)];
+            rnd.GetBytes(buffer);
+            return BitConverter.ToUInt64(buffer, 0);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            // Programmatically generate the static multidimensional array of random numbers for zobrist-like hashes
+            // Don't just want to do this on program load since we want it to be predictable across program loads
+            RandomNumberGenerator rng = new RNGCryptoServiceProvider();
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("\r\n{");
+            // One per tile
+            for (int i = 0; i < Constants.BoardSize; i++)
+            {
+                sb.Append("\r\n    {");
+                // One per possible piece on the tile
+                // We're only going to use 12, but create 13 so we can just take the square value + 6 to change the range of [-6,6] to [0,12]
+                for (int j = 0; j < 13; j++)
+                {
+                    sb.Append("\r\n        " + string.Format("0x{0:X}", NextInt64(rng)) + ",");
+                }
+                sb.Append("\r\n    },");
+            }
+            sb.Append("\r\n}");
+
+            richTextBox1.Text = Regex.Replace(sb.ToString(), @"\,([^}{,]*)\}", m => m.ToString().Substring(1));
         }
     }
 }
