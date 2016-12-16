@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
             this.gamePanel = new System.Windows.Forms.Panel();
             this.addPanel = new System.Windows.Forms.Panel();
@@ -58,6 +59,13 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showThreatenedPiecesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCSNFromPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveHistory = new System.Windows.Forms.DataGridView();
+            this.MoveNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.player1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.player2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.showComputerAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.gamePanel.SuspendLayout();
             this.addPanel.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
@@ -71,6 +79,7 @@
             this.splitContainer1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.csnPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).BeginInit();
             this.SuspendLayout();
             // 
             // gamePanel
@@ -218,6 +227,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.moveHistory);
             this.splitContainer1.Panel2.Controls.Add(this.infoLabel);
             this.splitContainer1.Size = new System.Drawing.Size(1095, 662);
             this.splitContainer1.SplitterDistance = 778;
@@ -265,9 +275,12 @@
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.highlightValidMovesToolStripMenuItem,
             this.computerPlaysBlueToolStripMenuItem,
-            this.showThreatenedPiecesToolStripMenuItem});
+            this.toolStripSeparator2,
+            this.highlightValidMovesToolStripMenuItem,
+            this.showThreatenedPiecesToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.showComputerAnalysisToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "&Options";
@@ -278,8 +291,8 @@
             this.highlightValidMovesToolStripMenuItem.CheckOnClick = true;
             this.highlightValidMovesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.highlightValidMovesToolStripMenuItem.Name = "highlightValidMovesToolStripMenuItem";
-            this.highlightValidMovesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.highlightValidMovesToolStripMenuItem.Text = "&Highlight Valid Moves";
+            this.highlightValidMovesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.highlightValidMovesToolStripMenuItem.Text = "Highlight Valid &Moves";
             // 
             // computerPlaysBlueToolStripMenuItem
             // 
@@ -287,7 +300,7 @@
             this.computerPlaysBlueToolStripMenuItem.CheckOnClick = true;
             this.computerPlaysBlueToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.computerPlaysBlueToolStripMenuItem.Name = "computerPlaysBlueToolStripMenuItem";
-            this.computerPlaysBlueToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.computerPlaysBlueToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.computerPlaysBlueToolStripMenuItem.Text = "Computer Plays Blue";
             // 
             // testToolStripMenuItem
@@ -367,8 +380,8 @@
             this.showThreatenedPiecesToolStripMenuItem.CheckOnClick = true;
             this.showThreatenedPiecesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showThreatenedPiecesToolStripMenuItem.Name = "showThreatenedPiecesToolStripMenuItem";
-            this.showThreatenedPiecesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.showThreatenedPiecesToolStripMenuItem.Text = "&Show Threatened Pieces";
+            this.showThreatenedPiecesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showThreatenedPiecesToolStripMenuItem.Text = "Highlight &Threatened Pieces";
             // 
             // copyCSNFromPositionToolStripMenuItem
             // 
@@ -376,6 +389,79 @@
             this.copyCSNFromPositionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.copyCSNFromPositionToolStripMenuItem.Text = "&Copy CSN from Position";
             this.copyCSNFromPositionToolStripMenuItem.Click += new System.EventHandler(this.copyCSNFromPositionToolStripMenuItem_Click);
+            // 
+            // moveHistory
+            // 
+            this.moveHistory.AllowUserToAddRows = false;
+            this.moveHistory.AllowUserToDeleteRows = false;
+            this.moveHistory.AllowUserToResizeColumns = false;
+            this.moveHistory.AllowUserToResizeRows = false;
+            this.moveHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.moveHistory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.MoveNumber,
+            this.player1,
+            this.player2});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.moveHistory.DefaultCellStyle = dataGridViewCellStyle1;
+            this.moveHistory.Location = new System.Drawing.Point(7, 30);
+            this.moveHistory.Name = "moveHistory";
+            this.moveHistory.ReadOnly = true;
+            this.moveHistory.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.moveHistory.RowHeadersVisible = false;
+            this.moveHistory.Size = new System.Drawing.Size(294, 629);
+            this.moveHistory.TabIndex = 1;
+            // 
+            // MoveNumber
+            // 
+            this.MoveNumber.DataPropertyName = "Number";
+            this.MoveNumber.HeaderText = "#";
+            this.MoveNumber.Name = "MoveNumber";
+            this.MoveNumber.ReadOnly = true;
+            this.MoveNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.MoveNumber.Width = 50;
+            // 
+            // player1
+            // 
+            this.player1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.player1.DataPropertyName = "RedMove";
+            this.player1.HeaderText = "Red";
+            this.player1.Name = "player1";
+            this.player1.ReadOnly = true;
+            this.player1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // player2
+            // 
+            this.player2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.player2.DataPropertyName = "BlueMove";
+            this.player2.HeaderText = "Blue";
+            this.player2.Name = "player2";
+            this.player2.ReadOnly = true;
+            this.player2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // showComputerAnalysisToolStripMenuItem
+            // 
+            this.showComputerAnalysisToolStripMenuItem.Checked = true;
+            this.showComputerAnalysisToolStripMenuItem.CheckOnClick = true;
+            this.showComputerAnalysisToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showComputerAnalysisToolStripMenuItem.Name = "showComputerAnalysisToolStripMenuItem";
+            this.showComputerAnalysisToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showComputerAnalysisToolStripMenuItem.Text = "Show Computer &Analysis";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(220, 6);
             // 
             // GameForm
             // 
@@ -409,6 +495,7 @@
             this.menuStrip1.PerformLayout();
             this.csnPanel.ResumeLayout(false);
             this.csnPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -443,6 +530,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem showThreatenedPiecesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyCSNFromPositionToolStripMenuItem;
+        private System.Windows.Forms.DataGridView moveHistory;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MoveNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn player1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn player2;
+        private System.Windows.Forms.ToolStripMenuItem showComputerAnalysisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 

@@ -15,7 +15,9 @@ namespace Chase.Engine
 
         public Player PlayerToMove { get { return Board.PlayerToMove; } }
 
-        private List<Position> History;
+        private List<Position> BoardHistory;
+
+        private List<Move> MoveHistory;
 
         private ISearchAlgorithm search;
         
@@ -62,8 +64,10 @@ namespace Chase.Engine
         {
             Board = position;
 
-            History = new List<Position>();
-            History.Add(Board.Clone());
+            BoardHistory = new List<Position>();
+            BoardHistory.Add(Board.Clone());
+
+            MoveHistory = new List<Move>();
         }
 
         private void Search_OnNewResult(object sender, SearchStatus e)
@@ -118,13 +122,14 @@ namespace Chase.Engine
         public void MakeMove(string move)
         {
             Board.MakeMove(move);
-            History.Add(Board.Clone());
+            BoardHistory.Add(Board.Clone());
         }
 
         public void MakeMove(Move move)
         {
             Board.MakeMove(move);
-            History.Add(Board.Clone());
+            BoardHistory.Add(Board.Clone());
+            MoveHistory.Add(move);
 
             // See if the game is over
             Player winner = GetWinner();
@@ -164,6 +169,45 @@ namespace Chase.Engine
         public List<Move> GetAllMoves()
         {
             return Board.GetValidMoves();
+        }
+
+        public List<MoveHistory> GetMoveHistory()
+        {
+            List<MoveHistory> history = new List<MoveHistory>();
+            MoveHistory mh = new MoveHistory();
+            int num = 1;
+
+            for (int i = 0; i < MoveHistory.Count; i++)
+            {
+                mh.Number = num;
+                if (BoardHistory[i].PlayerToMove == Player.Red)
+                {
+                    mh.RedMove = MoveHistory[i].ToString();
+
+                    if (i + 1 < MoveHistory.Count && BoardHistory[i + 1].PlayerToMove == Player.Red)
+                    {
+                        history.Add(mh);
+                        mh = new MoveHistory();
+                        num++;
+                    }
+                }
+                else
+                {
+                    mh.BlueMove = MoveHistory[i].ToString();
+                    
+                    history.Add(mh);
+                    mh = new MoveHistory();
+
+                    num++;
+                }
+            }
+
+            if (mh.Number > 0)
+            {
+                history.Add(mh);
+            }
+
+            return history;
         }
 
         public List<int> GetThreatenedPieces()
@@ -211,7 +255,7 @@ namespace Chase.Engine
             {
                 w.WriteLine("Moves: " + Board.MovesHistory);
                 w.WriteLine("--------------------------------------");
-                foreach (Position position in History)
+                foreach (Position position in BoardHistory)
                 {
                     w.Write(GetStringVisualization(position));
                     w.WriteLine("--------------------------------------");

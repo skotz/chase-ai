@@ -39,6 +39,7 @@ namespace Chase.GUI
         private void selfPlayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             type = GameType.ComputerSelfPlay;
+            infoLabel.Text = "Thinking...";
 
             game.StartNew();
             game.BeginGetBestMove(depth);
@@ -49,6 +50,11 @@ namespace Chase.GUI
             if (result.BestMove != null)
             {
                 game.MakeMove(result.BestMove);
+            }
+            
+            if (!showComputerAnalysisToolStripMenuItem.Checked)
+            {
+                searchStatusLabel.Text = "Your turn!";
             }
 
             RefreshBoard(result.BestMove);
@@ -71,10 +77,17 @@ namespace Chase.GUI
 
         private void Game_OnSearchProgress(SearchStatus status)
         {
-            searchStatusLabel.Text = "best: " + status.BestMoveSoFar.BestMove.ToString() +
-                " score: " + status.BestMoveSoFar.Score +
-                " nps: " + status.NodesPerSecond.ToString("0") + 
-                " pv: " + status.BestMoveSoFar.PrimaryVariation;
+            if (showComputerAnalysisToolStripMenuItem.Checked)
+            {
+                searchStatusLabel.Text = "best: " + status.BestMoveSoFar.BestMove.ToString() +
+                    " score: " + status.BestMoveSoFar.Score +
+                    " nps: " + status.NodesPerSecond.ToString("0") +
+                    " pv: " + status.BestMoveSoFar.PrimaryVariation;
+            }
+            else
+            {
+                searchStatusLabel.Text = "Thinking...";
+            }
         }
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
@@ -104,6 +117,12 @@ namespace Chase.GUI
 
         private void RefreshBoard(Move lastmove)
         {
+            if (gamePanel.Controls["tile0"] == null)
+            {
+                // Probably in the process of closing the program
+                return;
+            }
+            
             for (int i = 0; i < 81; i++)
             {
                 int piece = game.Board[i];
@@ -169,6 +188,10 @@ namespace Chase.GUI
                     }
                 }
             }
+
+            // Refresh move list
+            List<MoveHistory> history = game.GetMoveHistory();
+            moveHistory.DataSource = history;
 
             // Status information
             if (type == GameType.NotStarted)

@@ -46,6 +46,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="Interfaces\ISearchAlgorithm.cs" />
     <Compile Include="Move.cs" />
+    <Compile Include="MoveHistory.cs" />
     <Compile Include="SearchResult.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Position.cs" />
