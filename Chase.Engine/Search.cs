@@ -90,7 +90,7 @@ namespace Chase.Engine
                 }
                 else if (redPieces > bluePieces)
                 {
-                    eval += (redPieces * -100) / bluePieces - 100;
+                    eval -= (redPieces * 100) / bluePieces - 100;
                 }
 
                 return eval * Constants.EvalPieceWeight;
