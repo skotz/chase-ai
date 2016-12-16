@@ -55,7 +55,12 @@ namespace Chase.Engine
 
         public void StartNew()
         {
-            Board = Position.NewPosition();
+            StartNew(Position.NewPosition());
+        }
+
+        public void StartNew(Position position)
+        {
+            Board = position;
 
             History = new List<Position>();
             History.Add(Board.Clone());

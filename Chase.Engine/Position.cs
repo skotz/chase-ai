@@ -580,65 +580,72 @@ namespace Chase.Engine
 
         public static Position FromStringNotation(string csn)
         {
-            Position position = Position.EmptyPosition();
-
-            string[] sections = csn.Split(' ');
-            string[] rows = sections[0].Split('/');
-            string tomove = sections[1];
-
-            int blueTotal = 0;
-            int redTotal = 0;
-
-            // Initialize the board
-            int index = 0;
-            for (int i = 0; i < 9; i++)
+            try
             {
-                foreach (char piece in rows[i])
+                Position position = Position.EmptyPosition();
+
+                string[] sections = csn.Split(' ');
+                string[] rows = sections[0].Split('/');
+                string tomove = sections[1];
+
+                int blueTotal = 0;
+                int redTotal = 0;
+
+                // Initialize the board
+                int index = 0;
+                for (int i = 0; i < 9; i++)
                 {
-                    if (piece >= 'a' && piece <= 'f')
+                    foreach (char piece in rows[i])
                     {
-                        int value = (piece - 'a') + 1;
-                        position.Board[index++] = value;
-                        blueTotal += value;
-                    }
-                    else if (piece >= 'A' && piece <= 'F')
-                    {
-                        int value = (piece - 'A') + 1;
-                        position.Board[index++] = -value;
-                        redTotal += value;
-                    }
-                    else
-                    {
-                        int empty = int.Parse(piece.ToString());
-                        for (int x = 0; x < empty; x++)
+                        if (piece >= 'a' && piece <= 'f')
                         {
-                            position.Board[index++] = 0;
+                            int value = (piece - 'a') + 1;
+                            position.Board[index++] = value;
+                            blueTotal += value;
+                        }
+                        else if (piece >= 'A' && piece <= 'F')
+                        {
+                            int value = (piece - 'A') + 1;
+                            position.Board[index++] = -value;
+                            redTotal += value;
+                        }
+                        else
+                        {
+                            int empty = int.Parse(piece.ToString());
+                            for (int x = 0; x < empty; x++)
+                            {
+                                position.Board[index++] = 0;
+                            }
                         }
                     }
                 }
-            }
 
-            if (index != 81)
+                if (index != 81)
+                {
+                    throw new Exception("Invalid chase board notation string!");
+                }
+
+                // Set the player to move
+                position.PlayerToMove = tomove == "b" ? Player.Blue : Player.Red;
+
+                // Set the points to distribute
+                int points = 0;
+                if (blueTotal < Constants.PieceValueSum)
+                {
+                    points = Constants.PieceValueSum - blueTotal;
+                }
+                else if (redTotal < Constants.PieceValueSum)
+                {
+                    points = Constants.PieceValueSum - redTotal;
+                }
+                position.PointsToDistribute = points;
+
+                return position;
+            }
+            catch (Exception)
             {
-                throw new Exception("Invalid chase board notation string!");
+                return null;
             }
-
-            // Set the player to move
-            position.PlayerToMove = tomove == "b" ? Player.Blue : Player.Red;
-
-            // Set the points to distribute
-            int points = 0;
-            if (blueTotal < Constants.PieceValueSum)
-            {
-                points = Constants.PieceValueSum - blueTotal;
-            }
-            else if (redTotal < Constants.PieceValueSum)
-            {
-                points = Constants.PieceValueSum - redTotal;
-            }
-            position.PointsToDistribute = points;
-
-            return position;
         }
 
         public Position Clone()

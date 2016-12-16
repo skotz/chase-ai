@@ -154,7 +154,7 @@ namespace Chase.GUI
                         if (move.FromIndex == selectedFromTile)
                         {
                             gamePanel.Controls["tile" + move.ToIndex].BackColor = Color.LightGreen;
-                            gamePanel.Controls["tile" + move.FromIndex].BackColor = Color.Black;
+                            gamePanel.Controls["tile" + move.FromIndex].BackColor = Color.White;
                         }
                     }
                 }
@@ -361,6 +361,34 @@ namespace Chase.GUI
         private void button5_Click(object sender, EventArgs e)
         {
             addPanel.Visible = false;
+        }
+
+        private void loadPositionFromCSNToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            csnInput.Text = "";
+            csnPanel.Visible = true;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            csnPanel.Visible = false;
+        }
+
+        private void csnInput_TextChanged(object sender, EventArgs e)
+        {
+            Position position = Position.FromStringNotation(csnInput.Text);
+            if (position == null)
+            {
+                csnInput.BackColor = Color.LightPink;
+            }
+            else
+            {
+                csnInput.BackColor = Color.White;
+                csnPanel.Visible = false;
+
+                game.StartNew(position);
+                RefreshBoard();
+            }
         }
     }
 }
