@@ -133,6 +133,16 @@ namespace Chase.GUI
                 }
             }
 
+            // Show threatened pieces
+            if (showThreatenedPiecesToolStripMenuItem.Checked)
+            {
+                List<int> threats = game.GetThreatenedPieces();
+                foreach (int threatIndex in threats)
+                {
+                    gamePanel.Controls["tile" + threatIndex].BackColor = Color.LightPink;
+                }
+            }
+
             // Show valid moves
             if (highlightValidMovesToolStripMenuItem.Checked && game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
             {
@@ -367,6 +377,7 @@ namespace Chase.GUI
         {
             csnInput.Text = "";
             csnPanel.Visible = true;
+            csnInput.Focus();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -387,6 +398,9 @@ namespace Chase.GUI
                 csnPanel.Visible = false;
 
                 game.StartNew(position);
+
+                type = GameType.Analysis;
+
                 RefreshBoard();
             }
         }

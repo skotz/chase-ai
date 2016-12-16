@@ -10,6 +10,7 @@ namespace Chase.GUI
     {
         ComputerSelfPlay,
         ComputerVsHuman,
-        NotStarted
+        NotStarted,
+        Analysis
     }
 }

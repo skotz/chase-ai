@@ -56,6 +56,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.loadPositionFromCSNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.showThreatenedPiecesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gamePanel.SuspendLayout();
             this.addPanel.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
@@ -263,7 +264,8 @@
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.highlightValidMovesToolStripMenuItem,
-            this.computerPlaysBlueToolStripMenuItem});
+            this.computerPlaysBlueToolStripMenuItem,
+            this.showThreatenedPiecesToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "&Options";
@@ -274,7 +276,7 @@
             this.highlightValidMovesToolStripMenuItem.CheckOnClick = true;
             this.highlightValidMovesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.highlightValidMovesToolStripMenuItem.Name = "highlightValidMovesToolStripMenuItem";
-            this.highlightValidMovesToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.highlightValidMovesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.highlightValidMovesToolStripMenuItem.Text = "&Highlight Valid Moves";
             // 
             // computerPlaysBlueToolStripMenuItem
@@ -283,7 +285,7 @@
             this.computerPlaysBlueToolStripMenuItem.CheckOnClick = true;
             this.computerPlaysBlueToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.computerPlaysBlueToolStripMenuItem.Name = "computerPlaysBlueToolStripMenuItem";
-            this.computerPlaysBlueToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.computerPlaysBlueToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.computerPlaysBlueToolStripMenuItem.Text = "Computer Plays Blue";
             // 
             // testToolStripMenuItem
@@ -357,6 +359,15 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(198, 6);
             // 
+            // showThreatenedPiecesToolStripMenuItem
+            // 
+            this.showThreatenedPiecesToolStripMenuItem.Checked = true;
+            this.showThreatenedPiecesToolStripMenuItem.CheckOnClick = true;
+            this.showThreatenedPiecesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showThreatenedPiecesToolStripMenuItem.Name = "showThreatenedPiecesToolStripMenuItem";
+            this.showThreatenedPiecesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.showThreatenedPiecesToolStripMenuItem.Text = "&Show Threatened Pieces";
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -421,6 +432,7 @@
         private System.Windows.Forms.TextBox csnInput;
         private System.Windows.Forms.ToolStripMenuItem loadPositionFromCSNToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem showThreatenedPiecesToolStripMenuItem;
     }
 }
 

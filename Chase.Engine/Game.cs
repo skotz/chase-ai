@@ -166,6 +166,45 @@ namespace Chase.Engine
             return Board.GetValidMoves();
         }
 
+        public List<int> GetThreatenedPieces()
+        {
+            List<int> threats = new List<int>();
+            Player opponent = PlayerToMove == Player.Blue ? Player.Red : Player.Blue;
+            List<Move> moves = Board.GetValidMoves(opponent);
+
+            foreach (Move move in moves)
+            {
+                Position copy = Board.Clone();
+                copy.MakeMove(move);
+
+                for (int i=0; i < Constants.BoardSize; i++)
+                {
+                    if (PlayerToMove == Player.Blue)
+                    {
+                        if (Board[i] > 0 && copy[i] < 0)
+                        {
+                            if (!threats.Contains(i))
+                            {
+                                threats.Add(i);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Board[i] < 0 && copy[i] > 0)
+                        {
+                            if (!threats.Contains(i))
+                            {
+                                threats.Add(i);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return threats;   
+        }
+
         public void SaveGameToFile(string file)
         {
             using (StreamWriter w = new StreamWriter(file))

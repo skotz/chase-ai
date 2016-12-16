@@ -196,6 +196,11 @@ namespace Chase.Engine
 
         public List<Move> GetValidMoves()
         {
+            return GetValidMoves(PlayerToMove);
+        }
+
+        public List<Move> GetValidMoves(Player player)
+        {
             List<Move> moves = new List<Move>();
             int destination;
 
@@ -203,13 +208,13 @@ namespace Chase.Engine
             if (PointsToDistribute > 0)
             {
                 // Find our lowest valued piece
-                int smallest = Board.Where(x => PlayerToMove == Player.Blue ? x > 0 : x < 0).Select(x => Math.Abs(x)).Min();
+                int smallest = Board.Where(x => player == Player.Blue ? x > 0 : x < 0).Select(x => Math.Abs(x)).Min();
 
                 // Find out how what the new value of this piece will be and if we have any points left over
                 int maxTo = Constants.MaximumPieceValue - smallest;
                 int max = Math.Min(maxTo, PointsToDistribute);
 
-                if (PlayerToMove == Player.Red)
+                if (player == Player.Red)
                 {
                     smallest *= -1;
                 }
@@ -248,7 +253,7 @@ namespace Chase.Engine
                     if (Board[i] != 0)
                     {
                         // Only look for moves for the player whose turn it is to move
-                        if ((PlayerToMove == Player.Blue && Board[i] > 0) || (PlayerToMove == Player.Red && Board[i] < 0))
+                        if ((player == Player.Blue && Board[i] > 0) || (player == Player.Red && Board[i] < 0))
                         {
                             foreach (Direction direction in Constants.Directions)
                             {
