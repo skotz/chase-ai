@@ -89,8 +89,9 @@ namespace Chase.Engine
                 if (move.ToIndex == Constants.ChamberIndex)
                 {
                     // Figure out the point split
-                    int leftValue = (int)Math.Ceiling(sourcePiece / 2.0);
-                    int rightValue = leftValue * 2 > sourcePiece ? leftValue - 1 : leftValue;
+                    int sourcePieceValue = Math.Abs(sourcePiece);
+                    int leftValue = (int)Math.Ceiling(sourcePieceValue / 2.0);
+                    int rightValue = leftValue * 2 > sourcePieceValue ? leftValue - 1 : leftValue;
 
                     // If we're at the piece limit, just slide to the left
                     if (pieces >= Constants.MaximumPieceCount)
@@ -145,7 +146,7 @@ namespace Chase.Engine
                     }
 
                     // Create the new tiles and them recursively move them (in case they need to bump or capture)
-                    Board[Constants.ChamberIndex] = leftValue;
+                    Board[Constants.ChamberIndex] = sourcePiece > 0 ? leftValue : -leftValue;
                     Move leftMove = new Move()
                     {
                         FromIndex = Constants.ChamberIndex,
@@ -156,7 +157,7 @@ namespace Chase.Engine
                     MakeMove(leftMove);
                     if (rightValue > 0)
                     {
-                        Board[Constants.ChamberIndex] = rightValue;
+                        Board[Constants.ChamberIndex] = sourcePiece > 0 ? rightValue : -rightValue;
                         Move rightMove = new Move()
                         {
                             FromIndex = Constants.ChamberIndex,
@@ -549,6 +550,7 @@ namespace Chase.Engine
             };
 
             p.PointsToDistribute = 0;
+            p.PlayerToMove = Player.Red;
 
             return p;
         }
@@ -571,6 +573,7 @@ namespace Chase.Engine
             };
             
             p.PointsToDistribute = 0;
+            p.PlayerToMove = Player.Red;
 
             return p;
         }

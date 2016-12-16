@@ -97,6 +97,19 @@ namespace Chase.Engine
             }
         }
 
+        public bool IsValidMove(Move move)
+        {
+            foreach (Move m in GetAllMoves())
+            {
+                if (m.FromIndex == move.FromIndex && m.ToIndex == move.ToIndex && m.Increment == move.Increment)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public void MakeMove(string move)
         {
             Board.MakeMove(move);
