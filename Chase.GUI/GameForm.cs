@@ -227,16 +227,16 @@ namespace Chase.GUI
                     {
                         // Select a source tile
                         selectedFromTile = index;
+                    }
 
-                        // If the move we need to make is filling in points after a capture
-                        if (moves[0].Increment > 0)
+                    // If the move we need to make is filling in points after a capture
+                    if (moves[0].Increment > 0)
+                    {
+                        Move move = moves.FirstOrDefault(x => x.ToIndex == index);
+
+                        if (move != null)
                         {
-                            Move move = moves.FirstOrDefault(x => x.ToIndex == selectedFromTile);
-
-                            if (move != null)
-                            {
-                                MakeMove(move);
-                            }
+                            MakeMove(move);
                         }
                     }
                 }
