@@ -38,7 +38,10 @@ namespace Chase.GUI
 
         private void Game_OnFoundBestMove(SearchResult result)
         {
-            game.MakeMove(result.BestMove);
+            if (result.BestMove != null)
+            {
+                game.MakeMove(result.BestMove);
+            }
 
             RefreshBoard(result.BestMove);
 

@@ -29,15 +29,27 @@ namespace Chase.Engine
 
         private int EvaluatePosition(Position position)
         {
+            evaluations++;
+
             // Start with a small amount of randomness to prevent always choosing one of two equal moves
-            int eval = Constants.Rand.Next(3) - 1;
+            int eval = Constants.Rand.Next(3) - 1;            
 
-            Player savePlayer = position.PlayerToMove;
+            // Figure in how many pieces we have over our opponent
+            eval += EvaluateMaterial(position);
 
+            // Figure in a penalty for every piece on the A or I rows where a piece has only have 4 direction it can move
+            eval += EvaluateDevelopment(position);
+
+            // Figure in how many valid moves we have over our opponent
+            // eval += EvaluateMobility(position);
+
+            return eval;
+        }
+
+        private int EvaluateMaterial(Position position)
+        {
             int bluePieces = 0;
             int redPieces = 0;
-
-            evaluations++;
 
             // Material (number of pieces) difference
             for (int i = 0; i < Constants.BoardSize; i++)
@@ -51,28 +63,70 @@ namespace Chase.Engine
                     redPieces++;
                 }
             }
-            eval += (bluePieces - redPieces) * Constants.EvalPieceWeight;
-
-            // Mobility (number of valid moves) difference
-            //position.PlayerToMove = Player.Blue;
-            //int blueMoves = position.GetValidMoves().Count;
-            //position.PlayerToMove = Player.Red;
-            //int redMoves = position.GetValidMoves().Count;
-            //eval += (blueMoves - redMoves) * Constants.EvalMobilityWeight;
 
             // Game over scores
             if (bluePieces < Constants.MinimumPieceCount)
             {
                 return -Constants.VictoryScore;
             }
-            if (redPieces < Constants.MinimumPieceCount)
+            else if (redPieces < Constants.MinimumPieceCount)
             {
                 return Constants.VictoryScore;
             }
+            else
+            {
+                return (bluePieces - redPieces) * Constants.EvalPieceWeight;
+            }
+        }
+        
+        private int EvaluateMobility(Position position)
+        {
+            Player savePlayer = position.PlayerToMove;
+
+            position.PlayerToMove = Player.Blue;
+            int blueMoves = position.GetValidMoves().Count;
+
+            position.PlayerToMove = Player.Red;
+            int redMoves = position.GetValidMoves().Count;
+
+            // Mobility (number of valid moves) difference
+            int eval = (blueMoves - redMoves) * Constants.EvalMobilityWeight;
 
             position.PlayerToMove = savePlayer;
 
             return eval;
+        }
+
+        private int EvaluateDevelopment(Position position)
+        {
+            int blueUndeveloped = 0;
+            int redUndeveloped = 0;
+
+            // Get a penalty for each piece on the edge where it has at most 4 directions it can move
+            for (int i = 0; i < 9; i++)
+            {
+                if (position.Board[i] > 0)
+                {
+                    blueUndeveloped++;
+                }
+                if (position.Board[i] < 0)
+                {
+                    redUndeveloped++;
+                }
+            }
+            for (int i = 72; i < 81; i++)
+            {
+                if (position.Board[i] > 0)
+                {
+                    blueUndeveloped++;
+                }
+                if (position.Board[i] < 0)
+                {
+                    redUndeveloped++;
+                }
+            }
+
+            return (blueUndeveloped - redUndeveloped) * (-1) * Constants.EvalDevelopmentWeight;
         }
 
         private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth)
@@ -155,7 +209,7 @@ namespace Chase.Engine
                 if (reportdepth > 0)
                 {
                     // Report on the progress of our search
-                    OnNewResult(null, new SearchStatus()
+                    OnNewResult?.Invoke(null, new SearchStatus()
                     {
                         BestMoveSoFar = best,
                         SearchedNodes = evaluations,

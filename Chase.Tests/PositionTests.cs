@@ -86,5 +86,25 @@ namespace Chase.Tests
             // Can't move through another piece
             Assert.AreEqual(Constants.InvalidMove, position.GetDestinationIndexIfValidMove(55, Direction.DownRight, 6));
         }
+
+        [TestMethod]
+        public void TestFromStringNotation()
+        {
+            //    0,  1,  2,  3,  4,  5,  6,  7,  8, // i
+            //  9, 10, 11, 12, 13, 14, 15, 16, 17,   // h
+            //   18, 19, 20, 21, 22, 23, 24, 25, 26, // g
+            // 27, 28, 29, 30, 31, 32, 33, 34, 35,   // f
+            //   36, 37, 38, 39, 40, 41, 42, 43, 44, // e
+            // 45, 46, 47, 48, 49, 50, 51, 52, 53,   // d
+            //   54, 55, 56, 57, 58, 59, 60, 61, 62, // c
+            // 63, 64, 65, 66, 67, 68, 69, 70, 71,   // b
+            //   72, 73, 74, 75, 76, 77, 78, 79, 80  // a
+
+            Position position = Position.FromStringNotation("a2de2ba/9/b8/Ec2c1E2/C1DB4b/5B3/9/9/AA3A2A b");
+
+            Assert.AreEqual(2, position.PointsToDistribute);
+            Assert.AreEqual(-3, position.Board[36]);
+            Assert.AreEqual(Player.Blue, position.PlayerToMove);
+        }
     }
 }

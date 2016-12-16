@@ -56,6 +56,7 @@ namespace Chase.Engine
         public void StartNew()
         {
             Board = Position.NewPosition();
+
             History = new List<Position>();
             History.Add(Board.Clone());
         }

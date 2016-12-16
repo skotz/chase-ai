@@ -12,7 +12,11 @@ namespace Chase.Engine
 
         public const int EvalMobilityWeight = 1;
 
+        public const int EvalDevelopmentWeight = 5;
+
         public const int MaximumPieceCount = 10;
+
+        public const int PieceValueSum = 25;
 
         public const int MinimumPieceCount = 5;
 

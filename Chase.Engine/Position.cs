@@ -81,7 +81,7 @@ namespace Chase.Engine
                 // Are we capturing an enemy piece?
                 if ((sourcePiece > 0 && Board[move.ToIndex] < 0) || (sourcePiece < 0 && Board[move.ToIndex] > 0))
                 {
-                    // Keep track of how many points the enemy will need to distribute to other dice
+                    // Keep track of how many points the enemy will need to distribute to other die
                     PointsToDistribute = Math.Abs(Board[move.ToIndex]);
                 }
 
@@ -213,18 +213,22 @@ namespace Chase.Engine
                     smallest *= -1;
                 }
 
-                // Find all the pieces with this minimum value and create a move
-                for (int i = 0; i < Constants.BoardSize; i++)
+                // If the smallest value piece we have is a 6 then we don't want to generate invalid moves
+                if (max > 0)
                 {
-                    if (Board[i] == smallest)
+                    // Find all the pieces with this minimum value and create a move
+                    for (int i = 0; i < Constants.BoardSize; i++)
                     {
-                        moves.Add(new Move()
+                        if (Board[i] == smallest)
                         {
-                            FromIndex = -1,
-                            ToIndex = i,
-                            Increment = max,
-                            FinalDirection = (Direction)(-1)
-                        });
+                            moves.Add(new Move()
+                            {
+                                FromIndex = -1,
+                                ToIndex = i,
+                                Increment = max,
+                                FinalDirection = (Direction)(-1)
+                            });
+                        }
                     }
                 }
             }
@@ -366,7 +370,7 @@ namespace Chase.Engine
                     return index;
                 }
 
-                // Did we hit another piece before (blue or red) before the end of our distance?
+                // Did we hit another piece (blue or red) before the end of our distance?
                 if (Board[index] != 0)
                 {
                     return Constants.InvalidMove;
@@ -518,7 +522,7 @@ namespace Chase.Engine
                     return downright;
 
                 default:
-                    return -1;
+                    return Constants.InvalidMove;
             }
         }
 
@@ -569,6 +573,69 @@ namespace Chase.Engine
             p.PointsToDistribute = 0;
 
             return p;
+        }
+
+        public static Position FromStringNotation(string csn)
+        {
+            Position position = Position.EmptyPosition();
+
+            string[] sections = csn.Split(' ');
+            string[] rows = sections[0].Split('/');
+            string tomove = sections[1];
+
+            int blueTotal = 0;
+            int redTotal = 0;
+
+            // Initialize the board
+            int index = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                foreach (char piece in rows[i])
+                {
+                    if (piece >= 'a' && piece <= 'f')
+                    {
+                        int value = (piece - 'a') + 1;
+                        position.Board[index++] = value;
+                        blueTotal += value;
+                    }
+                    else if (piece >= 'A' && piece <= 'F')
+                    {
+                        int value = (piece - 'A') + 1;
+                        position.Board[index++] = -value;
+                        redTotal += value;
+                    }
+                    else
+                    {
+                        int empty = int.Parse(piece.ToString());
+                        for (int x = 0; x < empty; x++)
+                        {
+                            position.Board[index++] = 0;
+                        }
+                    }
+                }
+            }
+
+            if (index != 81)
+            {
+                throw new Exception("Invalid chase board notation string!");
+            }
+
+            // Set the player to move
+            position.PlayerToMove = tomove == "b" ? Player.Blue : Player.Red;
+
+            // Set the points to distribute
+            int points = 0;
+            if (blueTotal < Constants.PieceValueSum)
+            {
+                points = Constants.PieceValueSum - blueTotal;
+            }
+            else if (redTotal < Constants.PieceValueSum)
+            {
+                points = Constants.PieceValueSum - redTotal;
+            }
+            position.PointsToDistribute = points;
+
+            return position;
         }
 
         public Position Clone()
