@@ -65,7 +65,7 @@ namespace Chase.GUI
             else
             {
                 game.SaveGameToFile("game." + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
-                MessageBox.Show(winner.ToString() + " wins!");
+                MessageBox.Show(winner.ToString() + " wins!", "Chase", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -403,6 +403,12 @@ namespace Chase.GUI
 
                 RefreshBoard();
             }
+        }
+
+        private void copyCSNFromPositionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(game.Board.ToStringNotation());
+            MessageBox.Show("Position copied to clipboard!", "Chase", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

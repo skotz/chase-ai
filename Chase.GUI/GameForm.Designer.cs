@@ -57,6 +57,7 @@
             this.loadPositionFromCSNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showThreatenedPiecesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCSNFromPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gamePanel.SuspendLayout();
             this.addPanel.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
@@ -241,7 +242,8 @@
             this.newGameToolStripMenuItem,
             this.selfPlayToolStripMenuItem,
             this.toolStripSeparator1,
-            this.loadPositionFromCSNToolStripMenuItem});
+            this.loadPositionFromCSNToolStripMenuItem,
+            this.copyCSNFromPositionToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.gameToolStripMenuItem.Text = "&Game";
@@ -249,14 +251,14 @@
             // newGameToolStripMenuItem
             // 
             this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.newGameToolStripMenuItem.Text = "&New Game";
             this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
             // 
             // selfPlayToolStripMenuItem
             // 
             this.selfPlayToolStripMenuItem.Name = "selfPlayToolStripMenuItem";
-            this.selfPlayToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.selfPlayToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.selfPlayToolStripMenuItem.Text = "Computer Self &Play";
             this.selfPlayToolStripMenuItem.Click += new System.EventHandler(this.selfPlayToolStripMenuItem_Click);
             // 
@@ -350,14 +352,14 @@
             // loadPositionFromCSNToolStripMenuItem
             // 
             this.loadPositionFromCSNToolStripMenuItem.Name = "loadPositionFromCSNToolStripMenuItem";
-            this.loadPositionFromCSNToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.loadPositionFromCSNToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.loadPositionFromCSNToolStripMenuItem.Text = "&Load Position from CSN";
             this.loadPositionFromCSNToolStripMenuItem.Click += new System.EventHandler(this.loadPositionFromCSNToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(198, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
             // 
             // showThreatenedPiecesToolStripMenuItem
             // 
@@ -367,6 +369,13 @@
             this.showThreatenedPiecesToolStripMenuItem.Name = "showThreatenedPiecesToolStripMenuItem";
             this.showThreatenedPiecesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.showThreatenedPiecesToolStripMenuItem.Text = "&Show Threatened Pieces";
+            // 
+            // copyCSNFromPositionToolStripMenuItem
+            // 
+            this.copyCSNFromPositionToolStripMenuItem.Name = "copyCSNFromPositionToolStripMenuItem";
+            this.copyCSNFromPositionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.copyCSNFromPositionToolStripMenuItem.Text = "&Copy CSN from Position";
+            this.copyCSNFromPositionToolStripMenuItem.Click += new System.EventHandler(this.copyCSNFromPositionToolStripMenuItem_Click);
             // 
             // GameForm
             // 
@@ -433,6 +442,7 @@
         private System.Windows.Forms.ToolStripMenuItem loadPositionFromCSNToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem showThreatenedPiecesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyCSNFromPositionToolStripMenuItem;
     }
 }
 

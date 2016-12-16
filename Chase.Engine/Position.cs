@@ -576,7 +576,7 @@ namespace Chase.Engine
                 0,  0,  0,  0,  0,  0,  0,  0,  0,   // b
                   0,  0,  0,  0,  0,  0,  0,  0,  0  // a
             };
-            
+
             p.PointsToDistribute = 0;
             p.PlayerToMove = Player.Red;
 
@@ -651,6 +651,46 @@ namespace Chase.Engine
             {
                 return null;
             }
+        }
+
+        public string ToStringNotation()
+        {
+            int blanks = 0;
+            string csn = "";
+
+            Func<string> addBlanks = () =>
+            {
+                string count = blanks > 0 ? blanks.ToString() : "";
+                blanks = 0;
+                return count;
+            };
+
+            for (int index = 0; index < Constants.BoardSize; index++)
+            {
+                if (Board[index] > 0)
+                {
+                    csn += addBlanks() + ((char)('a' + (Board[index] - 1))).ToString();
+                }
+                else if (Board[index] < 0)
+                {
+                    csn += addBlanks() + ((char)('A' + (-Board[index] - 1))).ToString();
+                }
+                else
+                {
+                    blanks++;
+                }
+                
+                if (index.In(8, 17, 26, 35, 44, 53, 62, 71))
+                {
+                    csn += addBlanks() + "/";
+                }
+            }
+            csn += addBlanks();
+
+            // Side to move
+            csn += " " + (PlayerToMove == Player.Blue ? "b" : "r");
+
+            return csn;
         }
 
         public Position Clone()
