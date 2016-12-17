@@ -55,6 +55,11 @@
             this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selfPlayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.levelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twoMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
+            this.threeMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
+            this.fiveSecondsMove = new System.Windows.Forms.ToolStripMenuItem();
+            this.twentySecondsMove = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.loadPositionFromCSNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCSNFromPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,13 +70,8 @@
             this.showThreatenedPiecesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.showComputerAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTileLabelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.levelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.twoMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
-            this.threeMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
-            this.fiveSecondsMove = new System.Windows.Forms.ToolStripMenuItem();
-            this.twentySecondsMove = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gamePanel.SuspendLayout();
             this.csnPanel.SuspendLayout();
             this.addPanel.SuspendLayout();
@@ -385,6 +385,51 @@
             this.selfPlayToolStripMenuItem.Text = "Computer Self &Play";
             this.selfPlayToolStripMenuItem.Click += new System.EventHandler(this.selfPlayToolStripMenuItem_Click);
             // 
+            // levelToolStripMenuItem
+            // 
+            this.levelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.twoMovesDeep,
+            this.threeMovesDeep,
+            this.fiveSecondsMove,
+            this.twentySecondsMove});
+            this.levelToolStripMenuItem.Name = "levelToolStripMenuItem";
+            this.levelToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.levelToolStripMenuItem.Text = "Level";
+            // 
+            // twoMovesDeep
+            // 
+            this.twoMovesDeep.Checked = true;
+            this.twoMovesDeep.CheckOnClick = true;
+            this.twoMovesDeep.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.twoMovesDeep.Name = "twoMovesDeep";
+            this.twoMovesDeep.Size = new System.Drawing.Size(168, 22);
+            this.twoMovesDeep.Text = "2 Moves Deep";
+            this.twoMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            // 
+            // threeMovesDeep
+            // 
+            this.threeMovesDeep.CheckOnClick = true;
+            this.threeMovesDeep.Name = "threeMovesDeep";
+            this.threeMovesDeep.Size = new System.Drawing.Size(168, 22);
+            this.threeMovesDeep.Text = "3 Moves Deep";
+            this.threeMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            // 
+            // fiveSecondsMove
+            // 
+            this.fiveSecondsMove.CheckOnClick = true;
+            this.fiveSecondsMove.Name = "fiveSecondsMove";
+            this.fiveSecondsMove.Size = new System.Drawing.Size(168, 22);
+            this.fiveSecondsMove.Text = "5 Seconds/Move";
+            this.fiveSecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            // 
+            // twentySecondsMove
+            // 
+            this.twentySecondsMove.CheckOnClick = true;
+            this.twentySecondsMove.Name = "twentySecondsMove";
+            this.twentySecondsMove.Size = new System.Drawing.Size(168, 22);
+            this.twentySecondsMove.Text = "20 Seconds/Move";
+            this.twentySecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -464,13 +509,6 @@
             this.showComputerAnalysisToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.showComputerAnalysisToolStripMenuItem.Text = "Show Computer &Analysis";
             // 
-            // testToolStripMenuItem
-            // 
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-            this.testToolStripMenuItem.Text = "&Test";
-            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
-            // 
             // showTileLabelsToolStripMenuItem
             // 
             this.showTileLabelsToolStripMenuItem.Checked = true;
@@ -481,50 +519,13 @@
             this.showTileLabelsToolStripMenuItem.Text = "Show Tile &Labels";
             this.showTileLabelsToolStripMenuItem.Click += new System.EventHandler(this.showTileLabelsToolStripMenuItem_Click);
             // 
-            // levelToolStripMenuItem
+            // testToolStripMenuItem
             // 
-            this.levelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.twoMovesDeep,
-            this.threeMovesDeep,
-            this.fiveSecondsMove,
-            this.twentySecondsMove});
-            this.levelToolStripMenuItem.Name = "levelToolStripMenuItem";
-            this.levelToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.levelToolStripMenuItem.Text = "Level";
-            // 
-            // twoMovesDeep
-            // 
-            this.twoMovesDeep.Checked = true;
-            this.twoMovesDeep.CheckOnClick = true;
-            this.twoMovesDeep.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.twoMovesDeep.Name = "twoMovesDeep";
-            this.twoMovesDeep.Size = new System.Drawing.Size(168, 22);
-            this.twoMovesDeep.Text = "2 Moves Deep";
-            this.twoMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
-            // 
-            // threeMovesDeep
-            // 
-            this.threeMovesDeep.CheckOnClick = true;
-            this.threeMovesDeep.Name = "threeMovesDeep";
-            this.threeMovesDeep.Size = new System.Drawing.Size(168, 22);
-            this.threeMovesDeep.Text = "3 Moves Deep";
-            this.threeMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
-            // 
-            // fiveSecondsMove
-            // 
-            this.fiveSecondsMove.CheckOnClick = true;
-            this.fiveSecondsMove.Name = "fiveSecondsMove";
-            this.fiveSecondsMove.Size = new System.Drawing.Size(168, 22);
-            this.fiveSecondsMove.Text = "5 Seconds/Move";
-            this.fiveSecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
-            // 
-            // twentySecondsMove
-            // 
-            this.twentySecondsMove.CheckOnClick = true;
-            this.twentySecondsMove.Name = "twentySecondsMove";
-            this.twentySecondsMove.Size = new System.Drawing.Size(168, 22);
-            this.twentySecondsMove.Text = "20 Seconds/Move";
-            this.twentySecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.testToolStripMenuItem.Text = "&Test";
+            this.testToolStripMenuItem.Visible = false;
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // GameForm
             // 
