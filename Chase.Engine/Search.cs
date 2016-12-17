@@ -35,8 +35,6 @@ namespace Chase.Engine
         {
             SearchResult result = new SearchResult();
 
-            hashtable = new Dictionary<ulong, SearchResult>();
-
             initiatingPlayer = position.PlayerToMove;
 
             timer = Stopwatch.StartNew();
@@ -44,14 +42,29 @@ namespace Chase.Engine
             evaluations = 0;
             hashLookups = 0;
             timeLimitMilliseconds = settings.MaxSeconds < 0 ? 10000000 : settings.MaxSeconds * 1000;
+
+            List<Move> moves = null;
             
             // Iterative deepening
             // Increment depth by 2 since we always want to consider pairs of move (our move and opponent's move)
             for (int depth = settings.MaxSeconds < 0 ? settings.MaxDepth * 2 : 2; depth <= settings.MaxDepth * 2; depth += 2)
             {
+                // Need to re-initialize hash table at each depth
+                hashtable = new Dictionary<ulong, SearchResult>();
+
                 currentDepth = depth;
 
-                SearchResult nextDepth = AlphaBetaSearch(position, int.MinValue, int.MaxValue, depth, 1, 1);
+                SearchResult nextDepth = AlphaBetaSearch(position, int.MinValue, int.MaxValue, depth, 1, 1, ref moves);
+
+                // Move ordering for next iteration
+                if (initiatingPlayer == Player.Red)
+                {
+                    moves.Sort((c, n) => c.Evaluation.CompareTo(n.Evaluation));
+                }
+                else
+                {
+                    moves.Sort((c, n) => n.Evaluation.CompareTo(c.Evaluation));
+                }
 
                 if (!cutoff)
                 {
@@ -185,7 +198,7 @@ namespace Chase.Engine
             return (blueUndeveloped - redUndeveloped) * (-1) * Constants.EvalDevelopmentWeight;
         }
 
-        private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth, int depthUp)
+        private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth, int depthUp, ref List<Move> orderedMoves)
         {
             // If we've already processed this position, use the saved evaluation
             ulong hash = position.GetHash();
@@ -232,7 +245,18 @@ namespace Chase.Engine
                 Score = maximizingPlayer ? int.MinValue : int.MaxValue
             };
 
-            List<Move> moves = position.GetValidMoves();
+            List<Move> nullMoves = null;
+            List<Move> moves;
+            if (orderedMoves != null)
+            {
+                // Use an ordered list of moves based on the evaluations from a previous search depth
+                moves = orderedMoves;
+            }
+            else
+            {
+                moves = position.GetValidMoves();
+            }
+
             int movenum = 1;
             foreach (Move move in moves)
             {
@@ -253,7 +277,10 @@ namespace Chase.Engine
                 }
 
                 // Find opponents best counter move
-                SearchResult child = AlphaBetaSearch(copy, alpha, beta, depth - 1, reportdepth - 1, depthUp + 1);
+                SearchResult child = AlphaBetaSearch(copy, alpha, beta, depth - 1, reportdepth - 1, depthUp + 1, ref nullMoves);
+
+                // Store the evaluation for iterative deepening move ordering
+                move.Evaluation = child.Score;
 
                 if (maximizingPlayer)
                 {
@@ -319,6 +346,12 @@ namespace Chase.Engine
             if (!hashtable.ContainsKey(hash))
             {
                 hashtable.Add(hash, best);
+            }
+            
+            // Store the moves for the next depth (if using iterative deepening
+            if (depthUp == 1)
+            {
+                orderedMoves = moves;
             }
 
             return best;

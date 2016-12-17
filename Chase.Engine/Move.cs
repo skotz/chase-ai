@@ -23,6 +23,8 @@ namespace Chase.Engine
         /// </summary>
         public int Increment { get; set; }
 
+        public int Evaluation { get; set; }
+
         /// <summary>
         /// The direction the piece was moving when it stopped
         /// </summary>
