@@ -287,6 +287,15 @@ namespace Chase.Engine
 
                 if (reportdepth > 0)
                 {
+                    if (best == null)
+                    {
+                        best = new SearchResult();
+                    }
+                    if (best.BestMove == null)
+                    {
+                        best.BestMove = new Move();
+                    }
+
                     // Report on the progress of our search
                     OnNewResult?.Invoke(null, new SearchStatus()
                     {

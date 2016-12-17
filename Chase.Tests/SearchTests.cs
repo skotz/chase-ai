@@ -15,7 +15,7 @@ namespace Chase.Tests
         public void TestGetBestMove()
         {
             Search search = new Search();
-            SearchResult result = search.GetBestMove(Position.FromStringNotation("1bcdedcba/9/9/9/9/9/9/4a4/BBBDEDBBB b"), 1);
+            SearchResult result = search.GetBestMove(Position.FromStringNotation("1bcdedcba/9/9/9/9/9/9/4a4/BBBDEDBBB b"), new SearchArgs(1, -1));
 
             // The only sensible move is to capture on A5
             Assert.AreEqual(76, result.BestMove.ToIndex);
