@@ -8,8 +8,8 @@ namespace Chase.Engine.Interfaces
 {
     interface ISearchAlgorithm
     {
-        SearchResult GetBestMove(Position position, int searchDepth);
-
+        SearchResult GetBestMove(Position position, SearchArgs settings);
+        
         event EventHandler<SearchStatus> OnNewResult;
     }
 }

@@ -18,6 +18,10 @@ namespace Chase.Engine
 
         public int CurrentMove { get; set; }
 
+        public int Depth { get; set; }
+
+        public string CurrentVariation { get; set; }
+
         public decimal NodesPerSecond { get { return SearchedNodes / ((ElapsedMilliseconds == 0 ? 1 : ElapsedMilliseconds) / 1000.0M); } }
     }
 }

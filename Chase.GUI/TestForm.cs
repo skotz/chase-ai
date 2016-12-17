@@ -52,7 +52,7 @@ namespace Chase.GUI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            game.BeginGetBestMove(2);
+            game.BeginGetBestMove(2, -1);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -62,7 +62,7 @@ namespace Chase.GUI
 
         private void button4_Click(object sender, EventArgs e)
         {
-            SearchResult best = game.GetBestMove(2);
+            SearchResult best = game.GetBestMove(2, -1);
 
             game.MakeMove(best.BestMove);
 
@@ -87,7 +87,7 @@ namespace Chase.GUI
 
             while (game.GetWinner() == Player.None)
             {
-                best = game.GetBestMove(2);
+                best = game.GetBestMove(2, -1);
                 game.MakeMove(best.BestMove);
 
                 richTextBox1.Text += "Move: " + best.BestMove.ToString() + "\r\n";

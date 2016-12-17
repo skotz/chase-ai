@@ -10,19 +10,43 @@ namespace Chase.Engine
 {
     public class Search : ISearchAlgorithm
     {
-        private static int evaluations;
+        private int evaluations;
 
-        private static Stopwatch timer;
+        private Stopwatch timer;
+
+        private int timeLimitMilliseconds;
+
+        private bool cutoff;
+
+        private int currentDepth;
+
+        private string levelOneNode;
 
         public event EventHandler<SearchStatus> OnNewResult;
 
-        public SearchResult GetBestMove(Position position, int searchDepth)
+        public SearchResult GetBestMove(Position position, SearchArgs settings)
         {
-            timer = Stopwatch.StartNew();
-            evaluations = 0;
+            SearchResult result = new SearchResult();
 
-            SearchResult result = AlphaBetaSearch(position, int.MinValue, int.MaxValue, searchDepth * 2, 1);
-            result.Evaluations = evaluations;
+            timer = Stopwatch.StartNew();
+            cutoff = false;
+            evaluations = 0;
+            timeLimitMilliseconds = settings.MaxSeconds * 1000;
+            
+            // Iterative deepening
+            // Increment depth by 2 since we always want to consider pairs of move (our move and opponent's move)
+            for (int depth = settings.MaxSeconds < 0 ? settings.MaxDepth * 2 : 2; depth <= settings.MaxDepth * 2; depth += 2)
+            {
+                currentDepth = depth;
+
+                SearchResult nextDepth = AlphaBetaSearch(position, int.MinValue, int.MaxValue, depth, 1, 1);
+                nextDepth.Evaluations = evaluations;
+
+                if (!cutoff)
+                {
+                    result = nextDepth;
+                }
+            }
 
             return result;
         }
@@ -147,7 +171,7 @@ namespace Chase.Engine
             return (blueUndeveloped - redUndeveloped) * (-1) * Constants.EvalDevelopmentWeight;
         }
 
-        private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth)
+        private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth, int depthUp)
         {
             // Evaluate the position
             int eval = EvaluatePosition(position);
@@ -160,6 +184,13 @@ namespace Chase.Engine
                     Score = eval,
                     PrimaryVariation = eval == Constants.VictoryScore ? "BLUE-WINS" : "RED-WINS"
                 };
+            }
+
+            // See if we need to immediately stop searching
+            if (timer.ElapsedMilliseconds >= timeLimitMilliseconds)
+            {
+                cutoff = true;
+                return new SearchResult();
             }
 
             // We've reached the depth of our search, so return the heuristic evaluation of the position
@@ -192,8 +223,14 @@ namespace Chase.Engine
                     continue;
                 }
 
+                // Store the current node for search reporting
+                if (reportdepth > 0 && depthUp == 1)
+                {
+                    levelOneNode = move.ToString();
+                }
+
                 // Find opponents best counter move
-                SearchResult child = AlphaBetaSearch(copy, alpha, beta, depth - 1, reportdepth - 1);
+                SearchResult child = AlphaBetaSearch(copy, alpha, beta, depth - 1, reportdepth - 1, depthUp + 1);
 
                 if (maximizingPlayer)
                 {
@@ -239,7 +276,9 @@ namespace Chase.Engine
                         SearchedNodes = evaluations,
                         ElapsedMilliseconds = timer.ElapsedMilliseconds,
                         CurrentMove = movenum++,
-                        TotalMoves = moves.Count
+                        TotalMoves = moves.Count,
+                        Depth = currentDepth,
+                        CurrentVariation = (depthUp != 1 ? levelOneNode + " " : "") + move.ToString() + " " + child.PrimaryVariation
                     });
                 }
             }

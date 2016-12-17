@@ -88,21 +88,25 @@ namespace Chase.Engine
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            int depth = (int)e.Argument;
-            bestMove = GetBestMove(depth);
+            bestMove = GetBestMove((SearchArgs)e.Argument);
         }
 
-        public SearchResult GetBestMove(int searchDepth)
+        public SearchResult GetBestMove(int searchDepth, int searchTimeSeconds)
         {
-            return search.GetBestMove(Board, searchDepth);
+            return GetBestMove(new SearchArgs(searchDepth, searchTimeSeconds));
         }
 
-        public void BeginGetBestMove(int searchDepth)
+        public SearchResult GetBestMove(SearchArgs settings)
+        {
+            return search.GetBestMove(Board, settings);
+        }
+
+        public void BeginGetBestMove(int searchDepth, int searchTimeSeconds)
         {
             if (!worker.IsBusy)
             {
                 // Start the search in a background thread
-                worker.RunWorkerAsync(searchDepth);
+                worker.RunWorkerAsync(new SearchArgs(searchDepth, searchTimeSeconds));
             }
         }
 

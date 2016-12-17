@@ -16,9 +16,7 @@ namespace Chase.GUI
     {
         Game game;
         GameType type;
-
-        int depth = 2;
-
+        
         int selectedFromTile = -1;
         int selectedToTile = -1;
 
@@ -42,7 +40,7 @@ namespace Chase.GUI
             infoLabel.Text = "Thinking...";
 
             game.StartNew();
-            game.BeginGetBestMove(depth);
+            game.BeginGetBestMove(GetDepth(), GetSeconds());
         }
 
         private void Game_OnFoundBestMove(SearchResult result)
@@ -65,7 +63,7 @@ namespace Chase.GUI
                 // If it's a computer self-play game, always make a move. If the computer is playing a human, then it might have to make multiple moves in a row after a capture
                 if ((type == GameType.ComputerSelfPlay) || (game.PlayerToMove == Player.Blue && computerPlaysBlueToolStripMenuItem.Checked) || (game.PlayerToMove == Player.Red && !computerPlaysBlueToolStripMenuItem.Checked))
                 {
-                    game.BeginGetBestMove(depth);
+                    game.BeginGetBestMove(GetDepth(), GetSeconds());
                 }
             }
             else
@@ -81,8 +79,9 @@ namespace Chase.GUI
             {
                 searchStatusLabel.Text = "best: " + status.BestMoveSoFar.BestMove.ToString() +
                     " score: " + status.BestMoveSoFar.Score +
+                    " depth: " + status.Depth +
                     " nps: " + status.NodesPerSecond.ToString("0") +
-                    " pv: " + status.BestMoveSoFar.PrimaryVariation;
+                    " pv: " + status.CurrentVariation;
             }
             else
             {
@@ -106,7 +105,7 @@ namespace Chase.GUI
 
             if (!computerPlaysBlueToolStripMenuItem.Checked)
             {
-                game.BeginGetBestMove(depth);
+                game.BeginGetBestMove(GetDepth(), GetSeconds());
             }
         }
 
@@ -295,7 +294,7 @@ namespace Chase.GUI
             {
                 if ((game.PlayerToMove == Player.Blue && computerPlaysBlueToolStripMenuItem.Checked) || (game.PlayerToMove == Player.Red && !computerPlaysBlueToolStripMenuItem.Checked))
                 {
-                    game.BeginGetBestMove(depth);
+                    game.BeginGetBestMove(GetDepth(), GetSeconds());
                 }
             }
         }
@@ -442,6 +441,53 @@ namespace Chase.GUI
         private void showTileLabelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RefreshBoard();
+        }
+
+        private int GetDepth()
+        {
+            if (twoMovesDeep.Checked)
+            {
+                return 2;
+            }
+            else if (threeMovesDeep.Checked)
+            {
+                return 3;
+            }
+            else
+            {
+                return 100;
+            }
+        }
+
+        private int GetSeconds()
+        {
+            if (fiveSecondsMove.Checked)
+            {
+                return 5;
+            }
+            else if (twentySecondsMove.Checked)
+            {
+                return 20;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        private void depthToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<ToolStripMenuItem> options = new List<ToolStripMenuItem>()
+            {
+                twoMovesDeep,
+                threeMovesDeep,
+                fiveSecondsMove,
+                twentySecondsMove
+            };
+
+            options.Where(x => x.Name != ((ToolStripMenuItem)sender).Name).ToList().ForEach(x => x.Checked = false);
+
+            ((ToolStripMenuItem)sender).Checked = true;
         }
     }
 }
