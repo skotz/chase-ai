@@ -12,6 +12,8 @@ namespace Chase.Engine
 
         public long Evaluations { get; set; }
 
+        public long HashLookups { get; set; }
+
         public string PrimaryVariation { get; set; }
 
         public Move BestMove { get; set; }

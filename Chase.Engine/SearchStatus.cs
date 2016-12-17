@@ -12,6 +12,8 @@ namespace Chase.Engine
 
         public long SearchedNodes { get; set; }
 
+        public long HashLookups { get; set; }
+
         public long ElapsedMilliseconds { get; set; }
 
         public int TotalMoves { get; set; }

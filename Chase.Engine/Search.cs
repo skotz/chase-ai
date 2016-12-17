@@ -1,5 +1,6 @@
 ﻿using Chase.Engine.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace Chase.Engine
 {
     public class Search : ISearchAlgorithm
     {
-        private int evaluations;
+        private long evaluations;
+
+        private long hashLookups;
 
         private Stopwatch timer;
 
@@ -22,16 +25,21 @@ namespace Chase.Engine
 
         private string levelOneNode;
 
+        private Dictionary<ulong, SearchResult> hashtable;
+
         public event EventHandler<SearchStatus> OnNewResult;
 
         public SearchResult GetBestMove(Position position, SearchArgs settings)
         {
             SearchResult result = new SearchResult();
 
+            hashtable = new Dictionary<ulong, SearchResult>();
+
             timer = Stopwatch.StartNew();
             cutoff = false;
             evaluations = 0;
-            timeLimitMilliseconds = settings.MaxSeconds * 1000;
+            hashLookups = 0;
+            timeLimitMilliseconds = settings.MaxSeconds < 0 ? 10000000 : settings.MaxSeconds * 1000;
             
             // Iterative deepening
             // Increment depth by 2 since we always want to consider pairs of move (our move and opponent's move)
@@ -40,13 +48,15 @@ namespace Chase.Engine
                 currentDepth = depth;
 
                 SearchResult nextDepth = AlphaBetaSearch(position, int.MinValue, int.MaxValue, depth, 1, 1);
-                nextDepth.Evaluations = evaluations;
 
                 if (!cutoff)
                 {
                     result = nextDepth;
                 }
             }
+
+            result.Evaluations = evaluations;
+            result.HashLookups = hashLookups;
 
             return result;
         }
@@ -173,6 +183,14 @@ namespace Chase.Engine
 
         private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth, int depthUp)
         {
+            // If we've already processed this position, use the saved evaluation
+            ulong hash = position.GetHash();
+            if (hashtable.ContainsKey(hash))
+            {
+                hashLookups++;
+                return hashtable[hash];
+            }
+
             // Evaluate the position
             int eval = EvaluatePosition(position);
 
@@ -278,9 +296,15 @@ namespace Chase.Engine
                         CurrentMove = movenum++,
                         TotalMoves = moves.Count,
                         Depth = currentDepth,
+                        HashLookups = hashLookups,
                         CurrentVariation = (depthUp != 1 ? levelOneNode + " " : "") + move.ToString() + " " + child.PrimaryVariation
                     });
                 }
+            }
+
+            if (!hashtable.ContainsKey(hash))
+            {
+                hashtable.Add(hash, best);
             }
 
             return best;

@@ -81,6 +81,7 @@ namespace Chase.GUI
                     " score: " + status.BestMoveSoFar.Score +
                     " depth: " + status.Depth +
                     " nps: " + status.NodesPerSecond.ToString("0") +
+                    " hl: " + status.HashLookups +
                     " pv: " + status.CurrentVariation;
             }
             else
