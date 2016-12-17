@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -489,6 +490,18 @@ namespace Chase.GUI
             options.Where(x => x.Name != ((ToolStripMenuItem)sender).Name).ToList().ForEach(x => x.Checked = false);
 
             ((ToolStripMenuItem)sender).Checked = true;
+        }
+
+        private void saveGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = saveCgn.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                using (StreamWriter w = new StreamWriter(saveCgn.FileName))
+                {
+                    w.Write(game.GetGameNotationString());
+                }
+            }
         }
     }
 }

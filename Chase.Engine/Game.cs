@@ -145,29 +145,7 @@ namespace Chase.Engine
 
         public Player GetWinner()
         {
-            int bluePieces = 0;
-            int redPieces = 0;
-            for (int i = 0; i < Constants.BoardSize; i++)
-            {
-                if (Board[i] > 0)
-                {
-                    bluePieces++;
-                }
-                else if (Board[i] < 0)
-                {
-                    redPieces++;
-                }
-            }
-
-            if (bluePieces < Constants.MinimumPieceCount)
-            {
-                return Player.Red;
-            }
-            else if (redPieces < Constants.MinimumPieceCount)
-            {
-                return Player.Blue;
-            }
-            return Player.None;
+            return Board.GetWinner();
         }
 
         public List<Move> GetAllMoves()
@@ -214,6 +192,27 @@ namespace Chase.Engine
             return history;
         }
 
+        public string GetGameNotationString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("[Version \"1.0\"]");
+            sb.AppendLine("[Date \"" + DateTime.Now.ToString("yyyy.MM.dd") + "\"]");
+            if (BoardHistory.Count > 0)
+            {
+                Player winner = BoardHistory[BoardHistory.Count - 1].GetWinner();
+                sb.AppendLine("[Result \"" + (winner != Player.None ? winner + " Won" : "?") + "\"]");
+            }
+            sb.AppendLine();
+
+            foreach (MoveHistory move in GetMoveHistory())
+            {
+                sb.AppendLine((move.Number.ToString() + ".").PadRight(5, ' ') + (move.RedMove ?? "").PadRight(9, ' ') + move.BlueMove);
+            }
+
+            return sb.ToString();
+        }
+
         public List<int> GetThreatenedPieces()
         {
             List<int> threats = new List<int>();
@@ -257,13 +256,15 @@ namespace Chase.Engine
         {
             using (StreamWriter w = new StreamWriter(file))
             {
-                w.WriteLine("Moves: " + Board.MovesHistory);
-                w.WriteLine("--------------------------------------");
-                foreach (Position position in BoardHistory)
-                {
-                    w.Write(GetStringVisualization(position));
-                    w.WriteLine("--------------------------------------");
-                }
+                w.Write(GetGameNotationString());
+
+                //w.WriteLine("Moves: " + Board.MovesHistory);
+                //w.WriteLine("--------------------------------------");
+                //foreach (Position position in BoardHistory)
+                //{
+                //    w.Write(GetStringVisualization(position));
+                //    w.WriteLine("--------------------------------------");
+                //}
             }
         }
 

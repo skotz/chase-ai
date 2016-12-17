@@ -354,6 +354,33 @@ namespace Chase.Engine
             return moves;
         }
 
+        public Player GetWinner()
+        {
+            int bluePieces = 0;
+            int redPieces = 0;
+            for (int i = 0; i < Constants.BoardSize; i++)
+            {
+                if (Board[i] > 0)
+                {
+                    bluePieces++;
+                }
+                else if (Board[i] < 0)
+                {
+                    redPieces++;
+                }
+            }
+
+            if (bluePieces < Constants.MinimumPieceCount)
+            {
+                return Player.Red;
+            }
+            else if (redPieces < Constants.MinimumPieceCount)
+            {
+                return Player.Blue;
+            }
+            return Player.None;
+        }
+
         /// <summary>
         /// Check if it's possible to move a piece from a given tile in a given direction a given number of tiles.
         /// If the move is valid then the destination index will be returned.

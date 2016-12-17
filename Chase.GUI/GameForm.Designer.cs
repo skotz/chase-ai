@@ -72,6 +72,8 @@
             this.showComputerAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTileLabelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveCgn = new System.Windows.Forms.SaveFileDialog();
             this.gamePanel.SuspendLayout();
             this.csnPanel.SuspendLayout();
             this.addPanel.SuspendLayout();
@@ -366,7 +368,8 @@
             this.levelToolStripMenuItem,
             this.toolStripSeparator1,
             this.loadPositionFromCSNToolStripMenuItem,
-            this.copyCSNFromPositionToolStripMenuItem});
+            this.copyCSNFromPositionToolStripMenuItem,
+            this.saveGameToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.gameToolStripMenuItem.Text = "&Game";
@@ -527,6 +530,20 @@
             this.testToolStripMenuItem.Visible = false;
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
+            // saveGameToolStripMenuItem
+            // 
+            this.saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
+            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveGameToolStripMenuItem.Text = "&Save Game as CGN";
+            this.saveGameToolStripMenuItem.Click += new System.EventHandler(this.saveGameToolStripMenuItem_Click);
+            // 
+            // saveCgn
+            // 
+            this.saveCgn.DefaultExt = "cgn";
+            this.saveCgn.FileName = "game.cgn";
+            this.saveCgn.Filter = "Chase Game Notation|*.cgn";
+            this.saveCgn.Title = "Save Game";
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -607,6 +624,8 @@
         private System.Windows.Forms.ToolStripMenuItem threeMovesDeep;
         private System.Windows.Forms.ToolStripMenuItem fiveSecondsMove;
         private System.Windows.Forms.ToolStripMenuItem twentySecondsMove;
+        private System.Windows.Forms.ToolStripMenuItem saveGameToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveCgn;
     }
 }
 
