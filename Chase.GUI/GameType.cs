@@ -11,6 +11,7 @@ namespace Chase.GUI
         ComputerSelfPlay,
         ComputerVsHuman,
         NotStarted,
-        Analysis
+        Analysis,
+        Loaded
     }
 }

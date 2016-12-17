@@ -63,6 +63,9 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.loadPositionFromCSNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCSNFromPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadGameFromCGNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.computerPlaysBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -72,8 +75,11 @@
             this.showComputerAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTileLabelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCgn = new System.Windows.Forms.SaveFileDialog();
+            this.openCgn = new System.Windows.Forms.OpenFileDialog();
+            this.nextMove = new System.Windows.Forms.Button();
+            this.previousMove = new System.Windows.Forms.Button();
+            this.analysisLabel = new System.Windows.Forms.Label();
             this.gamePanel.SuspendLayout();
             this.csnPanel.SuspendLayout();
             this.addPanel.SuspendLayout();
@@ -276,6 +282,9 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.analysisLabel);
+            this.splitContainer1.Panel2.Controls.Add(this.previousMove);
+            this.splitContainer1.Panel2.Controls.Add(this.nextMove);
             this.splitContainer1.Panel2.Controls.Add(this.moveHistory);
             this.splitContainer1.Panel2.Controls.Add(this.infoLabel);
             this.splitContainer1.Size = new System.Drawing.Size(1095, 662);
@@ -306,8 +315,9 @@
             this.moveHistory.ReadOnly = true;
             this.moveHistory.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.moveHistory.RowHeadersVisible = false;
-            this.moveHistory.Size = new System.Drawing.Size(294, 629);
+            this.moveHistory.Size = new System.Drawing.Size(294, 600);
             this.moveHistory.TabIndex = 1;
+            //this.moveHistory.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.moveHistory_CellClick);
             // 
             // MoveNumber
             // 
@@ -369,7 +379,9 @@
             this.toolStripSeparator1,
             this.loadPositionFromCSNToolStripMenuItem,
             this.copyCSNFromPositionToolStripMenuItem,
-            this.saveGameToolStripMenuItem});
+            this.toolStripSeparator4,
+            this.saveGameToolStripMenuItem,
+            this.loadGameFromCGNToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.gameToolStripMenuItem.Text = "&Game";
@@ -452,6 +464,25 @@
             this.copyCSNFromPositionToolStripMenuItem.Text = "&Copy CSN from Position";
             this.copyCSNFromPositionToolStripMenuItem.Click += new System.EventHandler(this.copyCSNFromPositionToolStripMenuItem_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(200, 6);
+            // 
+            // saveGameToolStripMenuItem
+            // 
+            this.saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
+            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveGameToolStripMenuItem.Text = "&Save Game as CGN";
+            this.saveGameToolStripMenuItem.Click += new System.EventHandler(this.saveGameToolStripMenuItem_Click);
+            // 
+            // loadGameFromCGNToolStripMenuItem
+            // 
+            this.loadGameFromCGNToolStripMenuItem.Name = "loadGameFromCGNToolStripMenuItem";
+            this.loadGameFromCGNToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.loadGameFromCGNToolStripMenuItem.Text = "Load &Game from CGN";
+            this.loadGameFromCGNToolStripMenuItem.Click += new System.EventHandler(this.loadGameFromCGNToolStripMenuItem_Click);
+            // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -530,19 +561,48 @@
             this.testToolStripMenuItem.Visible = false;
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
-            // saveGameToolStripMenuItem
-            // 
-            this.saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
-            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.saveGameToolStripMenuItem.Text = "&Save Game as CGN";
-            this.saveGameToolStripMenuItem.Click += new System.EventHandler(this.saveGameToolStripMenuItem_Click);
-            // 
             // saveCgn
             // 
             this.saveCgn.DefaultExt = "cgn";
             this.saveCgn.FileName = "game.cgn";
             this.saveCgn.Filter = "Chase Game Notation|*.cgn";
             this.saveCgn.Title = "Save Game";
+            // 
+            // openCgn
+            // 
+            this.openCgn.DefaultExt = "cgn";
+            this.openCgn.FileName = "game.cgn";
+            this.openCgn.Filter = "Chase Game Notation|*.cgn";
+            this.openCgn.Title = "Load a saved game";
+            // 
+            // nextMove
+            // 
+            this.nextMove.Location = new System.Drawing.Point(226, 636);
+            this.nextMove.Name = "nextMove";
+            this.nextMove.Size = new System.Drawing.Size(75, 23);
+            this.nextMove.TabIndex = 2;
+            this.nextMove.Text = ">";
+            this.nextMove.UseVisualStyleBackColor = true;
+            this.nextMove.Click += new System.EventHandler(this.nextMove_Click);
+            // 
+            // previousMove
+            // 
+            this.previousMove.Location = new System.Drawing.Point(7, 636);
+            this.previousMove.Name = "previousMove";
+            this.previousMove.Size = new System.Drawing.Size(75, 23);
+            this.previousMove.TabIndex = 3;
+            this.previousMove.Text = "<";
+            this.previousMove.UseVisualStyleBackColor = true;
+            this.previousMove.Click += new System.EventHandler(this.previousMove_Click);
+            // 
+            // analysisLabel
+            // 
+            this.analysisLabel.Location = new System.Drawing.Point(88, 636);
+            this.analysisLabel.Name = "analysisLabel";
+            this.analysisLabel.Size = new System.Drawing.Size(132, 23);
+            this.analysisLabel.TabIndex = 4;
+            this.analysisLabel.Text = "CGN";
+            this.analysisLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // GameForm
             // 
@@ -626,6 +686,12 @@
         private System.Windows.Forms.ToolStripMenuItem twentySecondsMove;
         private System.Windows.Forms.ToolStripMenuItem saveGameToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveCgn;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem loadGameFromCGNToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openCgn;
+        private System.Windows.Forms.Button previousMove;
+        private System.Windows.Forms.Button nextMove;
+        private System.Windows.Forms.Label analysisLabel;
     }
 }
 

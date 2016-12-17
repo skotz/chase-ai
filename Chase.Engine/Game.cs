@@ -20,6 +20,8 @@ namespace Chase.Engine
         private List<Move> MoveHistory;
 
         private ISearchAlgorithm search;
+
+        private string loadedCgn;
         
         public delegate void SearchProgress(SearchStatus status);
 
@@ -68,6 +70,8 @@ namespace Chase.Engine
             BoardHistory.Add(Board.Clone());
 
             MoveHistory = new List<Move>();
+
+            loadedCgn = "";
         }
 
         private void Search_OnNewResult(object sender, SearchStatus e)
@@ -125,8 +129,9 @@ namespace Chase.Engine
 
         public void MakeMove(string move)
         {
-            Board.MakeMove(move);
+            Move parsed = Board.MakeMove(move);
             BoardHistory.Add(Board.Clone());
+            MoveHistory.Add(parsed);
         }
 
         public void MakeMove(Move move)
@@ -190,6 +195,55 @@ namespace Chase.Engine
             }
 
             return history;
+        }
+
+        public Move RecallState(int move)
+        {
+            // TODO: there's got to be a better way to load a state than to re-parse and re-play all past moves from a clean state...
+            LoadFromGameNotationString(loadedCgn, move);
+
+            if (MoveHistory.Count >= 1)
+            {
+                return MoveHistory[MoveHistory.Count - 1];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public int LoadFromGameNotationString(string cgn)
+        {
+            return LoadFromGameNotationString(cgn, int.MaxValue);
+        }
+
+        public int LoadFromGameNotationString(string cgn, int stopOnMove)
+        {
+            StartNew();
+
+            int moveNum = 0;
+            foreach (string line in cgn.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (!line.StartsWith("["))
+                {
+                    string[] parts = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 1; i < parts.Length; i++)
+                    {
+                        if (moveNum < stopOnMove)
+                        {
+                            MakeMove(parts[i]);
+                            moveNum++;
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(loadedCgn))
+            {
+                loadedCgn = cgn;
+            }
+            
+            return moveNum;
         }
 
         public string GetGameNotationString()

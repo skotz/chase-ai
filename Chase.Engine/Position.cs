@@ -43,9 +43,23 @@ namespace Chase.Engine
             }
         }
 
-        public void MakeMove(string move)
+        public Move MakeMove(string move)
         {
-            // TODO: parse string moves and validate before making the move
+            Move parse = Move.ParseMove(move);
+            if (parse.IsValid)
+            {
+                foreach (Move m in GetValidMoves())
+                {
+                    if (m.FromIndex == parse.FromIndex && m.ToIndex == parse.ToIndex && m.Increment == parse.Increment)
+                    {
+                        // We can't use the parsed move since it doesn't contain the final direction information
+                        MakeMove(m);
+                        return m;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void MakeMove(Move move)

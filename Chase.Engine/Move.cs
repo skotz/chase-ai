@@ -25,6 +25,8 @@ namespace Chase.Engine
 
         public int Evaluation { get; set; }
 
+        public bool IsValid { get { return FromIndex != -1 || ToIndex != -1 || Increment != -1; } }
+
         /// <summary>
         /// The direction the piece was moving when it stopped
         /// </summary>
@@ -44,6 +46,67 @@ namespace Chase.Engine
             }
 
             return IndexLookup.ContainsKey(tile) ? IndexLookup[tile] : Constants.InvalidTile; 
+        }
+
+        public static Move ParseMove(string move)
+        {
+            // There are three types of moves...
+            // Move from one tile to another:   A1-A2
+            // Add points after a capture:      A1+=1
+            // Add points to an adjacent piece: A1-A2+=1
+
+            try
+            {
+                string[] parts = move.ToUpper().Split(new string[] { "+=" }, StringSplitOptions.None);
+                if (parts.Length == 2)
+                {
+                    int increment = int.Parse(parts[1]);
+                    string[] moves = parts[0].Split('-');
+                    int fromTile = GetIndexFromTile(moves[0]);
+                    if (moves.Length == 2)
+                    {
+                        int toTile = GetIndexFromTile(moves[1]);
+
+                        return new Move()
+                        {
+                            FromIndex = fromTile,
+                            ToIndex = toTile,
+                            Increment = increment
+                        };
+                    }
+                    else
+                    {
+                        return new Move()
+                        {
+                            FromIndex = -1,
+                            ToIndex = fromTile,
+                            Increment = increment
+                        };
+                    }
+                }
+                else
+                {
+                    string[] moves = parts[0].Split('-');
+                    int fromTile = GetIndexFromTile(moves[0]);
+                    int toTile = GetIndexFromTile(moves[1]);
+
+                    return new Move()
+                    {
+                        FromIndex = fromTile,
+                        ToIndex = toTile,
+                        Increment = 0
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new Move()
+                {
+                    FromIndex = -1,
+                    ToIndex = -1,
+                    Increment = -1
+                };
+            }
         }
 
         public static string GetTileFromIndex(int index)

@@ -21,6 +21,9 @@ namespace Chase.GUI
         int selectedFromTile = -1;
         int selectedToTile = -1;
 
+        int analysisMaxMoves = 0;
+        int analysisMoveNum = 0;
+
         public GameForm()
         {
             InitializeComponent();
@@ -202,6 +205,19 @@ namespace Chase.GUI
             else
             {
                 infoLabel.Text = game.PlayerToMove.ToString() + "'s Turn";
+            }
+
+            if (type == GameType.Loaded)
+            {
+                nextMove.Enabled = true;
+                previousMove.Enabled = true;
+                analysisLabel.Text = analysisMoveNum + "/" + analysisMaxMoves;
+            }
+            else
+            {
+                nextMove.Enabled = false;
+                previousMove.Enabled = false;
+                analysisLabel.Text = "CGN";
             }
         }
 
@@ -501,6 +517,54 @@ namespace Chase.GUI
                 {
                     w.Write(game.GetGameNotationString());
                 }
+            }
+        }
+
+        private void loadGameFromCGNToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = openCgn.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                using (StreamReader r = new StreamReader(openCgn.FileName))
+                {
+                    analysisMaxMoves = game.LoadFromGameNotationString(r.ReadToEnd());
+                }
+
+                type = GameType.Loaded;
+                analysisMoveNum = analysisMaxMoves;
+
+                Move lastMove = game.RecallState(analysisMoveNum);
+                RefreshBoard(lastMove);
+            }
+        }
+
+        private void previousMove_Click(object sender, EventArgs e)
+        {
+            if (type == GameType.Loaded)
+            {
+                analysisMoveNum--;
+                if (analysisMoveNum < 0)
+                {
+                    analysisMoveNum = 0;
+                }
+
+                Move lastMove = game.RecallState(analysisMoveNum);
+                RefreshBoard(lastMove);
+            }
+        }
+
+        private void nextMove_Click(object sender, EventArgs e)
+        {
+            if (type == GameType.Loaded)
+            {
+                analysisMoveNum++;
+                if (analysisMoveNum > analysisMaxMoves)
+                {
+                    analysisMoveNum = analysisMaxMoves;
+                }
+                
+                Move lastMove = game.RecallState(analysisMoveNum);
+                RefreshBoard(lastMove);
             }
         }
     }
