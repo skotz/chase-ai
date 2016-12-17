@@ -99,6 +99,7 @@
     <ProjectReference Include="..\Chase.Engine\Chase.Engine.csproj">
       <Project>{407ed6b4-25c0-463f-b518-760ee89c7560}</Project>
       <Name>Chase.Engine</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

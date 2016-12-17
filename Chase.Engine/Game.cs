@@ -180,12 +180,15 @@ namespace Chase.Engine
                 }
                 else
                 {
-                    mh.BlueMove = MoveHistory[i].ToString();
-                    
-                    history.Add(mh);
-                    mh = new MoveHistory();
+                    if (MoveHistory[i] != null)
+                    {
+                        mh.BlueMove = MoveHistory[i].ToString();
 
-                    num++;
+                        history.Add(mh);
+                        mh = new MoveHistory();
+
+                        num++;
+                    }
                 }
             }
 

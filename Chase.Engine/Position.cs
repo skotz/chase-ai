@@ -139,7 +139,7 @@ namespace Chase.Engine
                     // If we're at the piece limit, just slide to the left
                     if (basePieceCount >= Constants.MaximumPieceCount)
                     {
-                        leftValue = sourcePiece;
+                        leftValue = sourcePieceValue;
                         rightValue = 0;
                     }
 
