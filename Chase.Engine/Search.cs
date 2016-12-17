@@ -25,6 +25,8 @@ namespace Chase.Engine
 
         private string levelOneNode;
 
+        private Player initiatingPlayer;
+
         private Dictionary<ulong, SearchResult> hashtable;
 
         public event EventHandler<SearchStatus> OnNewResult;
@@ -34,6 +36,8 @@ namespace Chase.Engine
             SearchResult result = new SearchResult();
 
             hashtable = new Dictionary<ulong, SearchResult>();
+
+            initiatingPlayer = position.PlayerToMove;
 
             timer = Stopwatch.StartNew();
             cutoff = false;
@@ -212,7 +216,8 @@ namespace Chase.Engine
             }
 
             // We've reached the depth of our search, so return the heuristic evaluation of the position
-            if (depth <= 0)
+            // Make sure we're evaluating after our opponent's last move (meaning it's our turn to move again) so that we calculate full move pairs
+            if (depth <= 0 && position.PlayerToMove == initiatingPlayer)
             {
                 return new SearchResult()
                 {
