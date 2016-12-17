@@ -125,7 +125,7 @@ namespace Chase.Engine
                 if ((sourcePiece > 0 && Board[move.ToIndex] < 0) || (sourcePiece < 0 && Board[move.ToIndex] > 0))
                 {
                     // Keep track of how many points the enemy will need to distribute to other die
-                    PointsToDistribute = Math.Abs(Board[move.ToIndex]);
+                    PointsToDistribute += Math.Abs(Board[move.ToIndex]);
                 }
 
                 // Are we landing on the chamber?
