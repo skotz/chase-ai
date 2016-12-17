@@ -22,8 +22,25 @@ namespace Chase.Engine
 
         private int lastHashIndex;
 
+        private static int[,] tileDirectionTable;
+
         public Position()
         {
+            if (tileDirectionTable == null)
+            {
+                // Create a lookup table for each direction from each source tile index that gives you the destination index
+                int[,] table = new int[Constants.BoardSize, 6];
+
+                for (int i = 0; i < Constants.BoardSize; i++)
+                {
+                    for (int d = 0; d < 6; d++)
+                    {
+                        table[i, d] = GetIndexInDirection(i, (Direction)d);
+                    }
+                }
+
+                tileDirectionTable = table;
+            }
         }
 
         public void MakeMove(string move)
@@ -438,6 +455,12 @@ namespace Chase.Engine
             // B  63, 64, 65, 66, 67, 68, 69, 70, 71,    
             // A    72, 73, 74, 75, 76, 77, 78, 79, 80   
             // ----------------------------------------
+
+            // Use the pre-calculated lookup table if initialized
+            if (tileDirectionTable != null)
+            {
+                return tileDirectionTable[sourceIndex, (int)direction];
+            }
 
             switch (direction)
             {
