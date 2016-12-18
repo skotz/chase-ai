@@ -102,16 +102,39 @@ namespace Chase.Engine
             int bluePieces = 0;
             int redPieces = 0;
 
+            int blueGoodPieces = 0;
+            int redGoodPieces = 0;
+
             // Material (number of pieces) difference
             for (int i = 0; i < Constants.BoardSize; i++)
             {
                 if (position.Board[i] > 0)
                 {
                     bluePieces++;
+
+                    if (position.Board[i].In(4, 5))
+                    {
+                        // 4s and 5s are good
+                        blueGoodPieces++;
+                    }
+                    else if (position.Board[i] == 6)
+                    {
+                        // 6s are bad
+                        blueGoodPieces--;
+                    }
                 }
                 else if (position.Board[i] < 0)
                 {
                     redPieces++;
+
+                    if (position.Board[i].In(-4, -5))
+                    {
+                        redGoodPieces++;
+                    }
+                    else if (position.Board[i] == -6)
+                    {
+                        redGoodPieces--;
+                    }
                 }
             }
 
@@ -131,10 +154,15 @@ namespace Chase.Engine
                 // Just the difference between the piece count between blue and red
                 // eval += (bluePieces - redPieces) * Constants.EvalPieceWeight;
 
+                // Figure in the ideal value of pieces
+                // Range: [-4 - 5, 5 - (-4)] --> [-9, 9]
+                eval += (blueGoodPieces - redGoodPieces) * Constants.EvalPieceValueWeight;
+
                 // Just subtracting red from blue results in the same score for (blue = 6, red = 5) and (blue = 10, red = 9) even thought the lead of 1 means more in the first case
                 // This calculation figures in that an extra piece means more the fewer you have, so... 
                 // (blue = 6, red = 5) --> (6 * 100) / 5 - 100 = 20
                 // (blue = 10, red = 9) --> (10 * 100) / 9 - 100 = 11
+                // Range: [-(10 * 100) / 5 - 100, (10 * 100) / 5 - 100] --> [-100, 100]
                 if (bluePieces > redPieces)
                 {
                     eval += (bluePieces * 100) / redPieces - 100;
@@ -195,6 +223,7 @@ namespace Chase.Engine
                 }
             }
 
+            // Range: [(10 - 0) * (-1), (0 - 10) * (-1)] * weight --> [-10, 10] * weight
             return (blueUndeveloped - redUndeveloped) * (-1) * Constants.EvalDevelopmentWeight;
         }
 

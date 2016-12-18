@@ -6,6 +6,8 @@ namespace Chase.Engine
     {
         public const int EvalPieceWeight = 10;
 
+        public const int EvalPieceValueWeight = 1;
+
         public const int EvalMobilityWeight = 1;
 
         public const int EvalDevelopmentWeight = 1;
