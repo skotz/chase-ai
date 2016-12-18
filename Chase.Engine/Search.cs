@@ -78,7 +78,7 @@ namespace Chase.Engine
             return result;
         }
 
-        private int EvaluatePosition(Position position)
+        private int EvaluatePosition(Position position, int currentDepth)
         {
             evaluations++;
 
@@ -86,7 +86,7 @@ namespace Chase.Engine
             int eval = Constants.Rand.Next(3) - 1;
 
             // Figure in how many pieces we have over our opponent
-            eval += EvaluateMaterial(position);
+            eval += EvaluateMaterial(position, currentDepth);
 
             // Figure in a penalty for every piece on the A or I rows where a piece has only have 4 direction it can move
             eval += EvaluateDevelopment(position);
@@ -97,7 +97,7 @@ namespace Chase.Engine
             return eval;
         }
 
-        private int EvaluateMaterial(Position position)
+        private int EvaluateMaterial(Position position, int currentDepth)
         {
             int bluePieces = 0;
             int redPieces = 0;
@@ -141,11 +141,12 @@ namespace Chase.Engine
             // Game over scores
             if (bluePieces < Constants.MinimumPieceCount)
             {
-                return -Constants.VictoryScore;
+                // Give slightly better evaluations to the faster forced win
+                return -Constants.VictoryScore + currentDepth;
             }
             else if (redPieces < Constants.MinimumPieceCount)
             {
-                return Constants.VictoryScore;
+                return Constants.VictoryScore - currentDepth;
             }
             else
             {
@@ -238,7 +239,7 @@ namespace Chase.Engine
             }
 
             // Evaluate the position
-            int eval = EvaluatePosition(position);
+            int eval = EvaluatePosition(position, depthUp);
 
             // See if someone won
             if (Math.Abs(eval) == Constants.VictoryScore)
@@ -284,6 +285,16 @@ namespace Chase.Engine
             else
             {
                 moves = position.GetValidMoves();
+            }
+
+            // If we have no moves, return the evaluation of the position
+            if (moves.Count == 0)
+            {
+                return new SearchResult()
+                {
+                    Score = eval,
+                    PrimaryVariation = ""
+                };
             }
 
             int movenum = 1;
