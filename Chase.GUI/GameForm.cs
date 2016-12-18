@@ -72,7 +72,15 @@ namespace Chase.GUI
             }
             else
             {
-                game.SaveGameToFile("game." + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
+                try
+                {
+                    game.SaveGameToFile("game." + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // This doesn't work when running from the installed Programs folder, so eat the exception.
+                }
+
                 MessageBox.Show(winner.ToString() + " wins!", "Chase", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
