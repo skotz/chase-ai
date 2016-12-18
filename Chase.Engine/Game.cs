@@ -15,6 +15,10 @@ namespace Chase.Engine
 
         public Player PlayerToMove { get { return Board.PlayerToMove; } }
 
+        public int RedInHand { get { return Constants.MaximumPieceCount - Board.CountPieces(Player.Red); } }
+
+        public int BlueInHand { get { return Constants.MaximumPieceCount - Board.CountPieces(Player.Blue); } }
+
         private List<Position> BoardHistory;
 
         private List<Move> MoveHistory;

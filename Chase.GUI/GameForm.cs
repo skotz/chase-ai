@@ -156,57 +156,72 @@ namespace Chase.GUI
                 }
             }
 
-            // Show threatened pieces
-            if (showThreatenedPiecesToolStripMenuItem.Checked)
+            Player winner = game.GetWinner();
+            if (winner == Player.None)
             {
-                List<int> threats = game.GetThreatenedPieces();
-                foreach (int threatIndex in threats)
+                // Show threatened pieces
+                if (showThreatenedPiecesToolStripMenuItem.Checked)
                 {
-                    gamePanel.Controls["tile" + threatIndex].BackColor = Color.LightPink;
-                }
-            }
-
-            // Show valid moves
-            if (highlightValidMovesToolStripMenuItem.Checked && game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
-            {
-                List<Move> moves = game.GetAllMoves();
-                if (moves.Count > 0 && moves[0].Increment > 0 && moves[0].FromIndex == -1)
-                {
-                    // Add points after a capture
-                    foreach (Move move in moves)
+                    List<int> threats = game.GetThreatenedPieces();
+                    foreach (int threatIndex in threats)
                     {
-                        gamePanel.Controls["tile" + move.ToIndex].Text += "+" + move.Increment;
-                        gamePanel.Controls["tile" + move.ToIndex].BackColor = Color.LightGreen;
+                        gamePanel.Controls["tile" + threatIndex].BackColor = Color.LightPink;
                     }
                 }
-                else if (selectedFromTile >= 0)
+
+                // Show valid moves
+                if (highlightValidMovesToolStripMenuItem.Checked && game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
                 {
-                    // Find movement moves
-                    foreach (Move move in moves)
+                    List<Move> moves = game.GetAllMoves();
+                    if (moves.Count > 0 && moves[0].Increment > 0 && moves[0].FromIndex == -1)
                     {
-                        if (move.FromIndex == selectedFromTile)
+                        // Add points after a capture
+                        foreach (Move move in moves)
                         {
+                            gamePanel.Controls["tile" + move.ToIndex].Text += "+" + move.Increment;
                             gamePanel.Controls["tile" + move.ToIndex].BackColor = Color.LightGreen;
-                            gamePanel.Controls["tile" + move.FromIndex].BackColor = Color.White;
+                        }
+                    }
+                    else if (selectedFromTile >= 0)
+                    {
+                        // Find movement moves
+                        foreach (Move move in moves)
+                        {
+                            if (move.FromIndex == selectedFromTile)
+                            {
+                                gamePanel.Controls["tile" + move.ToIndex].BackColor = Color.LightGreen;
+                                gamePanel.Controls["tile" + move.FromIndex].BackColor = Color.White;
+                            }
                         }
                     }
                 }
+
+                // Status information
+                if (type == GameType.NotStarted)
+                {
+                    infoLabel.Text = "Ready";
+                    handRed.Text = "?";
+                    handBlue.Text = "?";
+                }
+                else
+                {
+                    infoLabel.Text = game.PlayerToMove.ToString() + "'s Turn";
+                    handRed.Text = game.RedInHand.ToString();
+                    handBlue.Text = game.BlueInHand.ToString();
+                }
+            }
+            else
+            {
+                infoLabel.Text = winner.ToString() + " Won!";
+                handRed.Text = game.RedInHand.ToString();
+                handBlue.Text = game.BlueInHand.ToString();
             }
 
             // Refresh move list
             List<MoveHistory> history = game.GetMoveHistory();
             moveHistory.DataSource = history;
 
-            // Status information
-            if (type == GameType.NotStarted)
-            {
-                infoLabel.Text = "Ready";
-            }
-            else
-            {
-                infoLabel.Text = game.PlayerToMove.ToString() + "'s Turn";
-            }
-
+            // Analysis information
             if (type == GameType.Loaded)
             {
                 nextMove.Enabled = true;

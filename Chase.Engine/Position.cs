@@ -236,7 +236,7 @@ namespace Chase.Engine
             }
         }
 
-        private int CountPieces(Player player)
+        public int CountPieces(Player player)
         {
             int count = 0;
             for (int i = 0; i < Constants.BoardSize; i++)

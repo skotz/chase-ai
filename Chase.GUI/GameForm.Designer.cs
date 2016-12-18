@@ -46,6 +46,9 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.searchStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.analysisLabel = new System.Windows.Forms.Label();
+            this.previousMove = new System.Windows.Forms.Button();
+            this.nextMove = new System.Windows.Forms.Button();
             this.moveHistory = new System.Windows.Forms.DataGridView();
             this.MoveNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.player1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,9 +80,10 @@
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCgn = new System.Windows.Forms.SaveFileDialog();
             this.openCgn = new System.Windows.Forms.OpenFileDialog();
-            this.nextMove = new System.Windows.Forms.Button();
-            this.previousMove = new System.Windows.Forms.Button();
-            this.analysisLabel = new System.Windows.Forms.Label();
+            this.handRed = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.handBlue = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.gamePanel.SuspendLayout();
             this.csnPanel.SuspendLayout();
             this.addPanel.SuspendLayout();
@@ -94,6 +98,8 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // gamePanel
@@ -282,14 +288,44 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel2.Controls.Add(this.analysisLabel);
             this.splitContainer1.Panel2.Controls.Add(this.previousMove);
             this.splitContainer1.Panel2.Controls.Add(this.nextMove);
             this.splitContainer1.Panel2.Controls.Add(this.moveHistory);
-            this.splitContainer1.Panel2.Controls.Add(this.infoLabel);
             this.splitContainer1.Size = new System.Drawing.Size(1095, 662);
             this.splitContainer1.SplitterDistance = 778;
             this.splitContainer1.TabIndex = 8;
+            // 
+            // analysisLabel
+            // 
+            this.analysisLabel.Location = new System.Drawing.Point(88, 636);
+            this.analysisLabel.Name = "analysisLabel";
+            this.analysisLabel.Size = new System.Drawing.Size(132, 23);
+            this.analysisLabel.TabIndex = 4;
+            this.analysisLabel.Text = "CGN";
+            this.analysisLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // previousMove
+            // 
+            this.previousMove.Location = new System.Drawing.Point(7, 636);
+            this.previousMove.Name = "previousMove";
+            this.previousMove.Size = new System.Drawing.Size(75, 23);
+            this.previousMove.TabIndex = 3;
+            this.previousMove.Text = "<";
+            this.previousMove.UseVisualStyleBackColor = true;
+            this.previousMove.Click += new System.EventHandler(this.previousMove_Click);
+            // 
+            // nextMove
+            // 
+            this.nextMove.Location = new System.Drawing.Point(226, 636);
+            this.nextMove.Name = "nextMove";
+            this.nextMove.Size = new System.Drawing.Size(75, 23);
+            this.nextMove.TabIndex = 2;
+            this.nextMove.Text = ">";
+            this.nextMove.UseVisualStyleBackColor = true;
+            this.nextMove.Click += new System.EventHandler(this.nextMove_Click);
             // 
             // moveHistory
             // 
@@ -310,14 +346,13 @@
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.moveHistory.DefaultCellStyle = dataGridViewCellStyle1;
-            this.moveHistory.Location = new System.Drawing.Point(7, 30);
+            this.moveHistory.Location = new System.Drawing.Point(7, 70);
             this.moveHistory.Name = "moveHistory";
             this.moveHistory.ReadOnly = true;
             this.moveHistory.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.moveHistory.RowHeadersVisible = false;
-            this.moveHistory.Size = new System.Drawing.Size(294, 600);
+            this.moveHistory.Size = new System.Drawing.Size(294, 560);
             this.moveHistory.TabIndex = 1;
-            //this.moveHistory.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.moveHistory_CellClick);
             // 
             // MoveNumber
             // 
@@ -349,10 +384,10 @@
             // infoLabel
             // 
             this.infoLabel.AutoSize = true;
-            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoLabel.Location = new System.Drawing.Point(3, 3);
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoLabel.Location = new System.Drawing.Point(6, 24);
             this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(128, 24);
+            this.infoLabel.Size = new System.Drawing.Size(164, 25);
             this.infoLabel.TabIndex = 0;
             this.infoLabel.Text = "Ready to play!";
             this.infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -575,34 +610,48 @@
             this.openCgn.Filter = "Chase Game Notation|*.cgn";
             this.openCgn.Title = "Load a saved game";
             // 
-            // nextMove
+            // handRed
             // 
-            this.nextMove.Location = new System.Drawing.Point(226, 636);
-            this.nextMove.Name = "nextMove";
-            this.nextMove.Size = new System.Drawing.Size(75, 23);
-            this.nextMove.TabIndex = 2;
-            this.nextMove.Text = ">";
-            this.nextMove.UseVisualStyleBackColor = true;
-            this.nextMove.Click += new System.EventHandler(this.nextMove_Click);
+            this.handRed.BackColor = System.Drawing.Color.LightCoral;
+            this.handRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.handRed.Location = new System.Drawing.Point(6, 16);
+            this.handRed.Name = "handRed";
+            this.handRed.Size = new System.Drawing.Size(40, 40);
+            this.handRed.TabIndex = 6;
+            this.handRed.Text = "4";
+            this.handRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // previousMove
+            // groupBox1
             // 
-            this.previousMove.Location = new System.Drawing.Point(7, 636);
-            this.previousMove.Name = "previousMove";
-            this.previousMove.Size = new System.Drawing.Size(75, 23);
-            this.previousMove.TabIndex = 3;
-            this.previousMove.Text = "<";
-            this.previousMove.UseVisualStyleBackColor = true;
-            this.previousMove.Click += new System.EventHandler(this.previousMove_Click);
+            this.groupBox1.Controls.Add(this.handBlue);
+            this.groupBox1.Controls.Add(this.handRed);
+            this.groupBox1.Location = new System.Drawing.Point(203, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(98, 61);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "In Hand";
             // 
-            // analysisLabel
+            // handBlue
             // 
-            this.analysisLabel.Location = new System.Drawing.Point(88, 636);
-            this.analysisLabel.Name = "analysisLabel";
-            this.analysisLabel.Size = new System.Drawing.Size(132, 23);
-            this.analysisLabel.TabIndex = 4;
-            this.analysisLabel.Text = "CGN";
-            this.analysisLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.handBlue.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.handBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.handBlue.Location = new System.Drawing.Point(52, 16);
+            this.handBlue.Name = "handBlue";
+            this.handBlue.Size = new System.Drawing.Size(40, 40);
+            this.handBlue.TabIndex = 6;
+            this.handBlue.Text = "4";
+            this.handBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.infoLabel);
+            this.groupBox2.Location = new System.Drawing.Point(7, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(190, 61);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Status";
             // 
             // GameForm
             // 
@@ -631,12 +680,14 @@
             this.statusStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -692,6 +743,10 @@
         private System.Windows.Forms.Button previousMove;
         private System.Windows.Forms.Button nextMove;
         private System.Windows.Forms.Label analysisLabel;
+        private System.Windows.Forms.Label handRed;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label handBlue;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
 
