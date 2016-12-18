@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+Installer/Output/setup-chase.exe
