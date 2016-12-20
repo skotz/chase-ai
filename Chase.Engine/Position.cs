@@ -8,7 +8,7 @@ namespace Chase.Engine
 {
     public class Position
     {
-        public int[] Board { get; private set; }
+        public int[] Board;
 
         public int this[int index] { get { return Board[index]; } }
 

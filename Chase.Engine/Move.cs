@@ -34,6 +34,8 @@ namespace Chase.Engine
 
         private static Dictionary<string, int> IndexLookup;
 
+        private static string[] TileFromIndex;
+
         public static int GetIndexFromTile(string tile)
         {
             if (IndexLookup == null)
@@ -110,6 +112,20 @@ namespace Chase.Engine
         }
 
         public static string GetTileFromIndex(int index)
+        {
+            if (TileFromIndex == null)
+            {
+                TileFromIndex = new string[Constants.BoardSize];
+                for (int i = 0; i < Constants.BoardSize; i++)
+                {
+                    TileFromIndex[i] = FindTileFromIndex(i);
+                }
+            }
+
+            return TileFromIndex[index];
+        }
+
+        private static string FindTileFromIndex(int index)
         {
             // Indexes of each piece on the board...
             // ----------------------------------------
