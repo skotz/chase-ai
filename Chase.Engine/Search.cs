@@ -44,10 +44,35 @@ namespace Chase.Engine
             timeLimitMilliseconds = settings.MaxSeconds < 0 ? 10000000 : settings.MaxSeconds * 1000;
 
             List<Move> moves = null;
-            
+            List<int> depths = new List<int>();
+
+            // Instead of creating some complicated for loop, just store up the depths we intend to search ahead of time
+            if (settings.MaxSeconds < 0)
+            {
+                if (settings.MaxDepth != 1)
+                {
+                    // If we're searching deeper than 3 (6 half moves) then do a fast two level deep search to help with move ordering
+                    depths.Add(4);
+                }
+                else if (settings.MaxDepth > 1)
+                {
+                    // If we're searching deeper than 1 (2 half moves) then do a super fast one level deep search to help with move ordering
+                    depths.Add(2);
+                }
+                depths.Add(settings.MaxDepth * 2);
+            }
+            else
+            {
+                // All the depths we intend to search, in order
+                for (int depth = 2; depth <= settings.MaxDepth * 2; depth += 2)
+                {
+                    depths.Add(depth);
+                }
+            }
+
             // Iterative deepening
             // Increment depth by 2 since we always want to consider pairs of move (our move and opponent's move)
-            for (int depth = settings.MaxSeconds < 0 ? settings.MaxDepth * 2 : 2; depth <= settings.MaxDepth * 2; depth += 2)
+            foreach (int depth in depths)
             {
                 // Need to re-initialize hash table at each depth
                 hashtable = new Dictionary<ulong, SearchResult>();
@@ -112,7 +137,7 @@ namespace Chase.Engine
                 {
                     bluePieces++;
 
-                    if (position.Board[i].In(4, 5))
+                    if (position.Board[i] == 4 || position.Board[i] == 5)
                     {
                         // 4s and 5s are good
                         blueGoodPieces++;
@@ -127,7 +152,7 @@ namespace Chase.Engine
                 {
                     redPieces++;
 
-                    if (position.Board[i].In(-4, -5))
+                    if (position.Board[i] == -4 || position.Board[i] == -5)
                     {
                         redGoodPieces++;
                     }

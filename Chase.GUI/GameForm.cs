@@ -42,6 +42,7 @@ namespace Chase.GUI
         {
             type = GameType.ComputerSelfPlay;
             infoLabel.Text = "Thinking...";
+            searchStatusLabel.Text = "Thinking...";
 
             game.StartNew();
             game.BeginGetBestMove(GetDepth(), GetSeconds());
@@ -118,6 +119,7 @@ namespace Chase.GUI
 
             if (!computerPlaysBlueToolStripMenuItem.Checked)
             {
+                searchStatusLabel.Text = "Thinking...";
                 game.BeginGetBestMove(GetDepth(), GetSeconds());
             }
         }
@@ -335,6 +337,7 @@ namespace Chase.GUI
             {
                 if ((game.PlayerToMove == Player.Blue && computerPlaysBlueToolStripMenuItem.Checked) || (game.PlayerToMove == Player.Red && !computerPlaysBlueToolStripMenuItem.Checked))
                 {
+                    searchStatusLabel.Text = "Thinking...";
                     game.BeginGetBestMove(GetDepth(), GetSeconds());
                 }
             }
@@ -486,13 +489,21 @@ namespace Chase.GUI
 
         private int GetDepth()
         {
-            if (twoMovesDeep.Checked)
+            if (oneMoveDeep.Checked)
+            {
+                return 1;
+            }
+            else if (twoMovesDeep.Checked)
             {
                 return 2;
             }
             else if (threeMovesDeep.Checked)
             {
                 return 3;
+            }
+            else if (fourMovesDeep.Checked)
+            {
+                return 4;
             }
             else
             {
@@ -510,6 +521,10 @@ namespace Chase.GUI
             {
                 return 20;
             }
+            else if (sixtySecondsMove.Checked)
+            {
+                return 60;
+            }
             else
             {
                 return -1;
@@ -520,10 +535,13 @@ namespace Chase.GUI
         {
             List<ToolStripMenuItem> options = new List<ToolStripMenuItem>()
             {
+                oneMoveDeep,
                 twoMovesDeep,
                 threeMovesDeep,
+                fourMovesDeep,
                 fiveSecondsMove,
-                twentySecondsMove
+                twentySecondsMove,
+                sixtySecondsMove
             };
 
             options.Where(x => x.Name != ((ToolStripMenuItem)sender).Name).ToList().ForEach(x => x.Checked = false);

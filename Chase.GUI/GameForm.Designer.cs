@@ -46,6 +46,11 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.searchStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.infoLabel = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.handBlue = new System.Windows.Forms.Label();
+            this.handRed = new System.Windows.Forms.Label();
             this.analysisLabel = new System.Windows.Forms.Label();
             this.previousMove = new System.Windows.Forms.Button();
             this.nextMove = new System.Windows.Forms.Button();
@@ -53,7 +58,6 @@
             this.MoveNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.player1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.player2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.infoLabel = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,10 +84,10 @@
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCgn = new System.Windows.Forms.SaveFileDialog();
             this.openCgn = new System.Windows.Forms.OpenFileDialog();
-            this.handRed = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.handBlue = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.oneMoveDeep = new System.Windows.Forms.ToolStripMenuItem();
+            this.fourMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
+            this.sixtySecondsMove = new System.Windows.Forms.ToolStripMenuItem();
             this.gamePanel.SuspendLayout();
             this.csnPanel.SuspendLayout();
             this.addPanel.SuspendLayout();
@@ -96,10 +100,10 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // gamePanel
@@ -298,6 +302,60 @@
             this.splitContainer1.SplitterDistance = 778;
             this.splitContainer1.TabIndex = 8;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.infoLabel);
+            this.groupBox2.Location = new System.Drawing.Point(7, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(190, 61);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Status";
+            // 
+            // infoLabel
+            // 
+            this.infoLabel.AutoSize = true;
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoLabel.Location = new System.Drawing.Point(6, 24);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(164, 25);
+            this.infoLabel.TabIndex = 0;
+            this.infoLabel.Text = "Ready to play!";
+            this.infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.handBlue);
+            this.groupBox1.Controls.Add(this.handRed);
+            this.groupBox1.Location = new System.Drawing.Point(203, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(98, 61);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "In Hand";
+            // 
+            // handBlue
+            // 
+            this.handBlue.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.handBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.handBlue.Location = new System.Drawing.Point(52, 16);
+            this.handBlue.Name = "handBlue";
+            this.handBlue.Size = new System.Drawing.Size(40, 40);
+            this.handBlue.TabIndex = 6;
+            this.handBlue.Text = "4";
+            this.handBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // handRed
+            // 
+            this.handRed.BackColor = System.Drawing.Color.LightCoral;
+            this.handRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.handRed.Location = new System.Drawing.Point(6, 16);
+            this.handRed.Name = "handRed";
+            this.handRed.Size = new System.Drawing.Size(40, 40);
+            this.handRed.TabIndex = 6;
+            this.handRed.Text = "4";
+            this.handRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // analysisLabel
             // 
             this.analysisLabel.Location = new System.Drawing.Point(88, 636);
@@ -381,17 +439,6 @@
             this.player2.ReadOnly = true;
             this.player2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // infoLabel
-            // 
-            this.infoLabel.AutoSize = true;
-            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoLabel.Location = new System.Drawing.Point(6, 24);
-            this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(164, 25);
-            this.infoLabel.TabIndex = 0;
-            this.infoLabel.Text = "Ready to play!";
-            this.infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
@@ -438,10 +485,14 @@
             // levelToolStripMenuItem
             // 
             this.levelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.oneMoveDeep,
             this.twoMovesDeep,
             this.threeMovesDeep,
+            this.fourMovesDeep,
+            this.toolStripSeparator5,
             this.fiveSecondsMove,
-            this.twentySecondsMove});
+            this.twentySecondsMove,
+            this.sixtySecondsMove});
             this.levelToolStripMenuItem.Name = "levelToolStripMenuItem";
             this.levelToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.levelToolStripMenuItem.Text = "Level";
@@ -610,48 +661,34 @@
             this.openCgn.Filter = "Chase Game Notation|*.cgn";
             this.openCgn.Title = "Load a saved game";
             // 
-            // handRed
+            // toolStripSeparator5
             // 
-            this.handRed.BackColor = System.Drawing.Color.LightCoral;
-            this.handRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.handRed.Location = new System.Drawing.Point(6, 16);
-            this.handRed.Name = "handRed";
-            this.handRed.Size = new System.Drawing.Size(40, 40);
-            this.handRed.TabIndex = 6;
-            this.handRed.Text = "4";
-            this.handRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(165, 6);
             // 
-            // groupBox1
+            // oneMoveDeep
             // 
-            this.groupBox1.Controls.Add(this.handBlue);
-            this.groupBox1.Controls.Add(this.handRed);
-            this.groupBox1.Location = new System.Drawing.Point(203, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(98, 61);
-            this.groupBox1.TabIndex = 7;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "In Hand";
+            this.oneMoveDeep.CheckOnClick = true;
+            this.oneMoveDeep.Name = "oneMoveDeep";
+            this.oneMoveDeep.Size = new System.Drawing.Size(168, 22);
+            this.oneMoveDeep.Text = "1 Move Deep";
+            this.oneMoveDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
             // 
-            // handBlue
+            // fourMovesDeep
             // 
-            this.handBlue.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.handBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.handBlue.Location = new System.Drawing.Point(52, 16);
-            this.handBlue.Name = "handBlue";
-            this.handBlue.Size = new System.Drawing.Size(40, 40);
-            this.handBlue.TabIndex = 6;
-            this.handBlue.Text = "4";
-            this.handBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.fourMovesDeep.CheckOnClick = true;
+            this.fourMovesDeep.Name = "fourMovesDeep";
+            this.fourMovesDeep.Size = new System.Drawing.Size(168, 22);
+            this.fourMovesDeep.Text = "4 Moves Deep";
+            this.fourMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
             // 
-            // groupBox2
+            // sixtySecondsMove
             // 
-            this.groupBox2.Controls.Add(this.infoLabel);
-            this.groupBox2.Location = new System.Drawing.Point(7, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(190, 61);
-            this.groupBox2.TabIndex = 8;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Status";
+            this.sixtySecondsMove.CheckOnClick = true;
+            this.sixtySecondsMove.Name = "sixtySecondsMove";
+            this.sixtySecondsMove.Size = new System.Drawing.Size(168, 22);
+            this.sixtySecondsMove.Text = "60 Seconds/Move";
+            this.sixtySecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
             // 
             // GameForm
             // 
@@ -682,12 +719,12 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -747,6 +784,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label handBlue;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ToolStripMenuItem oneMoveDeep;
+        private System.Windows.Forms.ToolStripMenuItem fourMovesDeep;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem sixtySecondsMove;
     }
 }
 
