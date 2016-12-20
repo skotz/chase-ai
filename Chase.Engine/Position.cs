@@ -426,19 +426,19 @@ namespace Chase.Engine
                 if (i > 1 || isBounce)
                 {
                     // Check for richochets
-                    if (direction == Direction.UpRight && index.In(0, 1, 2, 3, 4, 5, 6, 7, 8))
+                    if (direction == Direction.UpRight && index >= 0 && index <= 8)
                     {
                         direction = Direction.DownRight;
                     }
-                    else if (direction == Direction.UpLeft && index.In(0, 1, 2, 3, 4, 5, 6, 7, 8))
+                    else if (direction == Direction.UpLeft && index >= 0 && index <= 8)
                     {
                         direction = Direction.DownLeft;
                     }
-                    else if (direction == Direction.DownLeft && index.In(72, 73, 74, 75, 76, 77, 78, 79, 80))
+                    else if (direction == Direction.DownLeft && index >= 72 && index <= 80)
                     {
                         direction = Direction.UpLeft;
                     }
-                    else if (direction == Direction.DownRight && index.In(72, 73, 74, 75, 76, 77, 78, 79, 80))
+                    else if (direction == Direction.DownRight && index >= 72 && index <= 80)
                     {
                         direction = Direction.UpRight;
                     }
