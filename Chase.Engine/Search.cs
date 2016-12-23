@@ -267,12 +267,12 @@ namespace Chase.Engine
             int eval = EvaluatePosition(position, depthUp);
 
             // See if someone won
-            if (Math.Abs(eval) == Constants.VictoryScore)
+            if (Math.Abs(eval) > Constants.VictoryScore - 100)
             {
                 return new SearchResult()
                 {
                     Score = eval,
-                    PrimaryVariation = eval == Constants.VictoryScore ? "BLUE-WINS" : "RED-WINS"
+                    PrimaryVariation = eval > 0 ? "BLUE-WINS" : "RED-WINS"
                 };
             }
 
