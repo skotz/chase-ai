@@ -128,5 +128,14 @@ namespace Chase.GUI
 
             richTextBox1.Text = Regex.Replace(sb.ToString(), @"\,([^}{,]*)\}", m => m.ToString().Substring(1));
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Game game = new Game();
+
+            game.AnalyzePosition(Position.NewPosition(), 2, "analysis.csv");
+
+            richTextBox1.Text = "Done Analyzing!";
+        }
     }
 }

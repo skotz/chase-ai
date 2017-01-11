@@ -63,10 +63,14 @@
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selfPlayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.levelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oneMoveDeep = new System.Windows.Forms.ToolStripMenuItem();
             this.twoMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
             this.threeMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
+            this.fourMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.fiveSecondsMove = new System.Windows.Forms.ToolStripMenuItem();
             this.twentySecondsMove = new System.Windows.Forms.ToolStripMenuItem();
+            this.sixtySecondsMove = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.loadPositionFromCSNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCSNFromPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,10 +88,6 @@
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCgn = new System.Windows.Forms.SaveFileDialog();
             this.openCgn = new System.Windows.Forms.OpenFileDialog();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.oneMoveDeep = new System.Windows.Forms.ToolStripMenuItem();
-            this.fourMovesDeep = new System.Windows.Forms.ToolStripMenuItem();
-            this.sixtySecondsMove = new System.Windows.Forms.ToolStripMenuItem();
             this.gamePanel.SuspendLayout();
             this.csnPanel.SuspendLayout();
             this.addPanel.SuspendLayout();
@@ -497,6 +497,14 @@
             this.levelToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.levelToolStripMenuItem.Text = "Level";
             // 
+            // oneMoveDeep
+            // 
+            this.oneMoveDeep.CheckOnClick = true;
+            this.oneMoveDeep.Name = "oneMoveDeep";
+            this.oneMoveDeep.Size = new System.Drawing.Size(168, 22);
+            this.oneMoveDeep.Text = "1 Move Deep";
+            this.oneMoveDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            // 
             // twoMovesDeep
             // 
             this.twoMovesDeep.Checked = true;
@@ -515,6 +523,19 @@
             this.threeMovesDeep.Text = "3 Moves Deep";
             this.threeMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
             // 
+            // fourMovesDeep
+            // 
+            this.fourMovesDeep.CheckOnClick = true;
+            this.fourMovesDeep.Name = "fourMovesDeep";
+            this.fourMovesDeep.Size = new System.Drawing.Size(168, 22);
+            this.fourMovesDeep.Text = "4 Moves Deep";
+            this.fourMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(165, 6);
+            // 
             // fiveSecondsMove
             // 
             this.fiveSecondsMove.CheckOnClick = true;
@@ -530,6 +551,14 @@
             this.twentySecondsMove.Size = new System.Drawing.Size(168, 22);
             this.twentySecondsMove.Text = "20 Seconds/Move";
             this.twentySecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
+            // 
+            // sixtySecondsMove
+            // 
+            this.sixtySecondsMove.CheckOnClick = true;
+            this.sixtySecondsMove.Name = "sixtySecondsMove";
+            this.sixtySecondsMove.Size = new System.Drawing.Size(168, 22);
+            this.sixtySecondsMove.Text = "60 Seconds/Move";
+            this.sixtySecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -644,7 +673,6 @@
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             this.testToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.testToolStripMenuItem.Text = "&Test";
-            this.testToolStripMenuItem.Visible = false;
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // saveCgn
@@ -660,35 +688,6 @@
             this.openCgn.FileName = "game.cgn";
             this.openCgn.Filter = "Chase Game Notation|*.cgn";
             this.openCgn.Title = "Load a saved game";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(165, 6);
-            // 
-            // oneMoveDeep
-            // 
-            this.oneMoveDeep.CheckOnClick = true;
-            this.oneMoveDeep.Name = "oneMoveDeep";
-            this.oneMoveDeep.Size = new System.Drawing.Size(168, 22);
-            this.oneMoveDeep.Text = "1 Move Deep";
-            this.oneMoveDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
-            // 
-            // fourMovesDeep
-            // 
-            this.fourMovesDeep.CheckOnClick = true;
-            this.fourMovesDeep.Name = "fourMovesDeep";
-            this.fourMovesDeep.Size = new System.Drawing.Size(168, 22);
-            this.fourMovesDeep.Text = "4 Moves Deep";
-            this.fourMovesDeep.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
-            // 
-            // sixtySecondsMove
-            // 
-            this.sixtySecondsMove.CheckOnClick = true;
-            this.sixtySecondsMove.Name = "sixtySecondsMove";
-            this.sixtySecondsMove.Size = new System.Drawing.Size(168, 22);
-            this.sixtySecondsMove.Text = "60 Seconds/Move";
-            this.sixtySecondsMove.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
             // 
             // GameForm
             // 

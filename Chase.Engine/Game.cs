@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chase.Engine
@@ -311,6 +313,59 @@ namespace Chase.Engine
             }
 
             return threats;   
+        }
+
+        public void AnalyzePosition(Position position, int depth, string file)
+        {
+            Semaphore s = new Semaphore(1, 1);
+            
+            using (StreamWriter w = new StreamWriter(file, false))
+            {
+                w.WriteLine("Last Move,Best Move,Move Score,Primary Variation,Depth,Evaluations,Seconds");
+            }
+
+            // Create a list of positions so we can process in parallel
+            List<Position> positions = new List<Position>();
+            positions.Add(position);
+            foreach (Move move in position.GetValidMoves())
+            {
+                Position copy = position.Clone();
+                copy.MakeMove(move);
+                positions.Add(copy);
+            }
+
+            // Analyze all positions in parallel
+            Parallel.ForEach(positions, p =>
+            {
+                Stopwatch timer = Stopwatch.StartNew();
+                Search search = new Search();
+                SearchArgs args = new SearchArgs(depth, -1);
+                SearchResult best = search.GetBestMove(p, args);
+                timer.Stop();
+
+                s.WaitOne();
+                using (StreamWriter w = new StreamWriter(file, true))
+                {
+                    string history = "";
+                    if (!string.IsNullOrEmpty(p.MovesHistory))
+                    {
+                        string move = p.MovesHistory;
+                        if (move.Contains(" "))
+                        {
+                            move = move.Split(' ')[0];
+                        }
+
+                        history = "After " + move;
+                    }
+                    else
+                    {
+                        history = "Starting Position";
+                    }
+
+                    w.WriteLine(history + "," + best.BestMove.ToString() + "," + best.Score + "," + best.PrimaryVariation + "," + depth + "," + best.Evaluations + "," + (timer.ElapsedMilliseconds / 1000.0).ToString("0.000"));
+                }
+                s.Release();
+            });
         }
 
         public void SaveGameToFile(string file)
