@@ -133,7 +133,7 @@ namespace Chase.GUI
         {
             Game game = new Game();
 
-            game.AnalyzePosition(Position.NewPosition(), 2, "analysis.csv");
+            game.AnalyzePosition(Position.NewPosition(), 6, "analysis.csv");
 
             richTextBox1.Text = "Done Analyzing!";
         }
