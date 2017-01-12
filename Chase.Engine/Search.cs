@@ -17,7 +17,7 @@ namespace Chase.Engine
 
         private Stopwatch timer;
 
-        private int timeLimitMilliseconds;
+        private long timeLimitMilliseconds;
 
         private bool cutoff;
 
@@ -44,7 +44,7 @@ namespace Chase.Engine
             evaluations = 0;
             hashLookups = 0;
             useCache = settings.EnableCaching;
-            timeLimitMilliseconds = settings.MaxSeconds < 0 ? 10000000 : settings.MaxSeconds * 1000;
+            timeLimitMilliseconds = settings.MaxSeconds < 0 ? long.MaxValue : settings.MaxSeconds * 1000;
 
             List<Move> moves = null;
             List<int> depths = new List<int>();
