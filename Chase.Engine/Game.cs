@@ -333,39 +333,46 @@ namespace Chase.Engine
                 copy.MakeMove(move);
                 positions.Add(copy);
             }
-
-            // Analyze all positions in parallel
-            Parallel.ForEach(positions, p =>
+            
+            // Create a list of actions to run in parallel
+            List<Action> actions = new List<Action>();
+            foreach (Position p in positions)
             {
-                Stopwatch timer = Stopwatch.StartNew();
-                Search search = new Search();
-                SearchArgs args = new SearchArgs(depth, -1);
-                SearchResult best = search.GetBestMove(p, args);
-                timer.Stop();
-
-                s.WaitOne();
-                using (StreamWriter w = new StreamWriter(file, true))
+                actions.Add(() =>
                 {
-                    string history = "";
-                    if (!string.IsNullOrEmpty(p.MovesHistory))
+                    Stopwatch timer = Stopwatch.StartNew();
+                    Search search = new Search();
+                    SearchArgs args = new SearchArgs(depth, -1, false);
+                    SearchResult best = search.GetBestMove(p, args);
+                    timer.Stop();
+
+                    s.WaitOne();
+                    using (StreamWriter w = new StreamWriter(file, true))
                     {
-                        string move = p.MovesHistory;
-                        if (move.Contains(" "))
+                        string history = "";
+                        if (!string.IsNullOrEmpty(p.MovesHistory))
                         {
-                            move = move.Split(' ')[0];
+                            string move = p.MovesHistory;
+                            if (move.Contains(" "))
+                            {
+                                move = move.Split(' ')[0];
+                            }
+
+                            history = "After " + move;
+                        }
+                        else
+                        {
+                            history = "Starting Position";
                         }
 
-                        history = "After " + move;
+                        w.WriteLine(history + "," + best.BestMove.ToString() + "," + best.Score + "," + best.PrimaryVariation + "," + depth + "," + best.Evaluations + "," + (timer.ElapsedMilliseconds / 1000.0).ToString("0.000"));
                     }
-                    else
-                    {
-                        history = "Starting Position";
-                    }
+                    s.Release();
+                });
+            }
 
-                    w.WriteLine(history + "," + best.BestMove.ToString() + "," + best.Score + "," + best.PrimaryVariation + "," + depth + "," + best.Evaluations + "," + (timer.ElapsedMilliseconds / 1000.0).ToString("0.000"));
-                }
-                s.Release();
-            });
+            // Analyze all positions in parallel
+            actions.ForEach(a => Task.Run(a));
         }
 
         public void SaveGameToFile(string file)

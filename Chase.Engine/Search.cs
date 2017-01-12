@@ -21,6 +21,8 @@ namespace Chase.Engine
 
         private bool cutoff;
 
+        private bool useCache;
+
         private int currentDepth;
 
         private string levelOneNode;
@@ -41,6 +43,7 @@ namespace Chase.Engine
             cutoff = false;
             evaluations = 0;
             hashLookups = 0;
+            useCache = settings.EnableCaching;
             timeLimitMilliseconds = settings.MaxSeconds < 0 ? 10000000 : settings.MaxSeconds * 1000;
 
             List<Move> moves = null;
@@ -255,12 +258,16 @@ namespace Chase.Engine
 
         private SearchResult AlphaBetaSearch(Position position, int alpha, int beta, int depth, int reportdepth, int depthUp, ref List<Move> orderedMoves)
         {
-            // If we've already processed this position, use the saved evaluation
-            ulong hash = position.GetHash();
-            if (hashtable.ContainsKey(hash))
+            ulong hash = 0L;
+            if (useCache)
             {
-                hashLookups++;
-                return hashtable[hash];
+                // If we've already processed this position, use the saved evaluation
+                hash = position.GetHash();
+                if (hashtable.ContainsKey(hash))
+                {
+                    hashLookups++;
+                    return hashtable[hash];
+                }
             }
 
             // Evaluate the position
@@ -408,9 +415,12 @@ namespace Chase.Engine
                 }
             }
 
-            if (!hashtable.ContainsKey(hash))
+            if (useCache)
             {
-                hashtable.Add(hash, best);
+                if (!hashtable.ContainsKey(hash))
+                {
+                    hashtable.Add(hash, best);
+                }
             }
             
             // Store the moves for the next depth (if using iterative deepening
