@@ -737,7 +737,7 @@ namespace Chase.GUI
                 chIndex - 1
             };
             int cancel = chIndex - 9;
-            
+
             SolidBrush tileCancelBrush = new SolidBrush(tileThreatenedPiece);
             SolidBrush tileTextBrush = new SolidBrush(tileTextColor);
 
@@ -749,17 +749,13 @@ namespace Chase.GUI
                 {
                     Color newColor = Color.FromArgb(128, tileBrush.Color.R, tileBrush.Color.G, tileBrush.Color.B);
                     tileBrush = new SolidBrush(newColor);
-                }                
+                }
 
                 // Draw the hex option
                 g.FillPath(tileBrush, tiles[options[i]].Path);
 
                 // Draw the option text
-                string value = "+" + (i + 1);
-                Font valueFont = new Font("Tahoma", 16.0f, FontStyle.Bold);
-                SizeF valueSize = g.MeasureString(value, valueFont);
-                RectangleF valueLocation = new RectangleF(new PointF(tiles[options[i]].BoundingBox.X + tiles[options[i]].BoundingBox.Width / 2 - valueSize.Width / 2, tiles[options[i]].BoundingBox.Y + tiles[options[i]].BoundingBox.Height / 2 - valueSize.Height / 2), valueSize);
-                g.DrawString(value, valueFont, tileTextBrush, valueLocation);
+                DrawTileText(g, options[i], tileTextBrush, "+" + (i + 1));
             }
 
             // Draw the cancel button
@@ -769,11 +765,7 @@ namespace Chase.GUI
                 tileCancelBrush = new SolidBrush(newColor);
             }
             g.FillPath(tileCancelBrush, tiles[cancel].Path);
-            string calcelValue = "X";
-            Font cancelFont = new Font("Tahoma", 16.0f, FontStyle.Bold);
-            SizeF cancelSize = g.MeasureString(calcelValue, cancelFont);
-            RectangleF cancelLocation = new RectangleF(new PointF(tiles[cancel].BoundingBox.X + tiles[cancel].BoundingBox.Width / 2 - cancelSize.Width / 2, tiles[cancel].BoundingBox.Y + tiles[cancel].BoundingBox.Height / 2 - cancelSize.Height / 2), cancelSize);
-            g.DrawString(calcelValue, cancelFont, tileTextBrush, cancelLocation);
+            DrawTileText(g, cancel, tileTextBrush, "X");
         }
 
         private void DrawHexTile(Graphics g, int hexIndex, bool hover)
@@ -894,10 +886,15 @@ namespace Chase.GUI
             }
 
             // Draw the piece value
-            Font valueFont = new Font("Tahoma", 16.0f, FontStyle.Bold);
-            SizeF valueSize = g.MeasureString(value, valueFont);
-            RectangleF valueLocation = new RectangleF(new PointF(tiles[hexIndex].BoundingBox.X + tiles[hexIndex].BoundingBox.Width / 2 - valueSize.Width / 2, tiles[hexIndex].BoundingBox.Y + tiles[hexIndex].BoundingBox.Height / 2 - valueSize.Height / 2), valueSize);
-            g.DrawString(value, valueFont, tileTextBrush, valueLocation);
+            DrawTileText(g, hexIndex, tileTextBrush, value);
+        }
+
+        private void DrawTileText(Graphics g, int tileIndex, SolidBrush textBrush, string text)
+        {
+            Font cancelFont = new Font("Tahoma", 16.0f, FontStyle.Bold);
+            SizeF cancelSize = g.MeasureString(text, cancelFont);
+            RectangleF cancelLocation = new RectangleF(new PointF(tiles[tileIndex].BoundingBox.X + tiles[tileIndex].BoundingBox.Width / 2 - cancelSize.Width / 2, tiles[tileIndex].BoundingBox.Y + tiles[tileIndex].BoundingBox.Height / 2 - cancelSize.Height / 2), cancelSize);
+            g.DrawString(text, cancelFont, textBrush, cancelLocation);
         }
 
         private void chasePanel_Click(object sender, EventArgs e)
