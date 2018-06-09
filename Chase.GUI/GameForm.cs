@@ -21,6 +21,9 @@ namespace Chase.GUI
         List<HexTile> tiles;
         Move lastMove;
 
+        bool addPieceMode = false;
+        int maxAddPiece = 5;
+
         int selectedFromTile = -1;
         int selectedToTile = -1;
 
@@ -285,6 +288,8 @@ namespace Chase.GUI
                                 add5.Enabled = increments.Contains(5);
 
                                 addPanel.Visible = true;
+                                addPieceMode = true;
+                                maxAddPiece = increments.Max();
                             }
                             else
                             {
@@ -450,11 +455,13 @@ namespace Chase.GUI
             }
 
             addPanel.Visible = false;
+            addPieceMode = false;
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
             addPanel.Visible = false;
+            addPieceMode = false;
         }
 
         private void loadPositionFromCSNToolStripMenuItem_Click(object sender, EventArgs e)
@@ -623,6 +630,7 @@ namespace Chase.GUI
         }
 
         private Color backgroundColor = Color.FromArgb(171, 171, 171);
+        private Color dialogColor = Color.FromArgb(200, 171, 171, 171);
 
         private Color tileColor = Color.FromArgb(225, 225, 225);
         private Color tileRedColor = Color.FromArgb(255, 0, 0);
@@ -660,6 +668,15 @@ namespace Chase.GUI
                 for (int i = 0; i < 81; i++)
                 {
                     DrawHexTile(g, i, tiles[i].IsPointInHex(mouseLocation));
+                }
+
+                if (addPieceMode)
+                {
+                    SolidBrush dialog = new SolidBrush(dialogColor);
+                    g.FillRectangle(dialog, 0, 0, b.Width, b.Height);
+
+                    // Need to distribute captured points after opponent's last move
+                    DrawAddPieceDialog(g, mouseLocation);
                 }
 
                 using (Graphics game = chasePanel.CreateGraphics())
@@ -706,6 +723,57 @@ namespace Chase.GUI
             path.AddPolygon(hexPoints);
 
             return new HexTile(hexPoints, path, x, y, tileWidth, tileWidth * widthToHeight);
+        }
+
+        private void DrawAddPieceDialog(Graphics g, PointF mouse)
+        {
+            int chIndex = 40;
+            int[] options = new int[]
+            {
+                chIndex - 8,
+                chIndex + 1,
+                chIndex + 10,
+                chIndex + 9,
+                chIndex - 1
+            };
+            int cancel = chIndex - 9;
+            
+            SolidBrush tileCancelBrush = new SolidBrush(tileThreatenedPiece);
+            SolidBrush tileTextBrush = new SolidBrush(tileTextColor);
+
+            for (int i = 0; i < maxAddPiece; i++)
+            {
+                // Change the color if the mouse is hovering over the tile
+                SolidBrush tileBrush = new SolidBrush(tileColor);
+                if (tiles[options[i]].IsPointInHex(mouse))
+                {
+                    Color newColor = Color.FromArgb(128, tileBrush.Color.R, tileBrush.Color.G, tileBrush.Color.B);
+                    tileBrush = new SolidBrush(newColor);
+                }                
+
+                // Draw the hex option
+                g.FillPath(tileBrush, tiles[options[i]].Path);
+
+                // Draw the option text
+                string value = "+" + (i + 1);
+                Font valueFont = new Font("Tahoma", 16.0f, FontStyle.Bold);
+                SizeF valueSize = g.MeasureString(value, valueFont);
+                RectangleF valueLocation = new RectangleF(new PointF(tiles[options[i]].BoundingBox.X + tiles[options[i]].BoundingBox.Width / 2 - valueSize.Width / 2, tiles[options[i]].BoundingBox.Y + tiles[options[i]].BoundingBox.Height / 2 - valueSize.Height / 2), valueSize);
+                g.DrawString(value, valueFont, tileTextBrush, valueLocation);
+            }
+
+            // Draw the cancel button
+            if (tiles[cancel].IsPointInHex(mouse))
+            {
+                Color newColor = Color.FromArgb(128, tileCancelBrush.Color.R, tileCancelBrush.Color.G, tileCancelBrush.Color.B);
+                tileCancelBrush = new SolidBrush(newColor);
+            }
+            g.FillPath(tileCancelBrush, tiles[cancel].Path);
+            string calcelValue = "X";
+            Font cancelFont = new Font("Tahoma", 16.0f, FontStyle.Bold);
+            SizeF cancelSize = g.MeasureString(calcelValue, cancelFont);
+            RectangleF cancelLocation = new RectangleF(new PointF(tiles[cancel].BoundingBox.X + tiles[cancel].BoundingBox.Width / 2 - cancelSize.Width / 2, tiles[cancel].BoundingBox.Y + tiles[cancel].BoundingBox.Height / 2 - cancelSize.Height / 2), cancelSize);
+            g.DrawString(calcelValue, cancelFont, tileTextBrush, cancelLocation);
         }
 
         private void DrawHexTile(Graphics g, int hexIndex, bool hover)
@@ -803,7 +871,7 @@ namespace Chase.GUI
             }
 
             // Change the color if the mouse is hovering over the tile
-            if (hover)
+            if (hover && !addPieceMode)
             {
                 Color newColor = Color.FromArgb(128, tileBrush.Color.R, tileBrush.Color.G, tileBrush.Color.B);
                 tileBrush = new SolidBrush(newColor);
@@ -848,7 +916,49 @@ namespace Chase.GUI
 
             if (hexIndex >= 0)
             {
-                ClickTile(hexIndex);
+                if (addPieceMode)
+                {
+                    ClickDialog(hexIndex);
+                }
+                else
+                {
+                    ClickTile(hexIndex);
+                }
+            }
+        }
+
+        private void ClickDialog(int hexIndex)
+        {
+            int chIndex = 40;
+            int[] options = new int[]
+            {
+                chIndex - 8,
+                chIndex + 1,
+                chIndex + 10,
+                chIndex + 9,
+                chIndex - 1
+            };
+            int cancel = chIndex - 9;
+            
+            int amount = options.ToList().IndexOf(hexIndex) + 1;
+            if (amount > 0)
+            {
+                List<Move> moves = game.GetAllMoves().Where(x => x.FromIndex == selectedFromTile && x.ToIndex == selectedToTile && x.Increment == amount).ToList();
+                if (moves.Count > 0)
+                {
+                    Move move = moves.First();
+                    MakeMove(move);
+                }
+
+                addPanel.Visible = false;
+                addPieceMode = false;
+            }
+
+            // User clicked cancel, so close dialog
+            if (hexIndex == cancel)
+            {
+                addPanel.Visible = false;
+                addPieceMode = false;
             }
         }
     }
