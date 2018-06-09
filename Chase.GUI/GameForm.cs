@@ -63,6 +63,7 @@ namespace Chase.GUI
             RefreshBoard();
 
             gameTimer.Start();
+            StartNewGame();
         }
 
         private void selfPlayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -137,6 +138,11 @@ namespace Chase.GUI
         }
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartNewGame();
+        }
+
+        private void StartNewGame()
         {
             type = GameType.ComputerVsHuman;
 
