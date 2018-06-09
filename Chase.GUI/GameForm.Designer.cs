@@ -31,22 +31,13 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
-            this.gamePanel = new System.Windows.Forms.Panel();
             this.csnPanel = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.csnInput = new System.Windows.Forms.TextBox();
-            this.addPanel = new System.Windows.Forms.Panel();
-            this.addNone = new System.Windows.Forms.Button();
-            this.add5 = new System.Windows.Forms.Button();
-            this.add4 = new System.Windows.Forms.Button();
-            this.add3 = new System.Windows.Forms.Button();
-            this.add2 = new System.Windows.Forms.Button();
-            this.add1 = new System.Windows.Forms.Button();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.searchStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.chasePanel = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.infoLabel = new System.Windows.Forms.Label();
@@ -91,33 +82,20 @@
             this.saveCgn = new System.Windows.Forms.SaveFileDialog();
             this.openCgn = new System.Windows.Forms.OpenFileDialog();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
-            this.gamePanel.SuspendLayout();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.csnPanel.SuspendLayout();
-            this.addPanel.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.chasePanel.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // gamePanel
-            // 
-            this.gamePanel.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.gamePanel.Controls.Add(this.csnPanel);
-            this.gamePanel.Controls.Add(this.addPanel);
-            this.gamePanel.Location = new System.Drawing.Point(3, 3);
-            this.gamePanel.Name = "gamePanel";
-            this.gamePanel.Size = new System.Drawing.Size(774, 656);
-            this.gamePanel.TabIndex = 7;
             // 
             // csnPanel
             // 
@@ -125,7 +103,7 @@
             this.csnPanel.Controls.Add(this.button1);
             this.csnPanel.Controls.Add(this.label1);
             this.csnPanel.Controls.Add(this.csnInput);
-            this.csnPanel.Location = new System.Drawing.Point(49, 145);
+            this.csnPanel.Location = new System.Drawing.Point(56, 180);
             this.csnPanel.Name = "csnPanel";
             this.csnPanel.Size = new System.Drawing.Size(672, 100);
             this.csnPanel.TabIndex = 1;
@@ -160,87 +138,6 @@
             this.csnInput.TabIndex = 0;
             this.csnInput.TextChanged += new System.EventHandler(this.csnInput_TextChanged);
             // 
-            // addPanel
-            // 
-            this.addPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.addPanel.Controls.Add(this.addNone);
-            this.addPanel.Controls.Add(this.add5);
-            this.addPanel.Controls.Add(this.add4);
-            this.addPanel.Controls.Add(this.add3);
-            this.addPanel.Controls.Add(this.add2);
-            this.addPanel.Controls.Add(this.add1);
-            this.addPanel.Location = new System.Drawing.Point(49, 251);
-            this.addPanel.Name = "addPanel";
-            this.addPanel.Size = new System.Drawing.Size(672, 156);
-            this.addPanel.TabIndex = 0;
-            this.addPanel.Visible = false;
-            // 
-            // addNone
-            // 
-            this.addNone.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addNone.Location = new System.Drawing.Point(550, 29);
-            this.addNone.Name = "addNone";
-            this.addNone.Size = new System.Drawing.Size(100, 100);
-            this.addNone.TabIndex = 1;
-            this.addNone.Text = "Cancel";
-            this.addNone.UseVisualStyleBackColor = true;
-            this.addNone.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // add5
-            // 
-            this.add5.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.add5.Location = new System.Drawing.Point(444, 29);
-            this.add5.Name = "add5";
-            this.add5.Size = new System.Drawing.Size(100, 100);
-            this.add5.TabIndex = 0;
-            this.add5.Text = "+5";
-            this.add5.UseVisualStyleBackColor = true;
-            this.add5.Click += new System.EventHandler(this.add1_Click);
-            // 
-            // add4
-            // 
-            this.add4.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.add4.Location = new System.Drawing.Point(338, 29);
-            this.add4.Name = "add4";
-            this.add4.Size = new System.Drawing.Size(100, 100);
-            this.add4.TabIndex = 0;
-            this.add4.Text = "+4";
-            this.add4.UseVisualStyleBackColor = true;
-            this.add4.Click += new System.EventHandler(this.add1_Click);
-            // 
-            // add3
-            // 
-            this.add3.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.add3.Location = new System.Drawing.Point(232, 29);
-            this.add3.Name = "add3";
-            this.add3.Size = new System.Drawing.Size(100, 100);
-            this.add3.TabIndex = 0;
-            this.add3.Text = "+3";
-            this.add3.UseVisualStyleBackColor = true;
-            this.add3.Click += new System.EventHandler(this.add1_Click);
-            // 
-            // add2
-            // 
-            this.add2.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.add2.Location = new System.Drawing.Point(126, 29);
-            this.add2.Name = "add2";
-            this.add2.Size = new System.Drawing.Size(100, 100);
-            this.add2.TabIndex = 0;
-            this.add2.Text = "+2";
-            this.add2.UseVisualStyleBackColor = true;
-            this.add2.Click += new System.EventHandler(this.add1_Click);
-            // 
-            // add1
-            // 
-            this.add1.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.add1.Location = new System.Drawing.Point(20, 29);
-            this.add1.Name = "add1";
-            this.add1.Size = new System.Drawing.Size(100, 100);
-            this.add1.TabIndex = 0;
-            this.add1.Text = "+1";
-            this.add1.UseVisualStyleBackColor = true;
-            this.add1.Click += new System.EventHandler(this.add1_Click);
-            // 
             // toolStripContainer1
             // 
             // 
@@ -250,12 +147,13 @@
             // 
             // toolStripContainer1.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1999, 662);
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.panel1);
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.chasePanel);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1091, 668);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(1999, 708);
+            this.toolStripContainer1.Size = new System.Drawing.Size(1091, 714);
             this.toolStripContainer1.TabIndex = 8;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -270,7 +168,7 @@
             this.searchStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 0);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1999, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1091, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 0;
             // 
@@ -281,43 +179,19 @@
             this.searchStatusLabel.Size = new System.Drawing.Size(42, 17);
             this.searchStatusLabel.Text = "Ready";
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.gamePanel);
-            this.splitContainer1.Panel1MinSize = 778;
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.chasePanel);
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer1.Panel2.Controls.Add(this.analysisLabel);
-            this.splitContainer1.Panel2.Controls.Add(this.previousMove);
-            this.splitContainer1.Panel2.Controls.Add(this.nextMove);
-            this.splitContainer1.Panel2.Controls.Add(this.moveHistory);
-            this.splitContainer1.Size = new System.Drawing.Size(1999, 662);
-            this.splitContainer1.SplitterDistance = 778;
-            this.splitContainer1.TabIndex = 8;
-            // 
             // chasePanel
             // 
-            this.chasePanel.Location = new System.Drawing.Point(307, 19);
+            this.chasePanel.Controls.Add(this.csnPanel);
+            this.chasePanel.Location = new System.Drawing.Point(5, 5);
             this.chasePanel.Name = "chasePanel";
-            this.chasePanel.Size = new System.Drawing.Size(898, 630);
+            this.chasePanel.Size = new System.Drawing.Size(775, 658);
             this.chasePanel.TabIndex = 9;
             this.chasePanel.Click += new System.EventHandler(this.chasePanel_Click);
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.infoLabel);
-            this.groupBox2.Location = new System.Drawing.Point(7, 3);
+            this.groupBox2.Location = new System.Drawing.Point(3, 0);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(190, 61);
             this.groupBox2.TabIndex = 8;
@@ -339,7 +213,7 @@
             // 
             this.groupBox1.Controls.Add(this.handBlue);
             this.groupBox1.Controls.Add(this.handRed);
-            this.groupBox1.Location = new System.Drawing.Point(203, 3);
+            this.groupBox1.Location = new System.Drawing.Point(199, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(98, 61);
             this.groupBox1.TabIndex = 7;
@@ -370,7 +244,7 @@
             // 
             // analysisLabel
             // 
-            this.analysisLabel.Location = new System.Drawing.Point(88, 636);
+            this.analysisLabel.Location = new System.Drawing.Point(84, 633);
             this.analysisLabel.Name = "analysisLabel";
             this.analysisLabel.Size = new System.Drawing.Size(132, 23);
             this.analysisLabel.TabIndex = 4;
@@ -379,7 +253,7 @@
             // 
             // previousMove
             // 
-            this.previousMove.Location = new System.Drawing.Point(7, 636);
+            this.previousMove.Location = new System.Drawing.Point(3, 633);
             this.previousMove.Name = "previousMove";
             this.previousMove.Size = new System.Drawing.Size(75, 23);
             this.previousMove.TabIndex = 3;
@@ -389,7 +263,7 @@
             // 
             // nextMove
             // 
-            this.nextMove.Location = new System.Drawing.Point(226, 636);
+            this.nextMove.Location = new System.Drawing.Point(222, 633);
             this.nextMove.Name = "nextMove";
             this.nextMove.Size = new System.Drawing.Size(75, 23);
             this.nextMove.TabIndex = 2;
@@ -416,7 +290,7 @@
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.moveHistory.DefaultCellStyle = dataGridViewCellStyle1;
-            this.moveHistory.Location = new System.Drawing.Point(7, 70);
+            this.moveHistory.Location = new System.Drawing.Point(3, 67);
             this.moveHistory.Name = "moveHistory";
             this.moveHistory.ReadOnly = true;
             this.moveHistory.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -460,7 +334,7 @@
             this.testToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1999, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1091, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -706,11 +580,24 @@
             this.gameTimer.Interval = 20;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.groupBox2);
+            this.panel1.Controls.Add(this.nextMove);
+            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Controls.Add(this.moveHistory);
+            this.panel1.Controls.Add(this.previousMove);
+            this.panel1.Controls.Add(this.analysisLabel);
+            this.panel1.Location = new System.Drawing.Point(786, 5);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(300, 658);
+            this.panel1.TabIndex = 10;
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1999, 708);
+            this.ClientSize = new System.Drawing.Size(1091, 714);
             this.Controls.Add(this.toolStripContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -718,10 +605,8 @@
             this.MaximizeBox = false;
             this.Name = "GameForm";
             this.Text = "Chase by Scott Clayton";
-            this.gamePanel.ResumeLayout(false);
             this.csnPanel.ResumeLayout(false);
             this.csnPanel.PerformLayout();
-            this.addPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
@@ -731,22 +616,19 @@
             this.toolStripContainer1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.chasePanel.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.moveHistory)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Panel gamePanel;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -754,18 +636,10 @@
         private System.Windows.Forms.ToolStripMenuItem gameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selfPlayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem highlightValidMovesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newGameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem computerPlaysBlueToolStripMenuItem;
-        private System.Windows.Forms.Panel addPanel;
-        private System.Windows.Forms.Button add5;
-        private System.Windows.Forms.Button add4;
-        private System.Windows.Forms.Button add3;
-        private System.Windows.Forms.Button add2;
-        private System.Windows.Forms.Button add1;
-        private System.Windows.Forms.Button addNone;
         private System.Windows.Forms.Label infoLabel;
         private System.Windows.Forms.Panel csnPanel;
         private System.Windows.Forms.Button button1;
@@ -806,6 +680,7 @@
         private System.Windows.Forms.ToolStripMenuItem sixtySecondsMove;
         private System.Windows.Forms.Panel chasePanel;
         private System.Windows.Forms.Timer gameTimer;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

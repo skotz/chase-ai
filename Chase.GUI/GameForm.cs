@@ -30,6 +30,26 @@ namespace Chase.GUI
         int analysisMaxMoves = 0;
         int analysisMoveNum = 0;
 
+        private Color backgroundColor = Color.FromArgb(171, 171, 171);
+        private Color dialogColor = Color.FromArgb(200, 171, 171, 171);
+
+        private Color tileColor = Color.FromArgb(225, 225, 225);
+        private Color tileRedColor = Color.FromArgb(255, 0, 0);
+        private Color tileBlueColor = Color.FromArgb(0, 0, 255);
+
+        private Color tileLabelColor = Color.FromArgb(128, 0, 0, 0);
+        private Color tileRedLabelColor = Color.FromArgb(100, 255, 255, 255);
+        private Color tileBlueLabelColor = Color.FromArgb(100, 255, 255, 255);
+
+        private Color tileTextColor = Color.FromArgb(0, 0, 0);
+        private Color tileRedTextColor = Color.FromArgb(200, 255, 255, 255);
+        private Color tileBlueTextColor = Color.FromArgb(200, 255, 255, 255);
+
+        private Color tileLastMove = Color.FromArgb(255, 255, 0);
+        private Color tileAvailableMove = Color.FromArgb(0, 255, 0);
+        private Color tileThreatenedPiece = Color.FromArgb(255, 0, 255);
+        private Color tileSelectedPiece = Color.FromArgb(0, 255, 255);
+
         public GameForm()
         {
             InitializeComponent();
@@ -140,82 +160,10 @@ namespace Chase.GUI
         private void RefreshBoard(Move lastmove)
         {
             lastMove = lastmove;
-
-            if (gamePanel.Controls["tile0"] == null)
-            {
-                // Probably in the process of closing the program
-                return;
-            }
             
-            for (int i = 0; i < 81; i++)
-            {
-                int piece = game.Board[i];
-                if (i == 40)
-                {
-                    SetButton(i, "CH", Color.Gray);
-                }
-                else if (piece == 0)
-                {
-                    SetButton(i, "", Color.Black);
-                }
-                else
-                {
-                    SetButton(i, Math.Abs(piece), piece > 0 ? Color.Blue : Color.Red);
-                }
-            }
-
-            if (lastmove != null)
-            {
-                if (lastmove.FromIndex > 0)
-                {
-                    gamePanel.Controls["tile" + lastmove.FromIndex].BackColor = Color.LightYellow;
-                }
-                if (lastmove.ToIndex > 0)
-                {
-                    gamePanel.Controls["tile" + lastmove.ToIndex].BackColor = Color.LightYellow;
-                }
-            }
-
             Player winner = game.GetWinner();
             if (winner == Player.None)
             {
-                // Show threatened pieces
-                if (showThreatenedPiecesToolStripMenuItem.Checked)
-                {
-                    List<int> threats = game.GetThreatenedPieces();
-                    foreach (int threatIndex in threats)
-                    {
-                        gamePanel.Controls["tile" + threatIndex].BackColor = Color.LightPink;
-                    }
-                }
-
-                // Show valid moves
-                if (highlightValidMovesToolStripMenuItem.Checked && game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
-                {
-                    List<Move> moves = game.GetAllMoves();
-                    if (moves.Count > 0 && moves[0].Increment > 0 && moves[0].FromIndex == -1)
-                    {
-                        // Add points after a capture
-                        foreach (Move move in moves)
-                        {
-                            gamePanel.Controls["tile" + move.ToIndex].Text += "+" + move.Increment;
-                            gamePanel.Controls["tile" + move.ToIndex].BackColor = Color.LightGreen;
-                        }
-                    }
-                    else if (selectedFromTile >= 0)
-                    {
-                        // Find movement moves
-                        foreach (Move move in moves)
-                        {
-                            if (move.FromIndex == selectedFromTile)
-                            {
-                                gamePanel.Controls["tile" + move.ToIndex].BackColor = Color.LightGreen;
-                                gamePanel.Controls["tile" + move.FromIndex].BackColor = Color.White;
-                            }
-                        }
-                    }
-                }
-
                 // Status information
                 if (type == GameType.NotStarted)
                 {
@@ -280,14 +228,6 @@ namespace Chase.GUI
                             {
                                 // If we're transferring points to an adjacent piece
                                 List<int> increments = options.Select(x => x.Increment).Distinct().ToList();
-
-                                add1.Enabled = increments.Contains(1);
-                                add2.Enabled = increments.Contains(2);
-                                add3.Enabled = increments.Contains(3);
-                                add4.Enabled = increments.Contains(4);
-                                add5.Enabled = increments.Contains(5);
-
-                                addPanel.Visible = true;
                                 addPieceMode = true;
                                 maxAddPiece = increments.Max();
                             }
@@ -355,113 +295,13 @@ namespace Chase.GUI
             }
         }
 
-        private void Button_Click(object sender, EventArgs e)
-        {
-            int index = int.Parse(((Button)sender).Name.Replace("tile", ""));
-            ClickTile(index);
-        }
-
         private void InitializeGameGUI()
         {
-            double hexFactor = 0.2471264367816092;
-            Point firstTile = new Point(40, 0);
-            Point nextTile = firstTile;
-            Point bottomright;
-            Size size;
-            
-            for (int i = 0; i < 81; i++)
-            {
-                CreateButton(i, nextTile, out bottomright, out size);
-                
-                if (i == 8 || i == 26 || i == 44 || i == 62)
-                {
-                    nextTile = new Point(firstTile.X - size.Width / 2, bottomright.Y - (int)(size.Height * hexFactor));
-                }
-                else if (i == 17 || i == 35 || i == 53 || i == 71)
-                {
-                    nextTile = new Point(firstTile.X, bottomright.Y - (int)(size.Height * hexFactor));
-                }
-                else
-                {
-                    nextTile = new Point(bottomright.X, nextTile.Y);
-                }
-            }
-
             tiles = new List<HexTile>();
             for (int i = 0; i < 81; i++)
             {
                 tiles.Add(CreateHexTile(i));
             }
-        }
-
-        private void CreateButton(int moveIndex, Point location, out Point lowerright, out Size size)
-        {
-            int space = 5;
-            float scale = 0.5f;
-            PointF[] pts = {
-                new PointF(0 * scale + space, 43 * scale + space),
-                new PointF(0 * scale + space, 131 * scale + space),
-                new PointF(76 * scale + space, 174 * scale + space),
-                new PointF(152 * scale + space, 131 * scale + space),
-                new PointF(152 * scale + space, 43 * scale + space),
-                new PointF(76 * scale + space, 0 * scale + space)
-            };
-            GraphicsPath polygon_path = new GraphicsPath(FillMode.Winding);
-            polygon_path.AddPolygon(pts);
-            Region polygon_region = new Region(polygon_path);
-
-            HexButton button = new HexButton();
-            button.Location = location;
-            button.Name = "tile" + moveIndex;
-            button.Size = new Size((int)pts[3].X, (int)pts[2].Y);
-            button.TabIndex = 7;
-            button.Text = moveIndex.ToString();
-            button.UseVisualStyleBackColor = true;
-            button.Font = new Font("Tahoma", 14.0f, FontStyle.Bold);
-            button.ForeColor = Color.Red;
-            button.TextAlign = ContentAlignment.MiddleCenter;
-            button.Region = polygon_region;
-            button.Points = pts;
-            button.SetBounds(button.Location.X, button.Location.Y, (int)pts[3].X + space * 2, (int)pts[2].Y + space * 2);
-            button.Click += Button_Click;
-            button.DisplayTileLabel = () => showTileLabelsToolStripMenuItem.Checked;
-            gamePanel.Controls.Add(button);
-
-            lowerright = new Point(button.Location.X + button.Width - space * 2, button.Location.Y + button.Height - space * 2);
-            size = new Size(button.Size.Width - space * 2, button.Size.Height - space * 2);
-        }
-
-        private void SetButton(int index, int value, Color team)
-        {
-            SetButton(index, value.ToString(), team);
-        }
-
-        private void SetButton(int index, string value, Color team)
-        {
-            gamePanel.Controls["tile" + index].Text = value;
-            gamePanel.Controls["tile" + index].ForeColor = team;
-            (gamePanel.Controls["tile" + index] as Button).UseVisualStyleBackColor = true;
-        }
-
-        private void add1_Click(object sender, EventArgs e)
-        {
-            int amount = int.Parse(((Button)sender).Name.Replace("add", ""));
-
-            List<Move> options = game.GetAllMoves().Where(x => x.FromIndex == selectedFromTile && x.ToIndex == selectedToTile && x.Increment  == amount).ToList();
-            if (options.Count > 0)
-            {
-                Move move = options.First();
-                MakeMove(move);
-            }
-
-            addPanel.Visible = false;
-            addPieceMode = false;
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            addPanel.Visible = false;
-            addPieceMode = false;
         }
 
         private void loadPositionFromCSNToolStripMenuItem_Click(object sender, EventArgs e)
@@ -628,26 +468,6 @@ namespace Chase.GUI
                 RefreshBoard(lastMove);
             }
         }
-
-        private Color backgroundColor = Color.FromArgb(171, 171, 171);
-        private Color dialogColor = Color.FromArgb(200, 171, 171, 171);
-
-        private Color tileColor = Color.FromArgb(225, 225, 225);
-        private Color tileRedColor = Color.FromArgb(255, 0, 0);
-        private Color tileBlueColor = Color.FromArgb(0, 0, 255);
-
-        private Color tileLabelColor = Color.FromArgb(128, 0, 0, 0);
-        private Color tileRedLabelColor = Color.FromArgb(100, 255, 255, 255);
-        private Color tileBlueLabelColor = Color.FromArgb(100, 255, 255, 255);
-
-        private Color tileTextColor = Color.FromArgb(0, 0, 0);
-        private Color tileRedTextColor = Color.FromArgb(200, 255, 255, 255);
-        private Color tileBlueTextColor = Color.FromArgb(200, 255, 255, 255);
-
-        private Color tileLastMove = Color.FromArgb(255, 255, 0);
-        private Color tileAvailableMove = Color.FromArgb(0, 255, 0);
-        private Color tileThreatenedPiece = Color.FromArgb(255, 0, 255);
-        private Color tileSelectedPiece = Color.FromArgb(0, 255, 255);
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
@@ -830,7 +650,7 @@ namespace Chase.GUI
             }
 
             // Highlight valid moves
-            if (highlightValidMovesToolStripMenuItem.Checked && game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
+            if (game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
             {
                 List<Move> moves = game.GetAllMoves();
                 if (moves.Count > 0 && moves[0].Increment > 0 && moves[0].FromIndex == -1)
@@ -838,7 +658,7 @@ namespace Chase.GUI
                     // Add points after a capture
                     foreach (Move move in moves)
                     {
-                        if (move.ToIndex == hexIndex)
+                        if (move.ToIndex == hexIndex && highlightValidMovesToolStripMenuItem.Checked)
                         {
                             value += "+" + move.Increment;
                             tileBrush = new SolidBrush(tileAvailableMove);
@@ -850,7 +670,7 @@ namespace Chase.GUI
                     // Find movement moves
                     foreach (Move move in moves)
                     {
-                        if (move.FromIndex == selectedFromTile && hexIndex == move.ToIndex)
+                        if (move.FromIndex == selectedFromTile && hexIndex == move.ToIndex && highlightValidMovesToolStripMenuItem.Checked)
                         {
                             tileBrush = new SolidBrush(tileAvailableMove);
                         }
@@ -946,15 +766,13 @@ namespace Chase.GUI
                     Move move = moves.First();
                     MakeMove(move);
                 }
-
-                addPanel.Visible = false;
+                
                 addPieceMode = false;
             }
 
             // User clicked cancel, so close dialog
             if (hexIndex == cancel)
             {
-                addPanel.Visible = false;
                 addPieceMode = false;
             }
         }
