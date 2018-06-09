@@ -13,11 +13,14 @@ namespace Chase.GUI
         public PointF[] Points { get; private set; }
 
         public GraphicsPath Path { get; private set; }
+        
+        public RectangleF BoundingBox { get; private set; }
 
-        public HexTile(PointF[] points, GraphicsPath path)
+        public HexTile(PointF[] points, GraphicsPath path, float x, float y, float width, float height)
         {
             Points = points;
             Path = path;
+            BoundingBox = new RectangleF(x, y, width, height);
         }
 
         public bool IsPointInHex(PointF point)

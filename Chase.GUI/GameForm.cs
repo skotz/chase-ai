@@ -622,6 +622,7 @@ namespace Chase.GUI
         private Color backgroundColor = Color.FromArgb(171, 171, 171);
         private Color tileColor = Color.FromArgb(225, 225, 225);
         private Color tileHoverColor = Color.FromArgb(229, 241, 251);
+        private Color tileLabelColor = Color.FromArgb(169, 169, 169);
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
@@ -680,6 +681,7 @@ namespace Chase.GUI
             float pointFactTop = 0.2828947f;
             float pointFactMid = 0.8618421f;
             float pointFactBottom = 1.1447368f;
+            float widthToHeight = 1.1547005f;
 
             PointF[] hexPoints = {
                 new PointF(x, tileWidth * pointFactTop + y),
@@ -693,12 +695,26 @@ namespace Chase.GUI
             GraphicsPath path = new GraphicsPath(FillMode.Winding);
             path.AddPolygon(hexPoints);
 
-            return new HexTile(hexPoints, path);
+            return new HexTile(hexPoints, path, x, y, tileWidth, tileWidth * widthToHeight);
         }
 
         private void DrawHexTile(Graphics g, Color color, int hexIndex)
         {
-            g.FillPath(new SolidBrush(color), tiles[hexIndex].Path);
+            SolidBrush tileBrush = new SolidBrush(color);
+            g.FillPath(tileBrush, tiles[hexIndex].Path);
+            
+            if (showTileLabelsToolStripMenuItem.Checked)
+            {
+                string tileLabel = Engine.Move.GetTileFromIndex(hexIndex);
+                if (tileLabel != "CH")
+                {
+                    SolidBrush labelBrush = new SolidBrush(tileLabelColor);
+                    Font font = new Font(new Font("Tahoma", 8f), FontStyle.Regular);
+                    SizeF size = g.MeasureString(tileLabel, font);
+                    RectangleF location = new RectangleF(new PointF(tiles[hexIndex].BoundingBox.X + tiles[hexIndex].BoundingBox.Width / 2 - size.Width / 2, tiles[hexIndex].BoundingBox.Y + 15), size);
+                    g.DrawString(tileLabel, font, labelBrush, location);
+                }
+            }
         }
     }
 }
