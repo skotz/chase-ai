@@ -19,6 +19,7 @@ namespace Chase.GUI
         GameType type;
 
         List<HexTile> tiles;
+        Move lastMove;
 
         int selectedFromTile = -1;
         int selectedToTile = -1;
@@ -135,6 +136,8 @@ namespace Chase.GUI
 
         private void RefreshBoard(Move lastmove)
         {
+            lastMove = lastmove;
+
             if (gamePanel.Controls["tile0"] == null)
             {
                 // Probably in the process of closing the program
@@ -620,9 +623,23 @@ namespace Chase.GUI
         }
 
         private Color backgroundColor = Color.FromArgb(171, 171, 171);
+
         private Color tileColor = Color.FromArgb(225, 225, 225);
-        private Color tileHoverColor = Color.FromArgb(229, 241, 251);
-        private Color tileLabelColor = Color.FromArgb(169, 169, 169);
+        private Color tileRedColor = Color.FromArgb(255, 0, 0);
+        private Color tileBlueColor = Color.FromArgb(0, 0, 255);
+
+        private Color tileLabelColor = Color.FromArgb(128, 0, 0, 0);
+        private Color tileRedLabelColor = Color.FromArgb(100, 255, 255, 255);
+        private Color tileBlueLabelColor = Color.FromArgb(100, 255, 255, 255);
+
+        private Color tileTextColor = Color.FromArgb(0, 0, 0);
+        private Color tileRedTextColor = Color.FromArgb(200, 255, 255, 255);
+        private Color tileBlueTextColor = Color.FromArgb(200, 255, 255, 255);
+
+        private Color tileLastMove = Color.FromArgb(255, 255, 0);
+        private Color tileAvailableMove = Color.FromArgb(0, 255, 0);
+        private Color tileThreatenedPiece = Color.FromArgb(255, 0, 255);
+        private Color tileSelectedPiece = Color.FromArgb(0, 255, 255);
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
@@ -642,14 +659,7 @@ namespace Chase.GUI
 
                 for (int i = 0; i < 81; i++)
                 {
-                    if (tiles[i].IsPointInHex(mouseLocation))
-                    {
-                        DrawHexTile(g, tileHoverColor, i);
-                    }
-                    else
-                    {
-                        DrawHexTile(g, tileColor, i);
-                    }
+                    DrawHexTile(g, i, tiles[i].IsPointInHex(mouseLocation));
                 }
 
                 using (Graphics game = chasePanel.CreateGraphics())
@@ -698,22 +708,147 @@ namespace Chase.GUI
             return new HexTile(hexPoints, path, x, y, tileWidth, tileWidth * widthToHeight);
         }
 
-        private void DrawHexTile(Graphics g, Color color, int hexIndex)
+        private void DrawHexTile(Graphics g, int hexIndex, bool hover)
         {
-            SolidBrush tileBrush = new SolidBrush(color);
+            // Determine ownership of tile
+            SolidBrush tileBrush;
+            SolidBrush tileTextBrush;
+            SolidBrush labelBrush;
+            int piece = game.Board[hexIndex];
+            string value = "";
+            if (hexIndex == 40)
+            {
+                // The chamber
+                tileBrush = new SolidBrush(tileColor);
+                tileTextBrush = new SolidBrush(tileTextColor);
+                labelBrush = new SolidBrush(tileLabelColor);
+                value = "CH";
+            }
+            else if (piece > 0)
+            {
+                // Blue team
+                tileBrush = new SolidBrush(tileBlueColor);
+                tileTextBrush = new SolidBrush(tileBlueTextColor);
+                labelBrush = new SolidBrush(tileBlueLabelColor);
+                value = piece.ToString();
+            }
+            else if (piece < 0)
+            {
+                // Red team
+                tileBrush = new SolidBrush(tileRedColor);
+                tileTextBrush = new SolidBrush(tileRedTextColor);
+                labelBrush = new SolidBrush(tileRedLabelColor);
+                value = Math.Abs(piece).ToString();
+            }
+            else
+            {
+                // Empty
+                tileBrush = new SolidBrush(tileColor);
+                tileTextBrush = new SolidBrush(tileTextColor);
+                labelBrush = new SolidBrush(tileLabelColor);
+                value = " ";
+            }
+
+            // Highlight the last move
+            if (lastMove != null)
+            {
+                if (lastMove.FromIndex == hexIndex || lastMove.ToIndex == hexIndex)
+                {
+                    tileBrush = new SolidBrush(tileLastMove);
+                    tileTextBrush = new SolidBrush(tileTextColor);
+                    labelBrush = new SolidBrush(tileLabelColor);
+                }
+            }
+
+            // Show threatened pieces
+            if (showThreatenedPiecesToolStripMenuItem.Checked)
+            {
+                if (game.GetThreatenedPieces().Contains(hexIndex))
+                {
+                    tileBrush = new SolidBrush(tileThreatenedPiece);
+                }
+            }
+
+            // Highlight valid moves
+            if (highlightValidMovesToolStripMenuItem.Checked && game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
+            {
+                List<Move> moves = game.GetAllMoves();
+                if (moves.Count > 0 && moves[0].Increment > 0 && moves[0].FromIndex == -1)
+                {
+                    // Add points after a capture
+                    foreach (Move move in moves)
+                    {
+                        if (move.ToIndex == hexIndex)
+                        {
+                            value += "+" + move.Increment;
+                            tileBrush = new SolidBrush(tileAvailableMove);
+                        }
+                    }
+                }
+                else if (selectedFromTile >= 0)
+                {
+                    // Find movement moves
+                    foreach (Move move in moves)
+                    {
+                        if (move.FromIndex == selectedFromTile && hexIndex == move.ToIndex)
+                        {
+                            tileBrush = new SolidBrush(tileAvailableMove);
+                        }
+                        if (move.FromIndex == selectedFromTile && hexIndex == move.FromIndex)
+                        {
+                            tileBrush = new SolidBrush(tileSelectedPiece);
+                        }
+                    }
+                }
+            }
+
+            // Change the color if the mouse is hovering over the tile
+            if (hover)
+            {
+                Color newColor = Color.FromArgb(128, tileBrush.Color.R, tileBrush.Color.G, tileBrush.Color.B);
+                tileBrush = new SolidBrush(newColor);
+            }
+
+            // Draw the hex tile
             g.FillPath(tileBrush, tiles[hexIndex].Path);
-            
+
+            // Draw the tile label
             if (showTileLabelsToolStripMenuItem.Checked)
             {
                 string tileLabel = Engine.Move.GetTileFromIndex(hexIndex);
                 if (tileLabel != "CH")
                 {
-                    SolidBrush labelBrush = new SolidBrush(tileLabelColor);
-                    Font font = new Font(new Font("Tahoma", 8f), FontStyle.Regular);
+                    Font font = new Font("Tahoma", 8f, FontStyle.Regular);
                     SizeF size = g.MeasureString(tileLabel, font);
                     RectangleF location = new RectangleF(new PointF(tiles[hexIndex].BoundingBox.X + tiles[hexIndex].BoundingBox.Width / 2 - size.Width / 2, tiles[hexIndex].BoundingBox.Y + 15), size);
                     g.DrawString(tileLabel, font, labelBrush, location);
                 }
+            }
+
+            // Draw the piece value
+            Font valueFont = new Font("Tahoma", 16.0f, FontStyle.Bold);
+            SizeF valueSize = g.MeasureString(value, valueFont);
+            RectangleF valueLocation = new RectangleF(new PointF(tiles[hexIndex].BoundingBox.X + tiles[hexIndex].BoundingBox.Width / 2 - valueSize.Width / 2, tiles[hexIndex].BoundingBox.Y + tiles[hexIndex].BoundingBox.Height / 2 - valueSize.Height / 2), valueSize);
+            g.DrawString(value, valueFont, tileTextBrush, valueLocation);
+        }
+
+        private void chasePanel_Click(object sender, EventArgs e)
+        {
+            // Get the index of the tile that was clicked
+            PointF mouseLocation = chasePanel.PointToClient(Cursor.Position);
+            int hexIndex = -1;
+            for (int i = 0; i < 81; i++)
+            {
+                if (tiles[i].IsPointInHex(mouseLocation))
+                {
+                    hexIndex = i; 
+                    break;
+                }
+            }
+
+            if (hexIndex >= 0)
+            {
+                ClickTile(hexIndex);
             }
         }
     }

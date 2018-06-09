@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
             this.gamePanel = new System.Windows.Forms.Panel();
             this.csnPanel = new System.Windows.Forms.Panel();
@@ -47,6 +47,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.searchStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.chasePanel = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.infoLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -89,7 +90,6 @@
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCgn = new System.Windows.Forms.SaveFileDialog();
             this.openCgn = new System.Windows.Forms.OpenFileDialog();
-            this.chasePanel = new System.Windows.Forms.Panel();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
             this.gamePanel.SuspendLayout();
             this.csnPanel.SuspendLayout();
@@ -306,6 +306,14 @@
             this.splitContainer1.SplitterDistance = 778;
             this.splitContainer1.TabIndex = 8;
             // 
+            // chasePanel
+            // 
+            this.chasePanel.Location = new System.Drawing.Point(307, 19);
+            this.chasePanel.Name = "chasePanel";
+            this.chasePanel.Size = new System.Drawing.Size(898, 630);
+            this.chasePanel.TabIndex = 9;
+            this.chasePanel.Click += new System.EventHandler(this.chasePanel_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.infoLabel);
@@ -400,14 +408,14 @@
             this.MoveNumber,
             this.player1,
             this.player2});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.moveHistory.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.moveHistory.DefaultCellStyle = dataGridViewCellStyle1;
             this.moveHistory.Location = new System.Drawing.Point(7, 70);
             this.moveHistory.Name = "moveHistory";
             this.moveHistory.ReadOnly = true;
@@ -692,13 +700,6 @@
             this.openCgn.FileName = "game.cgn";
             this.openCgn.Filter = "Chase Game Notation|*.cgn";
             this.openCgn.Title = "Load a saved game";
-            // 
-            // chasePanel
-            // 
-            this.chasePanel.Location = new System.Drawing.Point(307, 19);
-            this.chasePanel.Name = "chasePanel";
-            this.chasePanel.Size = new System.Drawing.Size(898, 630);
-            this.chasePanel.TabIndex = 9;
             // 
             // gameTimer
             // 
