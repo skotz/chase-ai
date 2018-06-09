@@ -17,7 +17,9 @@ namespace Chase.GUI
     {
         Game game;
         GameType type;
-        
+
+        List<HexTile> tiles;
+
         int selectedFromTile = -1;
         int selectedToTile = -1;
 
@@ -36,6 +38,8 @@ namespace Chase.GUI
 
             InitializeGameGUI();
             RefreshBoard();
+
+            gameTimer.Start();
         }
 
         private void selfPlayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -374,6 +378,12 @@ namespace Chase.GUI
                     nextTile = new Point(bottomright.X, nextTile.Y);
                 }
             }
+
+            tiles = new List<HexTile>();
+            for (int i = 0; i < 81; i++)
+            {
+                tiles.Add(CreateHexTile(i));
+            }
         }
 
         private void CreateButton(int moveIndex, Point location, out Point lowerright, out Size size)
@@ -607,6 +617,88 @@ namespace Chase.GUI
                 Move lastMove = game.RecallState(analysisMoveNum);
                 RefreshBoard(lastMove);
             }
+        }
+
+        private Color backgroundColor = Color.FromArgb(171, 171, 171);
+        private Color tileColor = Color.FromArgb(225, 225, 225);
+        private Color tileHoverColor = Color.FromArgb(229, 241, 251);
+
+        private void gameTimer_Tick(object sender, EventArgs e)
+        {
+            DrawBoard();
+        }
+
+        private void DrawBoard()
+        {
+            PointF mouseLocation = chasePanel.PointToClient(Cursor.Position);
+
+            using (Bitmap b = new Bitmap(chasePanel.Width, chasePanel.Height))
+            using (Graphics g = Graphics.FromImage(b))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                g.Clear(backgroundColor);
+
+                for (int i = 0; i < 81; i++)
+                {
+                    if (tiles[i].IsPointInHex(mouseLocation))
+                    {
+                        DrawHexTile(g, tileHoverColor, i);
+                    }
+                    else
+                    {
+                        DrawHexTile(g, tileColor, i);
+                    }
+                }
+
+                using (Graphics game = chasePanel.CreateGraphics())
+                {
+                    game.DrawImage(b, 0, 0, chasePanel.Width, chasePanel.Height);
+                }
+            }
+        }
+
+        private HexTile CreateHexTile(int hexIndex)
+        {
+            int space = 5;
+            int tileWidth = 76;
+            int rowOffset = 70;
+
+            int rowIndex = (int)Math.Floor(hexIndex / 9.0);
+            int columnIndex = hexIndex % 9;
+            float insetOffset = (space + tileWidth) / 2f;
+
+            float x = space + (space + tileWidth) * columnIndex;
+            float y = rowOffset * rowIndex + space;
+
+            if (rowIndex % 2 == 0)
+            {
+                // Inset rows
+                x += insetOffset;
+            }
+
+            float pointFactTop = 0.2828947f;
+            float pointFactMid = 0.8618421f;
+            float pointFactBottom = 1.1447368f;
+
+            PointF[] hexPoints = {
+                new PointF(x, tileWidth * pointFactTop + y),
+                new PointF(x, tileWidth * pointFactMid + y),
+                new PointF(tileWidth / 2f + x, tileWidth * pointFactBottom + y),
+                new PointF(tileWidth + x, tileWidth * pointFactMid + y),
+                new PointF(tileWidth + x, tileWidth * pointFactTop + y),
+                new PointF(tileWidth / 2f + x, y)
+            };
+
+            GraphicsPath path = new GraphicsPath(FillMode.Winding);
+            path.AddPolygon(hexPoints);
+
+            return new HexTile(hexPoints, path);
+        }
+
+        private void DrawHexTile(Graphics g, Color color, int hexIndex)
+        {
+            g.FillPath(new SolidBrush(color), tiles[hexIndex].Path);
         }
     }
 }
