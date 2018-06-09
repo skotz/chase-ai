@@ -34,8 +34,8 @@ namespace Chase.GUI
         private Color dialogColor = Color.FromArgb(200, 171, 171, 171);
 
         private Color tileColor = Color.FromArgb(225, 225, 225);
-        private Color tileRedColor = Color.FromArgb(255, 0, 0);
-        private Color tileBlueColor = Color.FromArgb(0, 0, 255);
+        private Color tileRedColor = Color.FromArgb(255, 49, 49);
+        private Color tileBlueColor = Color.FromArgb(68, 118, 242);
 
         private Color tileLabelColor = Color.FromArgb(128, 0, 0, 0);
         private Color tileRedLabelColor = Color.FromArgb(100, 255, 255, 255);
@@ -45,10 +45,9 @@ namespace Chase.GUI
         private Color tileRedTextColor = Color.FromArgb(200, 255, 255, 255);
         private Color tileBlueTextColor = Color.FromArgb(200, 255, 255, 255);
 
-        private Color tileLastMove = Color.FromArgb(255, 255, 0);
-        private Color tileAvailableMove = Color.FromArgb(0, 255, 0);
-        private Color tileThreatenedPiece = Color.FromArgb(255, 0, 255);
-        private Color tileSelectedPiece = Color.FromArgb(0, 255, 255);
+        private Color tileLastMove = Color.FromArgb(255, 218, 141);
+        private Color tileAvailableMove = Color.FromArgb(48, 247, 48);
+        private Color tileThreatenedPiece = Color.FromArgb(255, 188, 49);
 
         public GameForm()
         {
@@ -641,15 +640,17 @@ namespace Chase.GUI
             }
 
             // Show threatened pieces
+            bool threatened = false;
             if (showThreatenedPiecesToolStripMenuItem.Checked)
             {
                 if (game.GetThreatenedPieces().Contains(hexIndex))
                 {
-                    tileBrush = new SolidBrush(tileThreatenedPiece);
+                    threatened = true;
                 }
             }
 
             // Highlight valid moves
+            bool selected = false;
             if (game.PlayerToMove == (computerPlaysBlueToolStripMenuItem.Checked ? Player.Red : Player.Blue))
             {
                 List<Move> moves = game.GetAllMoves();
@@ -661,7 +662,7 @@ namespace Chase.GUI
                         if (move.ToIndex == hexIndex && highlightValidMovesToolStripMenuItem.Checked)
                         {
                             value += "+" + move.Increment;
-                            tileBrush = new SolidBrush(tileAvailableMove);
+                            selected = true;
                         }
                     }
                 }
@@ -672,11 +673,12 @@ namespace Chase.GUI
                     {
                         if (move.FromIndex == selectedFromTile && hexIndex == move.ToIndex && highlightValidMovesToolStripMenuItem.Checked)
                         {
-                            tileBrush = new SolidBrush(tileAvailableMove);
+                            selected = true;
                         }
                         if (move.FromIndex == selectedFromTile && hexIndex == move.FromIndex)
                         {
-                            tileBrush = new SolidBrush(tileSelectedPiece);
+                            Color newColor = Color.FromArgb(128, tileBrush.Color.R, tileBrush.Color.G, tileBrush.Color.B);
+                            tileBrush = new SolidBrush(newColor);
                         }
                     }
                 }
@@ -691,6 +693,20 @@ namespace Chase.GUI
 
             // Draw the hex tile
             g.FillPath(tileBrush, tiles[hexIndex].Path);
+
+            // Draw the threatened border
+            if (threatened)
+            {
+                Pen p = new Pen(tileThreatenedPiece, 5f);
+                g.DrawPath(p, tiles[hexIndex].Path);
+            }
+
+            // Draw the selected piece border
+            if (selected)
+            {
+                Pen p = new Pen(tileAvailableMove, 5f);
+                g.DrawPath(p, tiles[hexIndex].Path);
+            }
 
             // Draw the tile label
             if (showTileLabelsToolStripMenuItem.Checked)
