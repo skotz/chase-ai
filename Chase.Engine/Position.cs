@@ -315,7 +315,8 @@ namespace Chase.Engine
                                 // Find physical moves
                                 // Move in a direction for as many tiles as the value of the die on that tile
                                 Direction movement = direction;
-                                destination = GetDestinationIndexIfValidMove(i, ref movement, Math.Abs(Board[i]));
+                                int[] path;
+                                destination = GetDestinationIndexIfValidMove(i, ref movement, Math.Abs(Board[i]), out path);
 
                                 if (destination != Constants.InvalidMove)
                                 {
@@ -324,14 +325,15 @@ namespace Chase.Engine
                                         FromIndex = i,
                                         ToIndex = destination,
                                         Increment = 0,
-                                        FinalDirection = movement
+                                        FinalDirection = movement,
+                                        Path = path
                                     });
                                 }
 
                                 // Find point distribution moves
                                 if (Board[i] > 1 || Board[i] < -1)
                                 {
-                                    destination = GetDestinationIndexIfValidMove(i, ref movement, 1);
+                                    destination = GetDestinationIndexIfValidMove(i, ref movement, 1, out path);
 
                                     if (destination != Constants.InvalidMove)
                                     {
@@ -352,7 +354,8 @@ namespace Chase.Engine
                                                         FromIndex = i,
                                                         ToIndex = destination,
                                                         Increment = points,
-                                                        FinalDirection = movement
+                                                        FinalDirection = movement,
+                                                        Path = path
                                                     });
                                                 }
                                             }
@@ -403,10 +406,9 @@ namespace Chase.Engine
         /// <param name="direction">The initial direction of the movement</param>
         /// <param name="distance">The number of tiles to move</param>
         /// <returns></returns>
-        public int GetDestinationIndexIfValidMove(int sourceIndex, Direction direction, int distance, bool isBounce = false)
+        public int GetDestinationIndexIfValidMove(int sourceIndex, Direction direction, int distance)
         {
-            Direction d = direction;
-            return GetDestinationIndexIfValidMove(sourceIndex, ref direction, distance, isBounce);
+            return GetDestinationIndexIfValidMove(sourceIndex, ref direction, distance, false);
         }
 
         /// <summary>
@@ -417,9 +419,39 @@ namespace Chase.Engine
         /// <param name="direction">The initial direction of the movement</param>
         /// <param name="distance">The number of tiles to move</param>
         /// <returns></returns>
-        public int GetDestinationIndexIfValidMove(int sourceIndex, ref Direction direction, int distance, bool isBounce = false)
+        public int GetDestinationIndexIfValidMove(int sourceIndex, ref Direction direction, int distance, bool isBounce)
+        {
+            Direction d = direction;
+            int[] p;
+            return GetDestinationIndexIfValidMove(sourceIndex, ref direction, distance, out p, isBounce);
+        }
+
+        /// <summary>
+        /// Check if it's possible to move a piece from a given tile in a given direction a given number of tiles.
+        /// If the move is valid then the destination index will be returned.
+        /// </summary>
+        /// <param name="sourceIndex">The index of the tile from which we're moving</param>
+        /// <param name="direction">The initial direction of the movement</param>
+        /// <param name="distance">The number of tiles to move</param>
+        /// <returns></returns>
+        public int GetDestinationIndexIfValidMove(int sourceIndex, ref Direction direction, int distance, out int[] path)
+        {
+            return GetDestinationIndexIfValidMove(sourceIndex, ref direction, distance, out path, false);
+        }
+
+        /// <summary>
+        /// Check if it's possible to move a piece from a given tile in a given direction a given number of tiles.
+        /// If the move is valid then the destination index will be returned.
+        /// </summary>
+        /// <param name="sourceIndex">The index of the tile from which we're moving</param>
+        /// <param name="direction">The initial direction of the movement</param>
+        /// <param name="distance">The number of tiles to move</param>
+        /// <returns></returns>
+        public int GetDestinationIndexIfValidMove(int sourceIndex, ref Direction direction, int distance, out int[] path, bool isBounce = false)
         {
             int index = sourceIndex;
+            int pathIndex = 0;
+            path = new int[] { -1, -1, -1, -1, -1, -1 };
 
             for (int i = 1; i <= distance; i++)
             {
@@ -446,6 +478,12 @@ namespace Chase.Engine
 
                 // Move one tile
                 index = GetIndexInDirection(index, direction);
+
+                // Keep a history of the tiles we've moved through
+                if (pathIndex < 6)
+                {
+                    path[pathIndex++] = index;
+                }
 
                 if (index == Constants.InvalidMove)
                 {

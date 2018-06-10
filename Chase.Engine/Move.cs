@@ -25,6 +25,11 @@ namespace Chase.Engine
 
         public int Evaluation { get; set; }
 
+        /// <summary>
+        /// The path this move takes to get from the source tile to the destination tile
+        /// </summary>
+        public int[] Path { get; set; }
+
         public bool IsValid { get { return FromIndex != -1 || ToIndex != -1 || Increment != -1; } }
 
         /// <summary>

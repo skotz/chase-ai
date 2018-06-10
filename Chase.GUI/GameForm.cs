@@ -690,6 +690,13 @@ namespace Chase.GUI
                 }
             }
 
+            // Draw the last move path
+            if ((lastMove?.Path?.Contains(hexIndex) ?? false) && hexIndex != lastMove.ToIndex)
+            {
+                Color newColor = Color.FromArgb(128, tileLastMove.R, tileLastMove.G, tileLastMove.B);
+                tileBrush = new SolidBrush(newColor);
+            }
+
             // Change the color if the mouse is hovering over the tile
             if (hover && !addPieceMode)
             {
