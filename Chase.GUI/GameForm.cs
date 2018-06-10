@@ -665,10 +665,14 @@ namespace Chase.GUI
                     // Add points after a capture
                     foreach (Move move in moves)
                     {
-                        if (move.ToIndex == hexIndex && highlightValidMovesToolStripMenuItem.Checked)
+                        if (move.ToIndex == hexIndex)
                         {
                             value += "+" + move.Increment;
-                            selected = true;
+
+                            if (highlightValidMovesToolStripMenuItem.Checked)
+                            {
+                                selected = true;
+                            }
                         }
                     }
                 }
