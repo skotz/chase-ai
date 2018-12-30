@@ -14,6 +14,8 @@ namespace Chase.Engine
 
         public Player PlayerToMove { get; set; }
 
+        public Player LastPlayerToMove { get; set; }
+
         public int PointsToDistribute { get; private set; }
 
         public string MovesHistory { get; set; }
@@ -220,6 +222,7 @@ namespace Chase.Engine
             }
 
             // It's now the other player's turn to move
+            LastPlayerToMove = PlayerToMove;
             PlayerToMove = opponent;
             MovesHistory = string.IsNullOrEmpty(MovesHistory) ? move.ToString() : MovesHistory + " " + move.ToString();
 
@@ -258,6 +261,11 @@ namespace Chase.Engine
         {
             List<Move> moves = new List<Move>();
             int destination;
+
+            if (GetWinner() != Player.None)
+            {
+                return moves;
+            }
 
             // We must first distribute points if a piece was just captured
             if (PointsToDistribute > 0)
@@ -700,6 +708,7 @@ namespace Chase.Engine
 
             p.PointsToDistribute = 0;
             p.PlayerToMove = Player.Red;
+            p.LastPlayerToMove = Player.Blue;
 
             return p;
         }
@@ -723,6 +732,7 @@ namespace Chase.Engine
 
             p.PointsToDistribute = 0;
             p.PlayerToMove = Player.Red;
+            p.LastPlayerToMove = Player.Blue;
 
             return p;
         }
@@ -872,6 +882,7 @@ namespace Chase.Engine
             }
 
             position.PlayerToMove = PlayerToMove;
+            position.LastPlayerToMove = LastPlayerToMove;
             position.PointsToDistribute = PointsToDistribute;
             position.MovesHistory = MovesHistory;
 

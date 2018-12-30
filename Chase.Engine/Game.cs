@@ -53,7 +53,8 @@ namespace Chase.Engine
         {
             StartNew();
 
-            search = new Search();
+            //search = new Search();
+            search = new MonteCarloTreeSearch();
             search.OnNewResult += Search_OnNewResult;
 
             worker = new BackgroundWorker();
